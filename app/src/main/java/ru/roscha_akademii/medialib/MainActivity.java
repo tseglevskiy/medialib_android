@@ -23,11 +23,6 @@ public class MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        // Teest Leak Canary
-         wrongWay();
-
-
         binding.hello.setOnClickListener(v -> getPresenter().helloClicked());
     }
 
@@ -41,16 +36,5 @@ public class MainActivity
     public void showHelloToast() {
         Toast.makeText(this, "Hello!", Toast.LENGTH_LONG).show();
     }
-
-    // Teest Leak Canary
-    private void wrongWay() {
-        new Thread() {
-            @Override
-            public void run() {
-                while (true){
-                    SystemClock.sleep(1000);
-                }
-            }
-        }.start();
-    }
+    
 }
