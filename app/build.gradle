@@ -1,16 +1,34 @@
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "ru.roscha_akademii.medialib"
+        applicationId appId // from gradle.properties
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "0.0.0.1"
+        versionCode appVersionCode.toInteger()
+        versionName appVersionName // from gradle.properties
     }
     buildTypes {
         release {
@@ -27,16 +45,75 @@ android {
     }
 }
 
+def supportVersion = '24.2.0'
+def daggerVersion = '2.6.1'
+def supportTestVersion = '0.5'
+def espressoVersion = '2.2.2'
+def googlePlayVersion = '9.6.0'
+
 dependencies {
-    compile project(':net')
+//    compile project(':net')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
+    // http://stackoverflow.com/a/30793984/1263771
+    apt 'com.android.databinding:compiler:1.0-rc5'
+
+    // support libraries
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:support-annotations:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+
+    // google play services
+    compile "com.google.android.gms:play-services-location:$googlePlayVersion"
+    compile "com.google.android.gms:play-services-places:$googlePlayVersion"
+
+    // dagger
+    compile "com.google.dagger:dagger:$daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$daggerVersion"
+    provided 'javax.annotation:jsr250-api:1.0'
+
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
 
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
     compile 'com.hannesdorfmann.mosby:viewstate:2.0.1'
 
+    compile 'pl.charmas.android:android-reactive-location:0.10@aar'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+
+    ///////////////////////////////////////////////
+    // test
+
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
+
+    ///////////////////////////////////////////////
+    // androidTest
+
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile "com.google.dexmaker:dexmaker:1.2"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:1.2"
+
+    androidTestCompile "com.android.support:support-annotations:$supportVersion"
+
+    androidTestCompile ("com.android.support.test:runner:$supportTestVersion") {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    androidTestCompile "com.android.support.test:rules:$supportTestVersion"
+
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+        exclude group: 'com.android.support', module: 'design'
+    }
+
+    androidTestApt "com.google.dagger:dagger-compiler:$daggerVersion"
+
 }
