@@ -2,6 +2,7 @@ package ru.roscha_akademii.medialib;
 
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,7 +33,6 @@ public class MainActivity
         ((MediaLibApplication)getApplication()).component().inject(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         binding.hello.setOnClickListener(v -> getPresenter().helloClicked());
     }
 
@@ -46,4 +46,5 @@ public class MainActivity
     public void showHelloToast() {
         Toast.makeText(this, "Hello!", Toast.LENGTH_LONG).show();
     }
+    
 }

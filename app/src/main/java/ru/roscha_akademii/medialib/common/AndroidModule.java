@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -12,15 +14,23 @@ import dagger.Provides;
 @Module
 public class AndroidModule {
     private final MediaLibApplication application;
+    private final RefWatcher refWatcher;
 
-    public AndroidModule(MediaLibApplication application) {
+    public AndroidModule(MediaLibApplication application, RefWatcher refWatcher) {
         this.application = application;
+        this.refWatcher = refWatcher;
     }
 
     @Provides
     @Singleton
     public Context providesContext() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    public RefWatcher providesRefWatcher() {
+        return refWatcher;
     }
     
     @Provides

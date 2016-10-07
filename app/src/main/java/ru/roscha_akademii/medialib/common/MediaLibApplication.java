@@ -3,6 +3,8 @@ package ru.roscha_akademii.medialib.common;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Singleton;
 
@@ -11,9 +13,12 @@ import io.fabric.sdk.android.Fabric;
 import ru.roscha_akademii.medialib.MainActivity;
 
 public class MediaLibApplication extends Application {
+    private RefWatcher refWatcher;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        refWatcher = LeakCanary.install(this);
         Fabric.with(this, new Crashlytics());
     }
 
@@ -30,7 +35,7 @@ public class MediaLibApplication extends Application {
     private ApplicationComponent createComponent() {
         return DaggerMediaLibApplication_ApplicationComponent
                 .builder()
-                .androidModule(new AndroidModule(this))
+                .androidModule(new AndroidModule(this, refWatcher))
                 .build();
     }
 
