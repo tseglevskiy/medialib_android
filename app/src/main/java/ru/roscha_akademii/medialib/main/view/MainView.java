@@ -1,4 +1,4 @@
-package ru.roscha_akademii.medialib;
+package ru.roscha_akademii.medialib.main.view;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 

@@ -10,7 +10,9 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.fabric.sdk.android.Fabric;
-import ru.roscha_akademii.medialib.MainActivity;
+import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
+import ru.roscha_akademii.medialib.main.view.MainActivity;
+import ru.roscha_akademii.medialib.update.UpdateService;
 
 public class MediaLibApplication extends Application {
     private RefWatcher refWatcher;
@@ -30,6 +32,10 @@ public class MediaLibApplication extends Application {
     })
     public interface ApplicationComponent {
         void inject(MainActivity activity);
+
+        void inject(MainPresenterImpl mainPresenter);
+
+        void inject(UpdateService updateService);
     }
 
     private ApplicationComponent createComponent() {

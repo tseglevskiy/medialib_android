@@ -1,22 +1,20 @@
-package ru.roscha_akademii.medialib;
+package ru.roscha_akademii.medialib.main.view;
 
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import javax.inject.Inject;
 
-import io.fabric.sdk.android.Fabric;
+import ru.roscha_akademii.medialib.R;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.databinding.ActivityMainBinding;
+import ru.roscha_akademii.medialib.main.presenter.MainPresenter;
+import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
 
 public class MainActivity
         extends MvpActivity<MainView, MainPresenter>
@@ -36,10 +34,16 @@ public class MainActivity
         binding.hello.setOnClickListener(v -> getPresenter().helloClicked());
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPresenter().start();
+    }
+
     @NonNull
     @Override
     public MainPresenter createPresenter() {
-        return new MainPresenterImpl();
+        return new MainPresenterImpl(getApplicationContext());
     }
 
     @Override
