@@ -17,7 +17,7 @@ public class UpdateScheduler {
     private ServiceNavigator navigator;
 
     private static final long UPDATE_TIMEOUT = TimeUnit.DAYS.toMillis(1);
-    private static final String PREFS_UPDATE_SCHEDULE = "PREFS_UPDATE_SCHEDULE";
+    static final String PREFS_UPDATE_SCHEDULE = "PREFS_UPDATE_SCHEDULE";
 
     @Inject
     UpdateScheduler(SharedPreferences prefs,
