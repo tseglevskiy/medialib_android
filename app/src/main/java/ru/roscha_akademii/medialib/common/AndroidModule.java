@@ -23,25 +23,25 @@ public class AndroidModule {
 
     @Provides
     @Singleton
-    public Context providesContext() {
+    Context providesContext() {
         return application;
     }
 
     @Provides
     @Singleton
-    public RefWatcher providesRefWatcher() {
+    RefWatcher providesRefWatcher() {
         return refWatcher;
     }
     
     @Provides
     @Singleton
-    public Resources providesResources() {
+    Resources providesResources() {
         return application.getResources();
     }
 
     @Provides
     @Singleton
-    public SharedPreferences providesSharedPreferences(Context context) {
+    SharedPreferences providesSharedPreferences(Context context) {
         return context.getSharedPreferences("app", Context.MODE_PRIVATE);
     }
 

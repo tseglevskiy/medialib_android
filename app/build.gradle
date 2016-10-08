@@ -30,7 +30,8 @@ android {
         versionCode appVersionCode.toInteger()
         versionName appVersionName // from gradle.properties
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ru.roscha_akademii.medialib.common.MockAppRunner"
     }
     buildTypes {
         release {
