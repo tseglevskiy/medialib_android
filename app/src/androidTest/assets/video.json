@@ -1,0 +1,20 @@
+{ 
+  "list":[
+    {
+      "title": "название один",
+      "picture": "http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg",
+      "desc": "описание один",
+      "length": "00:10:10",
+      "dt": "2001-01-01",
+      "video": ""
+    },
+    {
+      "title": "название два",
+      "picture": "http://jsonparsing.parseapp.com/jsonData/images/interstellar.jpg",
+      "desc": "описание два, с тегами",
+      "length": "00:20:20",
+      "dt": "2002-02-12",
+      "video": ""
+    }
+  ]
+}
