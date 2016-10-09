@@ -16,6 +16,8 @@ import dagger.Provides;
 import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
+import ru.roscha_akademii.medialib.net.BaseUrlModule;
+import ru.roscha_akademii.medialib.net.NetModule;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
 
 import static org.mockito.Mockito.mock;
@@ -39,6 +41,8 @@ public class MainPresenterImplTest {
     @Singleton
     @Component(modules = {
             AndroidModule.class,
+            NetModule.class,
+            BaseUrlModule.class,
             MockUpdateSchedulerModule.class})
     interface MockApplicationComponent extends MediaLibApplication.ApplicationComponent {
         void inject(MainPresenterImplTest test);

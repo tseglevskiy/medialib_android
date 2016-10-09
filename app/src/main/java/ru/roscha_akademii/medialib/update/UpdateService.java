@@ -9,7 +9,12 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
+import ru.roscha_akademii.medialib.net.VideoApi;
+import ru.roscha_akademii.medialib.net.model.VideoAnswer;
 
 public class UpdateService extends Service {
     /**
@@ -25,6 +30,8 @@ public class UpdateService extends Service {
     @Inject
     UpdateScheduler updateScheduler;
 
+    @Inject
+    VideoApi api;
 
     @Nullable
     @Override
@@ -38,6 +45,8 @@ public class UpdateService extends Service {
         Log.d("happy", "UpdateService onCreate");
 
         ((MediaLibApplication) getApplicationContext()).component().inject(this);
+
+        update();
     }
 
     @Override
@@ -48,9 +57,31 @@ public class UpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        updateScheduler.updateCompleted(); // TODO temporary
-        stopSelf(startId);
 
         return START_NOT_STICKY;
+    }
+
+    void update() {
+        Call<VideoAnswer> call = api.getVideoList();
+        call.enqueue(new Callback<VideoAnswer>() {
+            @Override
+            public void onResponse(Call<VideoAnswer> call, Response<VideoAnswer> response) {
+                try {
+                    VideoAnswer answer = response.body();
+                    Log.d("happy", "got videos " + answer.list.size());
+
+                    updateScheduler.updateCompleted();
+                } catch (Exception ignore) {
+                    // ничего, в следующий раз получится
+                }
+                stopSelf();
+            }
+
+            @Override
+            public void onFailure(Call<VideoAnswer> call, Throwable t) {
+                stopSelf();
+            }
+        });
+
     }
 }

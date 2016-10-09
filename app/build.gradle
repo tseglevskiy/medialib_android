@@ -53,6 +53,7 @@ def daggerVersion = '2.6.1'
 def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
 def googlePlayVersion = '9.6.0'
+def okHttpVersion = '3.2.0'
 
 dependencies {
 //    compile project(':net')
@@ -76,14 +77,23 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:$daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    // retrofit
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
+    // rx
+//    compile 'io.reactivex:rxandroid:1.2.1'
+//    compile 'io.reactivex:rxjava:1.1.6'
+//    compile 'pl.charmas.android:android-reactive-location:0.10@aar'
+
+    // Mosby MVP
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
     compile 'com.hannesdorfmann.mosby:viewstate:2.0.1'
 
-    compile 'pl.charmas.android:android-reactive-location:0.10@aar'
-
+    // fabric.io
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
@@ -123,5 +133,7 @@ dependencies {
     }
 
     androidTestApt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    androidTestCompile "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
 
 }

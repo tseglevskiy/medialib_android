@@ -12,6 +12,8 @@ import dagger.Component;
 import io.fabric.sdk.android.Fabric;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
 import ru.roscha_akademii.medialib.main.view.MainActivity;
+import ru.roscha_akademii.medialib.net.BaseUrlModule;
+import ru.roscha_akademii.medialib.net.NetModule;
 import ru.roscha_akademii.medialib.update.UpdateService;
 
 public class MediaLibApplication extends Application {
@@ -28,7 +30,9 @@ public class MediaLibApplication extends Application {
 
     @Singleton
     @Component(modules = {
-            AndroidModule.class
+            AndroidModule.class,
+            BaseUrlModule.class,
+            NetModule.class
     })
     public interface ApplicationComponent {
         void inject(MainActivity activity);
