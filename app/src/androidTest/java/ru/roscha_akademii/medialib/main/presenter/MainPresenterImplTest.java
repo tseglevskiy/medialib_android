@@ -19,6 +19,7 @@ import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
 import ru.roscha_akademii.medialib.net.BaseUrlModule;
 import ru.roscha_akademii.medialib.net.NetModule;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
+import ru.roscha_akademii.medialib.video.VideoDbModule;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -43,6 +44,7 @@ public class MainPresenterImplTest {
             AndroidModule.class,
             NetModule.class,
             BaseUrlModule.class,
+            VideoDbModule.class,
             MockUpdateSchedulerModule.class})
     interface MockApplicationComponent extends MediaLibApplication.ApplicationComponent {
         void inject(MainPresenterImplTest test);

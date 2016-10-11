@@ -3,18 +3,31 @@ package ru.roscha_akademii.medialib.update;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+import com.pushtorefresh.storio.sqlite.queries.Query;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.net.VideoApi;
+import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.net.model.VideoAnswer;
+import ru.roscha_akademii.medialib.video.VideoDb;
+
+import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB;
 
 public class UpdateService extends Service {
     /**
@@ -32,6 +45,10 @@ public class UpdateService extends Service {
 
     @Inject
     VideoApi api;
+
+    @Inject
+    @Named(VIDEO_DB)
+    StorIOSQLite videoDb;
 
     @Nullable
     @Override
@@ -70,6 +87,8 @@ public class UpdateService extends Service {
                     VideoAnswer answer = response.body();
                     Log.d("happy", "got videos " + answer.list.size());
 
+                    saveVideos(answer.list);
+
                     updateScheduler.updateCompleted();
                 } catch (Exception ignore) {
                     // ничего, в следующий раз получится
@@ -82,6 +101,14 @@ public class UpdateService extends Service {
                 stopSelf();
             }
         });
+    }
+
+    void saveVideos(ArrayList<Video> list) {
+        videoDb
+                .put()
+                .objects(list)
+                .prepare()
+                .executeAsBlocking();
 
     }
 }

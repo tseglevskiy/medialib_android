@@ -3,9 +3,11 @@ package ru.roscha_akademii.medialib.common;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -15,6 +17,11 @@ import ru.roscha_akademii.medialib.main.view.MainActivity;
 import ru.roscha_akademii.medialib.net.BaseUrlModule;
 import ru.roscha_akademii.medialib.net.NetModule;
 import ru.roscha_akademii.medialib.update.UpdateService;
+import ru.roscha_akademii.medialib.video.VideoDb;
+import ru.roscha_akademii.medialib.video.VideoDbModule;
+
+import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB;
+import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB_FILENAME;
 
 public class MediaLibApplication extends Application {
     private RefWatcher refWatcher;
@@ -32,7 +39,8 @@ public class MediaLibApplication extends Application {
     @Component(modules = {
             AndroidModule.class,
             BaseUrlModule.class,
-            NetModule.class
+            NetModule.class,
+            VideoDbModule.class
     })
     public interface ApplicationComponent {
         void inject(MainActivity activity);
@@ -40,6 +48,16 @@ public class MediaLibApplication extends Application {
         void inject(MainPresenterImpl mainPresenter);
 
         void inject(UpdateService updateService);
+
+        // VideoDbModule
+
+        @Named(VIDEO_DB_FILENAME)
+        String videoDbFileName();
+
+        VideoDb videoDbSqliteHelper();
+
+        @Named(VIDEO_DB)
+        StorIOSQLite videoDbStorIo();
     }
 
     private ApplicationComponent createComponent() {

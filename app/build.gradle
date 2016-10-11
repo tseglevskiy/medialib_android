@@ -54,6 +54,7 @@ def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
 def googlePlayVersion = '9.6.0'
 def okHttpVersion = '3.2.0'
+def storIoVersion = '1.11.0'
 
 dependencies {
 //    compile project(':net')
@@ -97,6 +98,11 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+
+    // StorIO
+    compile "com.pushtorefresh.storio:sqlite:$storIoVersion"
+    compile "com.pushtorefresh.storio:sqlite-annotations:$storIoVersion"
+    apt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
 
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'

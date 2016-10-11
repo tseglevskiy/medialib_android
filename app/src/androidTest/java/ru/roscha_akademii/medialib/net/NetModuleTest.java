@@ -28,6 +28,7 @@ import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
 import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.net.model.VideoAnswer;
+import ru.roscha_akademii.medialib.video.VideoDbModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -64,6 +65,7 @@ public class NetModuleTest {
     @Component(modules = {
             AndroidModule.class,
             NetModule.class,
+            VideoDbModule.class,
             MockBaseUrlModule.class
     })
     interface MockApplicationComponent extends MediaLibApplication.ApplicationComponent {
@@ -117,12 +119,13 @@ public class NetModuleTest {
         assertEquals(200, response.code());
 
         RecordedRequest request1 = server.takeRequest();
-        assertEquals("/tseglevskiy/medialib_android/raw/87aff1ef294055d83b429a29c981b9514211a8bc/app/src/androidTest/assets/video.json", request1.getPath());
+        assertEquals("/tseglevskiy/medialib_android/raw/master/app/src/androidTest/assets/video.json", request1.getPath());
 
         ArrayList<Video> videos = response.body().list;
         assertEquals(2, videos.size());
 
         Video v1 = videos.get(0);
+        assertEquals(12345, v1.id);
         assertEquals("название один", v1.title);
         assertEquals("http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg", v1.pictureUrl);
         assertEquals("описание один", v1.description);
