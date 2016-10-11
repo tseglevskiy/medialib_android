@@ -38,12 +38,23 @@ public class NetModule {
                 .create();
     }
 
+    static final String URL = "https://bitbucket.org/tseglevskiy/medialib_android/";
+
+    public static final String BASE_URL = "baseurl";
+
+    @Provides
+    @Singleton
+    @Named(BASE_URL)
+    String baseUrl() {
+        return URL;
+    }
+
     @Provides
     @Singleton
     Retrofit providesRetrofit(
             OkHttpClient client,
             Gson gson,
-            @Named("base url") String baseUrl)
+            @Named(BASE_URL) String baseUrl)
     {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)

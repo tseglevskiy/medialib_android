@@ -11,11 +11,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -23,52 +20,33 @@ import okhttp3.mockwebserver.RecordedRequest;
 import retrofit2.Call;
 import retrofit2.Response;
 import ru.roscha_akademii.medialib.AssertsFileHelper;
+import ru.roscha_akademii.medialib.TestScope;
 import ru.roscha_akademii.medialib.common.AndroidModule;
-import ru.roscha_akademii.medialib.common.MediaLibApplication;
+import ru.roscha_akademii.medialib.common.ApplicationComponent;
+import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
 import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.net.model.VideoAnswer;
-import ru.roscha_akademii.medialib.video.VideoDbModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static ru.roscha_akademii.medialib.net.NetModule.BASE_URL;
 
 public class NetModuleTest {
     private String testVideoList;
     private MockWebServer server;
 
     @Inject
-    @Named("base url")
+    @Named(BASE_URL)
     String injectedBaseUrl;
 
     @Inject
-    VideoApi videoApi;
+    VideoApi videoApi; // SUT
 
-    @Module
-    class MockBaseUrlModule {
-        String baseUrl;
-
-        MockBaseUrlModule(String baseUrl) {
-            this.baseUrl = baseUrl;
-        }
-
-        @Provides
-        @Singleton
-        @Named("base url")
-        String baseUrl() {
-            return baseUrl;
-        }
-    }
-
-    @Singleton
-    @Component(modules = {
-            AndroidModule.class,
-            NetModule.class,
-            VideoDbModule.class,
-            MockBaseUrlModule.class
-    })
-    interface MockApplicationComponent extends MediaLibApplication.ApplicationComponent {
+    @TestScope
+    @Component(dependencies = ApplicationComponent.class)
+    interface MockApplicationComponent {
         void inject(NetModuleTest test);
     }
 
@@ -87,16 +65,24 @@ public class NetModuleTest {
 
         HttpUrl baseUrl = server.url("/tseglevskiy/medialib_android/");
 
-        MockBaseUrlModule urlModule = new MockBaseUrlModule(baseUrl.toString());
-
-        MockApplicationComponent component = DaggerNetModuleTest_MockApplicationComponent
+        ApplicationComponent component = DaggerApplicationComponent
                 .builder()
                 .androidModule(new AndroidModule(app, null))
-                .mockBaseUrlModule(urlModule)
+                .netModule(new NetModule() {
+                    @Override
+                    String baseUrl() {
+                        return baseUrl.toString();
+                    }
+                })
                 .build();
 
         app.setComponent(component);
-        component.inject(this);
+
+        MockApplicationComponent testComponent = DaggerNetModuleTest_MockApplicationComponent
+                .builder()
+                .applicationComponent(component)
+                .build();
+        testComponent.inject(this);
 
     }
 
@@ -107,7 +93,7 @@ public class NetModuleTest {
 
     @Test
     public void webServerMocked() {
-        assertFalse("web server didn't mocked", injectedBaseUrl.equals(BaseUrlModule.BASE_URL));
+        assertFalse("web server didn't mocked", injectedBaseUrl.equals(NetModule.URL));
     }
 
     @Test

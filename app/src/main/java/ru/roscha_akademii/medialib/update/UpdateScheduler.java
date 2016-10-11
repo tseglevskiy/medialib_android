@@ -4,13 +4,9 @@ import android.content.SharedPreferences;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import ru.roscha_akademii.medialib.common.ServiceNavigator;
 import ru.roscha_akademii.medialib.common.TimeProvider;
 
-@Singleton
 public class UpdateScheduler {
     private SharedPreferences prefs;
     private TimeProvider timeProvider;
@@ -19,7 +15,6 @@ public class UpdateScheduler {
     private static final long UPDATE_TIMEOUT = TimeUnit.DAYS.toMillis(1);
     static final String PREFS_UPDATE_SCHEDULE = "PREFS_UPDATE_SCHEDULE";
 
-    @Inject
     UpdateScheduler(SharedPreferences prefs,
                     TimeProvider timeProvider,
                     ServiceNavigator navigator)

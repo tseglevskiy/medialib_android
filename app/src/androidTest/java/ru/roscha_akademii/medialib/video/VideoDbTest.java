@@ -18,8 +18,8 @@ import javax.inject.Named;
 import dagger.Component;
 import ru.roscha_akademii.medialib.TestScope;
 import ru.roscha_akademii.medialib.common.AndroidModule;
-import ru.roscha_akademii.medialib.common.DaggerMediaLibApplication_ApplicationComponent;
-import ru.roscha_akademii.medialib.common.MediaLibApplication;
+import ru.roscha_akademii.medialib.common.ApplicationComponent;
+import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
 import ru.roscha_akademii.medialib.net.model.Video;
 
@@ -45,7 +45,7 @@ public class VideoDbTest {
      */
 
     @TestScope
-    @Component(dependencies = MediaLibApplication.ApplicationComponent.class)
+    @Component(dependencies = ApplicationComponent.class)
     interface TestApplicationComponent {
         void inject(VideoDbTest test);
     }
@@ -57,7 +57,7 @@ public class VideoDbTest {
         MockMediaLibApplication app
                 = (MockMediaLibApplication) instrumentation.getTargetContext().getApplicationContext();
 
-        MediaLibApplication.ApplicationComponent component = DaggerMediaLibApplication_ApplicationComponent
+        ApplicationComponent component = DaggerApplicationComponent
                 .builder()
                 .androidModule(new AndroidModule(app, null))
                 .videoDbModule(new VideoDbModule() {
