@@ -1,6 +1,7 @@
 { 
   "list":[
     {
+      "id": 12345,
       "title": "название один",
       "picture": "http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg",
       "desc": "описание один",
@@ -9,6 +10,7 @@
       "video": ""
     },
     {
+      "id": 56789,
       "title": "название два",
       "picture": "http://jsonparsing.parseapp.com/jsonData/images/interstellar.jpg",
       "desc": "описание два, с тегами",
