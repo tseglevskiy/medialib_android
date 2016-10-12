@@ -9,10 +9,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import dagger.Component;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -20,7 +16,6 @@ import okhttp3.mockwebserver.RecordedRequest;
 import retrofit2.Call;
 import retrofit2.Response;
 import ru.roscha_akademii.medialib.AssertsFileHelper;
-import ru.roscha_akademii.medialib.TestScope;
 import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
@@ -31,24 +26,14 @@ import ru.roscha_akademii.medialib.net.model.VideoAnswer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static ru.roscha_akademii.medialib.net.NetModule.BASE_URL;
 
 public class NetModuleTest {
     private String testVideoList;
     private MockWebServer server;
 
-    @Inject
-    @Named(BASE_URL)
-    String injectedBaseUrl;
+    private VideoApi videoApi; // SUT
 
-    @Inject
-    VideoApi videoApi; // SUT
-
-    @TestScope
-    @Component(dependencies = ApplicationComponent.class)
-    interface MockApplicationComponent {
-        void inject(NetModuleTest test);
-    }
+    private String injectedBaseUrl;
 
     @Before
     public void setUp() throws Exception {
@@ -78,11 +63,8 @@ public class NetModuleTest {
 
         app.setComponent(component);
 
-        MockApplicationComponent testComponent = DaggerNetModuleTest_MockApplicationComponent
-                .builder()
-                .applicationComponent(component)
-                .build();
-        testComponent.inject(this);
+        videoApi = component.videoApi();
+        injectedBaseUrl = component.serverBaseUrl();
 
     }
 

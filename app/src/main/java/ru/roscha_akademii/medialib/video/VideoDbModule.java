@@ -22,7 +22,7 @@ public class VideoDbModule {
     @Singleton
     @NonNull
     @Named(VIDEO_DB)
-    public StorIOSQLite providesVideoDbSio(VideoDb videoDbHelper) {
+    StorIOSQLite providesVideoDbSio(VideoDb videoDbHelper) {
         return DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(videoDbHelper)
                 .addTypeMapping(Video.class, new VideoSQLiteTypeMapping()) // required for object mapping
@@ -32,7 +32,7 @@ public class VideoDbModule {
     @Provides
     @Singleton
     @NonNull
-    public VideoDb providesVideoDbHelper(
+    VideoDb providesVideoDbHelper(
             Context context,
             @Named(VIDEO_DB_FILENAME) String fileName)
     {

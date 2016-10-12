@@ -11,7 +11,6 @@ import ru.roscha_akademii.medialib.common.ServiceNavigator;
 import ru.roscha_akademii.medialib.common.TimeProvider;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -21,10 +20,11 @@ import static org.mockito.Mockito.when;
 import static ru.roscha_akademii.medialib.update.UpdateScheduler.PREFS_UPDATE_SCHEDULE;
 
 public class UpdateSchedulerTest {
+    private UpdateScheduler scheduler; // SUT
+
     private SharedPreferences prefs;
     private TimeProvider timeProvider;
     private ServiceNavigator navigator;
-    private UpdateScheduler scheduler;
     private SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")

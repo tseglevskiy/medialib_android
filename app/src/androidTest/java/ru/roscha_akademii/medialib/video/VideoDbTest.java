@@ -12,11 +12,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import dagger.Component;
-import ru.roscha_akademii.medialib.TestScope;
 import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
@@ -25,30 +20,16 @@ import ru.roscha_akademii.medialib.net.model.Video;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB;
-import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB_FILENAME;
 
 public class VideoDbTest {
-    @Inject
-    @Named(VIDEO_DB)
-    StorIOSQLite videoDb; // SUT
+    private StorIOSQLite videoDb; // SUT
 
-    @Inject
-    @Named(VIDEO_DB_FILENAME)
-    String videoDbFileName;
-
-    @Inject
-    VideoDb videoDbSqliteHelper;
+    private String videoDbFileName;
+    private VideoDb videoDbSqliteHelper;
 
     /*
     boilerplate
      */
-
-    @TestScope
-    @Component(dependencies = ApplicationComponent.class)
-    interface TestApplicationComponent {
-        void inject(VideoDbTest test);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -70,13 +51,10 @@ public class VideoDbTest {
 
         app.setComponent(component);
 
-        TestApplicationComponent testComponent = DaggerVideoDbTest_TestApplicationComponent
-                .builder()
-                .applicationComponent(component)
-                .build();
+        videoDb = component.videoDbStorIo(); // SUT
 
-        testComponent.inject(this);
-
+        videoDbFileName = component.videoDbFileName();
+        videoDbSqliteHelper = component.videoDbSqliteHelper();
     }
 
     /*
@@ -179,4 +157,40 @@ public class VideoDbTest {
         assertEquals(video2.pictureUrl, readedList.get(1).pictureUrl);
 
     }
+
+    @Test
+    public void writeTwoItemsByThreeTimes_readByStorIo() {
+        videoDb
+                .put()
+                .object(video1)
+                .prepare()
+                .executeAsBlocking();
+
+        videoDb
+                .put()
+                .object(video2)
+                .prepare()
+                .executeAsBlocking();
+
+        videoDb
+                .put()
+                .object(video1)
+                .prepare()
+                .executeAsBlocking();
+
+        List<Video> readedList = videoDb
+                .get()
+                .listOfObjects(Video.class)
+                .withQuery(Query.builder()
+                        .table(VideoDb.VideoT.TABLE_NAME)
+                        .orderBy(VideoDb.VideoT.ID)
+                        .build())
+                .prepare()
+                .executeAsBlocking();
+
+        assertEquals(2, readedList.size());
+
+
+    }
+
 }

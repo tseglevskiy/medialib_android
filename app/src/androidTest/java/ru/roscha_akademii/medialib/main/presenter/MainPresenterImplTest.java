@@ -8,10 +8,6 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
-import dagger.Component;
-import ru.roscha_akademii.medialib.TestScope;
 import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
@@ -29,17 +25,8 @@ public class MainPresenterImplTest {
 
     private MainPresenterImpl presenter; // SUT
 
-    @TestScope
-    @Component(dependencies = ApplicationComponent.class)
-    interface MockApplicationComponent {
-        void inject(MainPresenterImplTest test);
-    }
-
-    @Inject
-    UpdateScheduler updateScheduler;
-
-    @Inject
-    Context context;
+    private UpdateScheduler updateScheduler;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
@@ -61,13 +48,10 @@ public class MainPresenterImplTest {
 
         app.setComponent(component);
 
-        MockApplicationComponent testComponent = DaggerMainPresenterImplTest_MockApplicationComponent
-                .builder()
-                .applicationComponent(component)
-                .build();
-        testComponent.inject(this);
-
+        context = component.context();
         presenter = new MainPresenterImpl(context);
+
+        updateScheduler = component.updateScheduler();
     }
 
     @Test
@@ -75,7 +59,6 @@ public class MainPresenterImplTest {
         presenter.start();
 
         verify(updateScheduler, times(1)).startBySchedule();
-
     }
 
 }
