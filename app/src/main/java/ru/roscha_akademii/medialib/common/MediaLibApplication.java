@@ -38,4 +38,9 @@ public class MediaLibApplication extends Application {
 
         return component;
     }
+
+    public RefWatcher refWatcher() {
+        return refWatcher;
+    }
+
 }

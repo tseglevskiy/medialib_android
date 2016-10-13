@@ -1,6 +1,5 @@
 package ru.roscha_akademii.medialib.main.view;
 
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +10,10 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import javax.inject.Inject;
 
 import ru.roscha_akademii.medialib.R;
+import ru.roscha_akademii.medialib.common.ActivityModule;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.databinding.ActivityMainBinding;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenter;
-import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
 
 public class MainActivity
         extends MvpActivity<MainView, MainPresenter>
@@ -23,15 +22,27 @@ public class MainActivity
     private ActivityMainBinding binding;
 
     @Inject
-    SharedPreferences prefs;
+    MainPresenter injectedPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((MediaLibApplication)getApplication())
+                .component()
+                .activityComponent(new ActivityModule(this))
+                .inject(this);
+
         super.onCreate(savedInstanceState);
-        ((MediaLibApplication)getApplication()).component().inject(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         binding.hello.setOnClickListener(v -> getPresenter().helloClicked());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ((MediaLibApplication)getApplication()).refWatcher().watch(presenter);
     }
 
     @Override
@@ -43,7 +54,7 @@ public class MainActivity
     @NonNull
     @Override
     public MainPresenter createPresenter() {
-        return new MainPresenterImpl(getApplicationContext());
+        return injectedPresenter;
     }
 
     @Override

@@ -30,16 +30,20 @@ import static ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB_FILENAME;
         UpdateModule.class
 })
 public interface ApplicationComponent {
-    void inject(MainActivity activity);
+    /*
+    ActivityScope components
+     */
 
-    void inject(MainPresenterImpl mainPresenter);
+    ActivityComponent activityComponent(ActivityModule am);
+
+    /*
+    Injectors
+     */
 
     void inject(UpdateService updateService);
 
     /*
-
     Using submodules requires providing explicit methods in the parent component.
-
      */
 
     // AndroidModule
