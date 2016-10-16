@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.main.view;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,8 @@ public class MainActivity
     @Inject
     MainPresenter injectedPresenter;
 
+    private VideoListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ((MediaLibApplication)getApplication())
@@ -40,6 +43,10 @@ public class MainActivity
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.list.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new VideoListAdapter();
+        binding.list.setAdapter(adapter);
     }
 
     @Override
@@ -85,6 +92,6 @@ public class MainActivity
 
     @Override
     public void showVideoList(List<Video> list) {
-        // TODO
+        adapter.setList(list);
     }
 }
