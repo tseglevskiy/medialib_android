@@ -18,11 +18,19 @@ import ru.roscha_akademii.medialib.net.model.VideoSQLiteTypeMapping;
 public class VideoDbModule {
     public static final String VIDEO_DB = "videodb";
 
+
+    @Provides
+    @Singleton
+    @NonNull
+    VideoDb providesVideoDb(@Named(VIDEO_DB) StorIOSQLite storio) {
+        return new VideoDb(storio);
+    }
+
     @Provides
     @Singleton
     @NonNull
     @Named(VIDEO_DB)
-    StorIOSQLite providesVideoDbSio(VideoDb videoDbHelper) {
+    StorIOSQLite providesVideoDbSio(VideoDbSqliteHelper videoDbHelper) {
         return DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(videoDbHelper)
                 .addTypeMapping(Video.class, new VideoSQLiteTypeMapping()) // required for object mapping
@@ -32,7 +40,7 @@ public class VideoDbModule {
     @Provides
     @Singleton
     @NonNull
-    VideoDb providesVideoDbHelper(
+    VideoDbSqliteHelper providesVideoDbHelper(
             Context context,
             @Named(VIDEO_DB_FILENAME) String fileName)
     {
@@ -41,7 +49,7 @@ public class VideoDbModule {
         if (fileName.isEmpty()) {
             fileName = null;
         }
-        return new VideoDb(context, fileName);
+        return new VideoDbSqliteHelper(context, fileName);
     }
 
     public static final String VIDEO_DB_FILENAME = "video db filename";

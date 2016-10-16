@@ -8,14 +8,13 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
-import ru.roscha_akademii.medialib.main.view.MainActivity;
 import ru.roscha_akademii.medialib.net.NetModule;
 import ru.roscha_akademii.medialib.net.VideoApi;
 import ru.roscha_akademii.medialib.update.UpdateModule;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
 import ru.roscha_akademii.medialib.update.UpdateService;
 import ru.roscha_akademii.medialib.video.VideoDb;
+import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper;
 import ru.roscha_akademii.medialib.video.VideoDbModule;
 
 import static ru.roscha_akademii.medialib.net.NetModule.BASE_URL;
@@ -62,12 +61,15 @@ public interface ApplicationComponent {
     @Named(VIDEO_DB_FILENAME)
     String videoDbFileName();
 
-    VideoDb videoDbSqliteHelper();
+    VideoDbSqliteHelper videoDbSqliteHelper();
 
     @Named(VIDEO_DB)
     StorIOSQLite videoDbStorIo();
 
+    VideoDb videoDb();
+
     // UpdateModule
 
     UpdateScheduler updateScheduler();
+
 }

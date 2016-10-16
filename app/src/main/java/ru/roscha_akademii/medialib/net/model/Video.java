@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import ru.roscha_akademii.medialib.video.VideoDb;
+import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper;
 
-@StorIOSQLiteType(table = VideoDb.VideoT.TABLE_NAME)
+@StorIOSQLiteType(table = VideoDbSqliteHelper.VideoT.TABLE_NAME)
 public class Video {
-    @StorIOSQLiteColumn(name = VideoDb.VideoT.ID, key = true)
+    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.ID, key = true)
     public long id;
 
-    @StorIOSQLiteColumn(name = VideoDb.VideoT.TITLE)
+    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.TITLE)
     public String title;
 
-    @StorIOSQLiteColumn(name = VideoDb.VideoT.PICTURE_URL)
+    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.PICTURE_URL)
     @SerializedName("picture")
     public String pictureUrl;
 
-    @StorIOSQLiteColumn(name = VideoDb.VideoT.DESCRIPTION)
+    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.DESCRIPTION)
     @SerializedName("desc")
     public String description;
 
@@ -28,7 +28,7 @@ public class Video {
     @SerializedName("dt")
     public String issueDate;
 
-    @StorIOSQLiteColumn(name = VideoDb.VideoT.VIDEO_URL)
+    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.VIDEO_URL)
     @SerializedName("video")
     public String videoUrl;
 }

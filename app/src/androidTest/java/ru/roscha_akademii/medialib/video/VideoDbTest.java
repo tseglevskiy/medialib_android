@@ -1,11 +1,9 @@
 package ru.roscha_akademii.medialib.video;
 
 import android.app.Instrumentation;
-import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +16,13 @@ import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
 import ru.roscha_akademii.medialib.net.model.Video;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class VideoDbTest {
-    private StorIOSQLite videoDb; // SUT
-
+    private StorIOSQLite videoDbStorIoHelper;
     private String videoDbFileName;
-    private VideoDb videoDbSqliteHelper;
+
+    private VideoDb videoDb; // SUT
 
     /*
     boilerplate
@@ -51,16 +48,18 @@ public class VideoDbTest {
 
         app.setComponent(component);
 
-        videoDb = component.videoDbStorIo(); // SUT
+        videoDbStorIoHelper = component.videoDbStorIo();
 
         videoDbFileName = component.videoDbFileName();
-        videoDbSqliteHelper = component.videoDbSqliteHelper();
+
+        videoDb = component.videoDb(); // SUT
     }
 
     /*
     test data
      */
     private static Video video1 = new Video();
+
     static {
         video1.id = 1111;
         video1.description = "description one";
@@ -70,6 +69,7 @@ public class VideoDbTest {
     }
 
     private static Video video2 = new Video();
+
     static {
         video2.id = 2222;
         video2.description = "description two";
@@ -88,109 +88,35 @@ public class VideoDbTest {
     }
 
     @Test
-    public void writeOneItem_readManually() {
-        videoDb
-                .put()
-                .object(video1)
-                .prepare()
-                .executeAsBlocking();
+    public void emptyDb_readAllVideo() {
+        List<Video> list = videoDb.getAllVideo();
 
-        Cursor cursor = videoDbSqliteHelper
-                .getReadableDatabase()
-                .rawQuery("select * from " + VideoDb.VideoT.TABLE_NAME, null);
-
-        assertEquals("added one object", 1, cursor.getCount());
-
-        int desriptionIdx = cursor.getColumnIndex(VideoDb.VideoT.DESCRIPTION);
-        int idIdx = cursor.getColumnIndex(VideoDb.VideoT.ID);
-        int titleIdx = cursor.getColumnIndex(VideoDb.VideoT.TITLE);
-        int videoUrlIdx = cursor.getColumnIndex(VideoDb.VideoT.VIDEO_URL);
-        int pictureUrlIdx = cursor.getColumnIndex(VideoDb.VideoT.PICTURE_URL);
-
-        assertTrue(cursor.moveToFirst());
-
-        assertEquals(video1.id, cursor.getLong(idIdx));
-        assertEquals(video1.description, cursor.getString(desriptionIdx));
-        assertEquals(video1.title, cursor.getString(titleIdx));
-        assertEquals(video1.videoUrl, cursor.getString(videoUrlIdx));
-        assertEquals(video1.pictureUrl, cursor.getString(pictureUrlIdx));
-
-        cursor.close();
+        assertNotNull(list);
+        assertEquals(0, list.size());
     }
 
     @Test
-    public void writeTwoItems_readByStorIo() {
-        videoDb
+    public void twoVideos_readAllVideo() {
+        videoDbStorIoHelper
                 .put()
                 .object(video1)
                 .prepare()
                 .executeAsBlocking();
 
-        videoDb
+        videoDbStorIoHelper
                 .put()
                 .object(video2)
                 .prepare()
                 .executeAsBlocking();
 
-        List<Video> readedList = videoDb
-                .get()
-                .listOfObjects(Video.class)
-                .withQuery(Query.builder()
-                        .table(VideoDb.VideoT.TABLE_NAME)
-                        .orderBy(VideoDb.VideoT.ID)
-                        .build())
-                .prepare()
-                .executeAsBlocking();
+        List<Video> list = videoDb.getAllVideo();
 
-        assertEquals(2, readedList.size());
+        assertNotNull(list);
+        assertEquals(2, list.size());
 
-        assertEquals(video1.id, readedList.get(0).id);
-        assertEquals(video1.description, readedList.get(0).description);
-        assertEquals(video1.title, readedList.get(0).title);
-        assertEquals(video1.videoUrl, readedList.get(0).videoUrl);
-        assertEquals(video1.pictureUrl, readedList.get(0).pictureUrl);
-
-        assertEquals(video2.id, readedList.get(1).id);
-        assertEquals(video2.description, readedList.get(1).description);
-        assertEquals(video2.title, readedList.get(1).title);
-        assertEquals(video2.videoUrl, readedList.get(1).videoUrl);
-        assertEquals(video2.pictureUrl, readedList.get(1).pictureUrl);
-
+        assertEquals(video1.id, list.get(0).id);
+        assertEquals(video2.id, list.get(1).id);
     }
 
-    @Test
-    public void writeTwoItemsByThreeTimes_readByStorIo() {
-        videoDb
-                .put()
-                .object(video1)
-                .prepare()
-                .executeAsBlocking();
-
-        videoDb
-                .put()
-                .object(video2)
-                .prepare()
-                .executeAsBlocking();
-
-        videoDb
-                .put()
-                .object(video1)
-                .prepare()
-                .executeAsBlocking();
-
-        List<Video> readedList = videoDb
-                .get()
-                .listOfObjects(Video.class)
-                .withQuery(Query.builder()
-                        .table(VideoDb.VideoT.TABLE_NAME)
-                        .orderBy(VideoDb.VideoT.ID)
-                        .build())
-                .prepare()
-                .executeAsBlocking();
-
-        assertEquals(2, readedList.size());
-
-
-    }
 
 }

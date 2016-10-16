@@ -7,6 +7,7 @@ import dagger.Provides;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenter;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
+import ru.roscha_akademii.medialib.video.VideoDb;
 
 @Module
 public class ActivityModule {
@@ -24,8 +25,9 @@ public class ActivityModule {
 
     @Provides
     @ActivityScope
-    MainPresenter providesMainPresenter(UpdateScheduler scheduler) {
-        return new MainPresenterImpl(scheduler);
+    MainPresenter providesMainPresenter(UpdateScheduler scheduler,
+                                        VideoDb videoDb) {
+        return new MainPresenterImpl(scheduler, videoDb);
     }
 
 }

@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import ru.roscha_akademii.medialib.R;
@@ -14,6 +16,7 @@ import ru.roscha_akademii.medialib.common.ActivityModule;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.databinding.ActivityMainBinding;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenter;
+import ru.roscha_akademii.medialib.net.model.Video;
 
 public class MainActivity
         extends MvpActivity<MainView, MainPresenter>
@@ -61,5 +64,9 @@ public class MainActivity
     public void showHelloToast() {
         Toast.makeText(this, "Hello!", Toast.LENGTH_LONG).show();
     }
-    
+
+    @Override
+    public void showVideoList(List<Video> list) {
+        // TODO
+    }
 }
