@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MediaLib</string>
+    <string name="update">Update</string>
 </resources>

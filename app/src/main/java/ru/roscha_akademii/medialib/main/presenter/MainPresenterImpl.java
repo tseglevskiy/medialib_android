@@ -24,7 +24,7 @@ public class MainPresenterImpl
     }
 
     @Override
-    public void helloClicked() {
+    public void wannaUpdateVideoList() {
         updateScheduler.startNow();
         if (getView() != null) {
             getView().showHelloToast();
