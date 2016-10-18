@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public abstract class CommonListAdapter<D, B extends ViewDataBinding>
+    public abstract class CommonListAdapter<D, B extends ViewDataBinding>
         extends RecyclerView.Adapter<CommonListAdapter.CommonHolder<B>>
 {
     List<D> list;
     private int layoutId;
+    private OnItemClickListener clickListener;
 
-    public CommonListAdapter(int layoutId) {
+    public CommonListAdapter(int layoutId,
+                             OnItemClickListener clickListener) {
         this.layoutId = layoutId;
+        this.clickListener = clickListener;
     }
 
     public void setList(List<D> list) {
@@ -42,10 +45,10 @@ public abstract class CommonListAdapter<D, B extends ViewDataBinding>
 
     @Override
     public void onBindViewHolder(CommonHolder<B> holder, int position) {
-        show(list.get(position), holder.binding);
+        show(list.get(position), holder.binding, clickListener);
     }
 
-    public abstract void show(D item, B binding);
+    public abstract void show(D item, B binding, OnItemClickListener clickListener);
 
     static class CommonHolder<B extends ViewDataBinding> extends RecyclerView.ViewHolder {
         private B binding;
@@ -58,5 +61,9 @@ public abstract class CommonListAdapter<D, B extends ViewDataBinding>
         public B getBinding() {
             return binding;
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(long id);
     }
 }

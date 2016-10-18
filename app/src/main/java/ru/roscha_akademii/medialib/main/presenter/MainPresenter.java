@@ -8,4 +8,6 @@ public interface MainPresenter extends MvpPresenter<MainView> {
     void wannaUpdateVideoList();
 
     void start();
+
+    void wannaOpenVideo(long id);
 }

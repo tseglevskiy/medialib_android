@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import ru.roscha_akademii.medialib.R;
 import ru.roscha_akademii.medialib.common.ActivityModule;
+import ru.roscha_akademii.medialib.common.CommonListAdapter;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.databinding.ActivityMainBinding;
 import ru.roscha_akademii.medialib.main.presenter.MainPresenter;
@@ -24,7 +25,7 @@ import ru.roscha_akademii.medialib.net.model.Video;
 
 public class MainActivity
         extends MvpActivity<MainView, MainPresenter>
-        implements MainView
+        implements MainView, CommonListAdapter.OnItemClickListener
 {
     private ActivityMainBinding binding;
 
@@ -45,7 +46,7 @@ public class MainActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.list.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new VideoListAdapter();
+        adapter = new VideoListAdapter(this);
         binding.list.setAdapter(adapter);
     }
 
@@ -93,5 +94,10 @@ public class MainActivity
     @Override
     public void showVideoList(List<Video> list) {
         adapter.setList(list);
+    }
+
+    @Override
+    public void onItemClicked(long id) {
+        getPresenter().wannaOpenVideo(id);
     }
 }

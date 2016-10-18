@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity" />
+
         <service android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
 
         <meta-data

@@ -5,15 +5,17 @@ import ru.roscha_akademii.medialib.common.CommonListAdapter;
 import ru.roscha_akademii.medialib.databinding.VideolistItemBinding;
 import ru.roscha_akademii.medialib.net.model.Video;
 
-public class VideoListAdapter extends CommonListAdapter<Video, VideolistItemBinding> {
+class VideoListAdapter extends CommonListAdapter<Video, VideolistItemBinding> {
 
-    public VideoListAdapter() {
-        super(R.layout.videolist_item);
+    VideoListAdapter(OnItemClickListener clickListener) {
+        super(R.layout.videolist_item, clickListener);
     }
 
     @Override
-    public void show(Video item, VideolistItemBinding binding) {
+    public void show(Video item, VideolistItemBinding binding, OnItemClickListener clickListener) {
         binding.title.setText(item.title);
         binding.description.setText(item.description);
+        binding.getRoot().setOnClickListener(v -> clickListener.onItemClicked(item.id));
     }
+
 }

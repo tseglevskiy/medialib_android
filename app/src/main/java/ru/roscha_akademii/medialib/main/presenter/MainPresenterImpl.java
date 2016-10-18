@@ -4,6 +4,7 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import java.util.List;
 
+import ru.roscha_akademii.medialib.common.ActivityNavigator;
 import ru.roscha_akademii.medialib.main.view.MainView;
 import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
@@ -15,12 +16,15 @@ public class MainPresenterImpl
 {
     UpdateScheduler updateScheduler;
     private VideoDb videoDb;
+    private ActivityNavigator navigator;
 
     public MainPresenterImpl(UpdateScheduler updateScheduler,
-                             VideoDb videoDb) {
+                             VideoDb videoDb,
+                             ActivityNavigator navigator) {
 
         this.updateScheduler = updateScheduler;
         this.videoDb = videoDb;
+        this.navigator = navigator;
     }
 
     @Override
@@ -36,6 +40,11 @@ public class MainPresenterImpl
         updateScheduler.startBySchedule();
 
         getAndDisplayVideoList();
+    }
+
+    @Override
+    public void wannaOpenVideo(long id) {
+        navigator.openVideo(id);
     }
 
     private void getAndDisplayVideoList() {

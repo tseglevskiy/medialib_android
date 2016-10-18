@@ -2,11 +2,16 @@ package ru.roscha_akademii.medialib.common;
 
 import android.app.Activity;
 
-// dummy navigator
-public class ActivityNavigator {
-    Activity activity;
+import ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity;
 
-    public ActivityNavigator(Activity activity) {
+public class ActivityNavigator {
+    private Activity activity;
+
+    ActivityNavigator(Activity activity) {
         this.activity = activity;
+    }
+
+    public void openVideo(long id) {
+        activity.startActivity(ShowVideoActivity.getStartIntent(activity, id));
     }
 }
