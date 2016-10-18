@@ -7,7 +7,7 @@
       "desc": "описание один",
       "length": "00:10:10",
       "dt": "2001-01-01",
-      "video": ""
+      "video": "http://video.roscha-akademii.ru/img/movie/video/O-tom-kak-nauchitsya-pobezhdat-samomu-i-segodnya.mp4"
     },
     {
       "id": 56789,
@@ -16,7 +16,7 @@
       "desc": "описание два, с тегами",
       "length": "00:20:20",
       "dt": "2002-02-12",
-      "video": ""
+      "video": "http://video.roscha-akademii.ru/img/movie/video/O-tom-kak-nauchitsya-pobezhdat-samomu-i-segodnya.mp4"
     }
   ]
 }
