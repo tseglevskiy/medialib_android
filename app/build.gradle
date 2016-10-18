@@ -106,6 +106,9 @@ dependencies {
     compile "com.pushtorefresh.storio:sqlite-annotations:$storIoVersion"
     apt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
 
+    // ExoPlayer
+    compile 'com.google.android.exoplayer:exoplayer:r2.0.0'
+
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'

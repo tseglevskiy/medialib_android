@@ -96,6 +96,7 @@ public class UpdateSchedulerTest {
 
         ArgumentCaptor<Long> captorForTime = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<String> captorForKey = ArgumentCaptor.forClass(String.class);
+
         verify(editor, times(1))
                 .putLong(captorForKey.capture(), captorForTime.capture());
         verify(editor, times(1)).apply();

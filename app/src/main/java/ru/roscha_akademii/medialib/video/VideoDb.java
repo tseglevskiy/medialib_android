@@ -25,4 +25,23 @@ public class VideoDb {
                 .prepare()
                 .executeAsBlocking();
     }
+
+    public Video getVideo(long id) {
+        try {
+            return db
+                    .get()
+                    .listOfObjects(Video.class)
+                    .withQuery(Query.builder()
+                            .table(VideoDbSqliteHelper.VideoT.TABLE_NAME)
+                            .where(VideoDbSqliteHelper.VideoT.ID + " = ?")
+                            .whereArgs(id)
+                            .orderBy(VideoDbSqliteHelper.VideoT.ID)
+                            .build())
+                    .prepare()
+                    .executeAsBlocking()
+                    .get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
 }

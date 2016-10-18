@@ -35,8 +35,8 @@ public class ActivityModule {
 
     @Provides
     @ActivityScope
-    ShowVideoPresenter providesShowVideoPresenter() {
-        return new ShowVideoPresenterImpl();
+    ShowVideoPresenter providesShowVideoPresenter(VideoDb videoDb) {
+        return new ShowVideoPresenterImpl(videoDb);
     }
 
 

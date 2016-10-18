@@ -1,7 +1,5 @@
 package ru.roscha_akademii.medialib.main.presenter;
 
-import android.view.View;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -9,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.roscha_akademii.medialib.common.ActivityNavigator;
 import ru.roscha_akademii.medialib.main.view.MainView;
 import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.update.UpdateScheduler;
@@ -27,6 +26,7 @@ public class MainPresenterImplTest {
     private UpdateScheduler updateScheduler;
     private MainView view;
     private VideoDb videoDb;
+    private ActivityNavigator navigator;
 
     /*
 test data
@@ -51,15 +51,16 @@ test data
         video2.videoUrl = "video url two";
     }
 
+
     @Before
     public void setUp() throws Exception {
         updateScheduler = mock(UpdateScheduler.class);
 
         videoDb = mock(VideoDb.class);
         view = mock(MainView.class);
+        navigator = mock(ActivityNavigator.class);
 
-        presenter = new MainPresenterImpl(updateScheduler, videoDb);
-
+        presenter = new MainPresenterImpl(updateScheduler, videoDb, navigator);
     }
 
     @Test

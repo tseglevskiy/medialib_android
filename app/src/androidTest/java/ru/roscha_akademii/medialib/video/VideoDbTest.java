@@ -118,5 +118,52 @@ public class VideoDbTest {
         assertEquals(video2.id, list.get(1).id);
     }
 
+    @Test
+    public void twoVideos_readVideo_unexistingVideo() {
+        videoDbStorIoHelper
+                .put()
+                .object(video1)
+                .prepare()
+                .executeAsBlocking();
 
+        videoDbStorIoHelper
+                .put()
+                .object(video2)
+                .prepare()
+                .executeAsBlocking();
+
+        long unexistingId = 3333;
+        assertNotEquals(unexistingId, video1.id);
+        assertNotEquals(unexistingId, video2.id);
+
+        Video video = videoDb.getVideo(1999);
+
+        assertNull(video);
+    }
+
+    @Test
+    public void twoVideos_readVideo_oneVideo() {
+        videoDbStorIoHelper
+                .put()
+                .object(video1)
+                .prepare()
+                .executeAsBlocking();
+
+        videoDbStorIoHelper
+                .put()
+                .object(video2)
+                .prepare()
+                .executeAsBlocking();
+
+        Video video = videoDb.getVideo(video1.id);
+
+        assertEquals(video1.id, video.id);
+        assertEquals(video1.description, video.description);
+
+        video = videoDb.getVideo(video2.id);
+
+        assertEquals(video2.id, video.id);
+        assertEquals(video2.description, video.description);
+
+    }
 }
