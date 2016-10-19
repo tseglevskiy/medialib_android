@@ -11,12 +11,14 @@ android:
     - extra-google-m2repository
     - sys-img-armeabi-v7a-android-19
 
+  licenses:
+    - android-sdk-license-.+
+    - google-gdk-license-.+
+
 before_install:
     - chmod +x gradlew
     - echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
     - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force  > /dev/null
-    - mkdir ~/.android/license || true
-    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.android/license/android-sdk-license
 
 script:
     - ./gradlew clean :app:assembleDebug :app:connectedDebugAndroidTest
