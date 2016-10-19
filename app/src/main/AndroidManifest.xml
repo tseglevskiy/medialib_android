@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity" />
+        <activity
+            android:name="ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity"
+            android:configChanges="orientation|screenSize"/>
 
         <service android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
 
@@ -27,5 +29,5 @@
             android:name="io.fabric.ApiKey"
             android:value="e4db8735247b7447b9bc26b87ad78173a5a0366c"/>
     </application>
-    
+
 </manifest>
