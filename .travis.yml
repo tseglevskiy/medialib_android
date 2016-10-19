@@ -15,9 +15,8 @@ before_install:
     - chmod +x gradlew
     - echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
     - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force  > /dev/null
-    - find ~ -name platform-tools 2> /dev/null
-    - mkdir "$ANDROID_SDK/licenses" || true
-    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_SDK/licenses/android-sdk-license"
+    - mkdir ~/.android/license || true
+    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.android/license/android-sdk-license
 
 script:
     - ./gradlew clean :app:assembleDebug :app:connectedDebugAndroidTest
