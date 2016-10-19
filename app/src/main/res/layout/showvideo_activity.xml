@@ -6,14 +6,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/player"
+        <!--<com.google.android.exoplayer2.ui.SimpleExoPlayerView-->
+            <!--android:id="@+id/player"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
+
+        <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textureContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+            <TextureView
+                android:id="@+id/texture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-        <TextView
+        </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+
+
+        <Button
             android:id="@+id/videoId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

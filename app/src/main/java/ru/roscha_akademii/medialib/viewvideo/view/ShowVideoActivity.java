@@ -11,16 +11,23 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.text.TextRenderer;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -56,6 +63,27 @@ public class ShowVideoActivity
     @Inject
     ShowVideoPresenter injectedPresenter;
 
+
+    SimpleExoPlayer.VideoListener videoListener = new StubVideoListener() {
+        @Override
+        public void onVideoSizeChanged(int width,
+                                       int height,
+                                       int unappliedRotationDegrees,
+                                       float pixelWidthHeightRatio)
+        {
+            Log.d("happy", "video onVideoSizeChanged" + width + " " + height
+            + " " + unappliedRotationDegrees + " " + pixelWidthHeightRatio);
+
+            binding.textureContainer
+                    .setAspectRatio(height == 0 ? 1 : (width * pixelWidthHeightRatio) / height);
+        }
+
+    };
+
+    ExoPlayer.EventListener eventListener = new StubExoPlayerEventListener();
+
+    TextRenderer.Output textOutput = new StubTextRendererOutput();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ((MediaLibApplication) getApplication())
@@ -74,7 +102,14 @@ public class ShowVideoActivity
                 this,                                   // контекст
                 new DefaultTrackSelector(mainHandler),  // TrackSelector
                 new DefaultLoadControl());
-        binding.player.setPlayer(player);
+
+//        binding.player.setPlayer(player);
+
+        player.setVideoTextureView(binding.texture);
+
+        player.setVideoListener(videoListener);
+        player.addListener(eventListener);
+        player.setTextOutput(textOutput);
 
         dataSourceFactory = new DefaultDataSourceFactory(
                 this,               // Context
@@ -88,6 +123,12 @@ public class ShowVideoActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        player.stop();
+        player.setVideoTextureView(null);
+        player.setVideoListener(null);
+        player.removeListener(eventListener);
+        player.setTextOutput(null);
 
         ((MediaLibApplication) getApplication()).refWatcher().watch(injectedPresenter);
         ((MediaLibApplication) getApplication()).refWatcher().watch(player);

@@ -38,7 +38,7 @@ public class NetModule {
                 .create();
     }
 
-    static final String URL = "https://bitbucket.org/tseglevskiy/medialib_android/";
+    static final String URL = "https://raw.githubusercontent.com/tseglevskiy/medialib_android/master/";
 
     public static final String BASE_URL = "baseurl";
 
