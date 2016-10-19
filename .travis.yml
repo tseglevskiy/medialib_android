@@ -1,0 +1,26 @@
+language: android
+jdk: oraclejdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-24.0.1
+    - android-24
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-19
+
+before_install:
+    - chmod +x gradlew
+    - echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
+    - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force  > /dev/null
+
+script:
+    - ./gradlew clean :app:assembleDebug :app:connectedDebugAndroidTest
+
+before_script:
+    - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+    - emulator -avd test -no-skin -no-audio -no-window &
+    - android-wait-for-emulator
+    - adb shell input keyevent 82 &
+
