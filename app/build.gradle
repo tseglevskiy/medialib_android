@@ -24,13 +24,13 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId appId // from gradle.properties
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode appVersionCode.toInteger()
         versionName appVersionName // from gradle.properties
 
@@ -55,7 +55,7 @@ android {
     }
 }
 
-def supportVersion = '24.2.0'
+def supportVersion = '25.0.0'
 def daggerVersion = '2.6.1'
 def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
@@ -79,7 +79,7 @@ dependencies {
 
     // http://stackoverflow.com/questions/37615379/travis-ci-build-doesnt-work-with-android-constraint-layout
     // https://code.google.com/p/android/issues/detail?id=212128
-    compile 'com.android.support.constraint:constraint-layout:1.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 
     // google play services
     compile "com.google.android.gms:play-services-location:$googlePlayVersion"
