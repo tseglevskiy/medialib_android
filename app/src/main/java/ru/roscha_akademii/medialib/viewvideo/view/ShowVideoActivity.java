@@ -1,22 +1,20 @@
 package ru.roscha_akademii.medialib.viewvideo.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -41,6 +39,19 @@ import ru.roscha_akademii.medialib.databinding.ShowvideoActivityBinding;
 import ru.roscha_akademii.medialib.net.model.Video;
 import ru.roscha_akademii.medialib.viewvideo.presenter.ShowVideoPresenter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+/*
+логика реализована сейчас такая:
+
+вертикальное расположение - с меню и данными
+горизонтальное - фулскрин, с убранными заголовками
+
+пока не нажата "toggle full screen", телефон реагирует на вращения
+если нажата - остаемся в горизонтальном расположении независимо от положения телефона
+ */
+
 public class ShowVideoActivity
         extends MvpActivity<ShowVideoView, ShowVideoPresenter>
         implements ShowVideoView
@@ -51,12 +62,12 @@ public class ShowVideoActivity
     private SimpleExoPlayer player;
     DataSource.Factory dataSourceFactory;
     ExtractorsFactory extractorsFactory;
-    PlayerHandler mainHandler;
+    PlayerHandler playerHandler;
+    HideControlHandler mainHandler;
 
-    private int savedOrientation;
-    private ViewGroup.LayoutParams originalContainerLayoutParams;
-    private boolean isFullscreen = false;
-    private View container;
+    private View decorView;
+
+    Mode mode = Mode.AUTO;
 
     public static Intent getStartIntent(Context context, long id) {
         Intent intent = new Intent(context, ShowVideoActivity.class);
@@ -84,6 +95,7 @@ public class ShowVideoActivity
 
             binding.textureContainer
                     .setAspectRatio(height == 0 ? 1 : (width * pixelWidthHeightRatio) / height);
+            binding.getRoot().requestLayout();
         }
 
     };
@@ -104,13 +116,14 @@ public class ShowVideoActivity
         Log.d("happy", "onCreate");
 
         binding = DataBindingUtil.setContentView(this, R.layout.showvideo_activity);
-//        binding.videoId.setText("" + getVideoId());
+        binding.textureContainer.setAspectRatio(1.78f);
 
-        mainHandler = new PlayerHandler();
+        playerHandler = new PlayerHandler();
+        mainHandler = new HideControlHandler();
 
         player = ExoPlayerFactory.newSimpleInstance(
                 this,                                   // контекст
-                new DefaultTrackSelector(mainHandler),  // TrackSelector
+                new DefaultTrackSelector(playerHandler),  // TrackSelector
                 new DefaultLoadControl());
 
 //        binding.player.setPlayer(player);
@@ -128,11 +141,34 @@ public class ShowVideoActivity
 
         extractorsFactory = new DefaultExtractorsFactory();
 
-//        container = binding.container;
-        container = binding.textureContainer;
-
-        originalContainerLayoutParams = container.getLayoutParams();
         binding.videoId.setOnClickListener(v -> doToggleFullscreen());
+
+        // https://developer.android.com/training/system-ui/visibility.html
+        decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener
+                (visibility -> {
+                    // Note that system bars will only be "visible" if none of the
+                    // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                        // The system bars are visible. Make any desired
+                        // adjustments to your UI, such as showing the action bar or
+                        // other navigational controls.
+
+                        binding.videoId.setVisibility(VISIBLE);
+                        mainHandler.hide();
+                        binding.getRoot().requestLayout();
+                    } else {
+                        // The system bars are NOT visible. Make any desired
+                        // adjustments to your UI, such as hiding the action bar or
+                        // other navigational controls.
+
+                        binding.videoId.setVisibility(GONE);
+                        binding.getRoot().requestLayout();
+                        mainHandler.clear();
+                    }
+                });
+
+        checkOrientation();
 
     }
 
@@ -145,6 +181,9 @@ public class ShowVideoActivity
         player.setVideoListener(null);
         player.removeListener(eventListener);
         player.setTextOutput(null);
+
+        mainHandler.removeCallbacksAndMessages(null);
+        playerHandler.removeCallbacksAndMessages(null);
 
         ((MediaLibApplication) getApplication()).refWatcher().watch(injectedPresenter);
         ((MediaLibApplication) getApplication()).refWatcher().watch(player);
@@ -169,7 +208,7 @@ public class ShowVideoActivity
                 Uri.parse(video.videoUrl),     // uri источника
                 dataSourceFactory,  // DataSource.Factory
                 extractorsFactory,  // ExtractorsFactory
-                mainHandler,        // Handler для получения событий от плеера
+                playerHandler,        // Handler для получения событий от плеера
                 null                // Listener - объект-получатель событий от плеера
         );
 
@@ -187,86 +226,115 @@ public class ShowVideoActivity
         }
     }
 
+    @SuppressLint("HandlerLeak")
+    public class HideControlHandler extends Handler {
+        static final int MSG_HIDE_CONTROLS = 1;
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (isLandscape()) {
+                hideControls();
+            }
+        }
+
+        void clear() {
+            removeCallbacksAndMessages(null);
+        }
+
+        void hide() {
+            clear();
+            sendEmptyMessageDelayed(HideControlHandler.MSG_HIDE_CONTROLS, 5000);
+        }
+    }
+
     public void doToggleFullscreen() {
-        if (isFullscreen) {
-            Log.d("happy", "go normal");
-            setRequestedOrientation(savedOrientation);
+        if (mode == Mode.AUTO) {
+            setMode(Mode.FULLSCREEN);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
-            getSupportActionBar().show();
-
-            // Make the status bar and navigation bar visible again.
-            getWindow().getDecorView().setSystemUiVisibility(0);
-
-            container.setLayoutParams(originalContainerLayoutParams);
-
-            getWindow().setFlags(
-                    0, // clear flag
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-            container.setLayoutParams(getLayoutParamsBasedOnParent(
-                    container,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
-//            fullscreenButton.setImageResource(R.drawable.ic_action_full_screen);
-
-            isFullscreen = false;
+//            hideControls();
+            mainHandler.hide();
         } else {
-            Log.d("happy", "go full");
-            savedOrientation = getResources().getConfiguration().orientation;
+            setMode(Mode.AUTO);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
+//            showControls();
+        }
+    }
+
+    void setMode(Mode mode) {
+        this.mode = mode;
+        if (mode == Mode.FULLSCREEN) {
+            binding.videoId.setText("Normal");
+        } else {
+            binding.videoId.setText("Full screen");
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int newOrientation = newConfig.orientation;
+        if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideControls();
+        } else {
+            showControls();
+        }
+    }
+
+    boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    void checkOrientation() {
+
+        if (isLandscape()) {
+            hideControls();
+
+        } else {
+            showControls();
+
+        }
+    }
+
+    void showControls() {
+        mainHandler.clear();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
+        }
+
+        decorView.setSystemUiVisibility(0);
+        getWindow().setFlags(
+                0,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        binding.getRoot().requestLayout();
+    }
+
+    void hideControls() {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-//            requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-            container.setLayoutParams(getLayoutParamsBasedOnParent(
-                    container,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-
-//            fullscreenButton.setImageResource(R.drawable.ic_action_return_from_full_screen);
-
-            isFullscreen = true;
         }
 
+        // спрятать элементы навигации и включить фулскрин
+        int visibilityFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (Build.VERSION.SDK_INT >= 19) {
+            visibilityFlags |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(visibilityFlags);
+
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        binding.videoId.setVisibility(GONE);
+        binding.getRoot().requestLayout();
     }
 
-    public static ViewGroup.LayoutParams getLayoutParamsBasedOnParent(View view, int width, int height)
-            throws IllegalArgumentException
-    {
-
-        // Get the parent of the given view.
-        ViewParent parent = view.getParent();
-
-        // Determine what is the parent's type and return the appropriate type of LayoutParams.
-        if (parent instanceof FrameLayout) {
-            return new FrameLayout.LayoutParams(width, height);
-        }
-        if (parent instanceof RelativeLayout) {
-            return new RelativeLayout.LayoutParams(width, height);
-        }
-        if (parent instanceof LinearLayout) {
-            return new LinearLayout.LayoutParams(width, height);
-        }
-
-        // Throw this exception if the parent is not the correct type.
-        IllegalArgumentException exception = new IllegalArgumentException("The PARENT of a " +
-                "FrameLayout container used by the GoogleMediaFramework must be a LinearLayout, " +
-                "FrameLayout, or RelativeLayout. Please ensure that the container is inside one of these " +
-                "three supported view groups.");
-
-        // If the parent is not one of the supported types, throw our exception.
-        throw exception;
+    enum Mode {
+        FULLSCREEN,
+        AUTO
     }
-
 }
