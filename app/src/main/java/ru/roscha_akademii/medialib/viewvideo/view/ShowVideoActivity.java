@@ -62,12 +62,17 @@ public class ShowVideoActivity
     private SimpleExoPlayer player;
     DataSource.Factory dataSourceFactory;
     ExtractorsFactory extractorsFactory;
+    MediaSource videoSource;
+
     PlayerHandler playerHandler;
     HideControlHandler mainHandler;
 
     private View decorView;
 
     Mode mode = Mode.AUTO;
+
+    long savedPosition = 0;
+    private String url;
 
     public static Intent getStartIntent(Context context, long id) {
         Intent intent = new Intent(context, ShowVideoActivity.class);
@@ -121,26 +126,6 @@ public class ShowVideoActivity
         playerHandler = new PlayerHandler();
         mainHandler = new HideControlHandler();
 
-        player = ExoPlayerFactory.newSimpleInstance(
-                this,                                   // контекст
-                new DefaultTrackSelector(playerHandler),  // TrackSelector
-                new DefaultLoadControl());
-
-//        binding.player.setPlayer(player);
-
-        player.setVideoTextureView(binding.texture);
-
-        player.setVideoListener(videoListener);
-        player.addListener(eventListener);
-        player.setTextOutput(textOutput);
-
-        dataSourceFactory = new DefaultDataSourceFactory(
-                this,               // Context
-                "MyExoPlayerDemo"   // user-agent
-        );
-
-        extractorsFactory = new DefaultExtractorsFactory();
-
         binding.videoId.setOnClickListener(v -> doToggleFullscreen());
 
         // https://developer.android.com/training/system-ui/visibility.html
@@ -170,23 +155,7 @@ public class ShowVideoActivity
 
         checkOrientation();
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        player.stop();
-        player.setVideoTextureView(null);
-        player.setVideoListener(null);
-        player.removeListener(eventListener);
-        player.setTextOutput(null);
-
-        mainHandler.removeCallbacksAndMessages(null);
-        playerHandler.removeCallbacksAndMessages(null);
-
-        ((MediaLibApplication) getApplication()).refWatcher().watch(injectedPresenter);
-        ((MediaLibApplication) getApplication()).refWatcher().watch(player);
+        getPresenter().start(getVideoId());
     }
 
     @NonNull
@@ -199,22 +168,19 @@ public class ShowVideoActivity
     protected void onStart() {
         super.onStart();
 
-        getPresenter().start(getVideoId());
+        activatePlayer(url);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        deactivatePlayer();
     }
 
     @Override
     public void showVideo(Video video) {
-        MediaSource videoSource = new ExtractorMediaSource(
-                Uri.parse(video.videoUrl),     // uri источника
-                dataSourceFactory,  // DataSource.Factory
-                extractorsFactory,  // ExtractorsFactory
-                playerHandler,        // Handler для получения событий от плеера
-                null                // Listener - объект-получатель событий от плеера
-        );
-
-        player.prepare(videoSource);
-        player.setPlayWhenReady(true);
-
+        url = video.videoUrl;
     }
 
     public static class PlayerHandler extends Handler {
@@ -336,5 +302,75 @@ public class ShowVideoActivity
     enum Mode {
         FULLSCREEN,
         AUTO
+    }
+
+    /*
+    Player
+     */
+
+
+    private void activatePlayer(String url) {
+
+        player = ExoPlayerFactory.newSimpleInstance(
+                this,                                   // контекст
+                new DefaultTrackSelector(playerHandler),  // TrackSelector
+                new DefaultLoadControl());
+
+//        binding.player.setPlayer(player);
+
+        player.setVideoTextureView(binding.texture);
+
+        player.setVideoListener(videoListener);
+        player.addListener(eventListener);
+        player.setTextOutput(textOutput);
+
+        dataSourceFactory = new DefaultDataSourceFactory(
+                this,               // Context
+                "MyExoPlayerDemo"   // user-agent
+        );
+
+        extractorsFactory = new DefaultExtractorsFactory();
+
+        videoSource = new ExtractorMediaSource(
+                Uri.parse(url),     // uri источника
+                dataSourceFactory,  // DataSource.Factory
+                extractorsFactory,  // ExtractorsFactory
+                playerHandler,        // Handler для получения событий от плеера
+                null                // Listener - объект-получатель событий от плеера
+        );
+
+        player.prepare(videoSource);
+        player.seekTo(savedPosition);
+
+        player.setPlayWhenReady(true);
+
+    }
+
+    private void deactivatePlayer() {
+
+        player.stop();
+
+        savedPosition = player.getCurrentPosition();
+
+        playerHandler.removeCallbacksAndMessages(null);
+
+        player.release();
+
+        player.setVideoListener(null);
+        player.removeListener(eventListener);
+        player.setTextOutput(null);
+
+        ((MediaLibApplication) getApplication()).refWatcher().watch(videoSource);
+        videoSource = null;
+
+        ((MediaLibApplication) getApplication()).refWatcher().watch(dataSourceFactory);
+        dataSourceFactory = null;
+
+        ((MediaLibApplication) getApplication()).refWatcher().watch(extractorsFactory);
+        extractorsFactory = null;
+
+        ((MediaLibApplication) getApplication()).refWatcher().watch(player);
+        player = null;
+
     }
 }
