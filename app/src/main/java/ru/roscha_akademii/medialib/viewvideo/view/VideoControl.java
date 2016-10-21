@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -18,6 +19,11 @@ import java.util.Locale;
 
 import ru.roscha_akademii.medialib.R;
 import ru.roscha_akademii.medialib.databinding.VideocontrolBinding;
+
+/*
+ * вдохновение и идеи для расшиpaния этого класса можно брать в
+ * com.google.android.exoplayer2.ui.PlaybackControlView
+ */
 
 public class VideoControl extends FrameLayout {
     private final VideocontrolBinding binding;
@@ -42,6 +48,7 @@ public class VideoControl extends FrameLayout {
         );
 
         binding.mediacontrollerProgress.setMax(PROGRESS_BAR_MAX);
+        binding.mediacontrollerProgress.setOnSeekBarChangeListener(positionListener);
 
         binding.play.setOnClickListener(v -> togglePlayPause());
         binding.pause.setOnClickListener(v -> togglePlayPause());
@@ -151,10 +158,10 @@ public class VideoControl extends FrameLayout {
 
         binding.time.setText(stringForTime(duration));
 
-//        if (!dragging) {
-        binding.timeCurrent.setText(stringForTime(position));
-        binding.mediacontrollerProgress.setProgress(progressBarValue(position));
-//        }
+        if (!dragging) {
+            binding.timeCurrent.setText(stringForTime(position));
+            binding.mediacontrollerProgress.setProgress(progressBarValue(position));
+        }
 
         binding.mediacontrollerProgress.setSecondaryProgress(progressBarValue(bufferedPosition));
 
@@ -181,6 +188,53 @@ public class VideoControl extends FrameLayout {
 
         }
     }
+
+    /*
+     * Dragging in Progress bar
+     *
+     */
+
+
+    HidingPlanner hidingPlanner = null;
+
+    public void setHiddingPlanner(HidingPlanner planner) {
+        hidingPlanner = planner;
+    }
+
+    boolean dragging = false;
+    SeekBar.OnSeekBarChangeListener positionListener = new SeekBar.OnSeekBarChangeListener() {
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            dragging = true;
+            if (hidingPlanner != null) hidingPlanner.freeze();
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+                binding.timeCurrent.setText(stringForTime(positionValue(progress)));
+            }
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            dragging = false;
+            player.seekTo(positionValue(seekBar.getProgress()));
+            if (hidingPlanner != null) hidingPlanner.hideInMoments();
+        }
+    };
+
+    private long positionValue(int progress) {
+        long duration =
+                player == null
+                        ? C.TIME_UNSET
+                        : player.getDuration();
+        return duration == C.TIME_UNSET
+                ? 0
+                : ((duration * progress) / PROGRESS_BAR_MAX);
+    }
+
 
     /*
      * Tools

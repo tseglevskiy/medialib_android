@@ -127,6 +127,7 @@ public class ShowVideoActivity
         mainHandler = new HideControlHandler();
 
         binding.videoControl.setFullscreenButtonListener(() -> doToggleFullscreen());
+        binding.videoControl.setHiddingPlanner(mainHandler);
 
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = getWindow().getDecorView();
@@ -140,7 +141,7 @@ public class ShowVideoActivity
                         // other navigational controls.
 
                         binding.videoControl.setVisibility(VISIBLE);
-                        mainHandler.hide();
+                        mainHandler.hideInMoments();
                         binding.getRoot().requestLayout();
                     } else {
                         // The system bars are NOT visible. Make any desired
@@ -149,7 +150,7 @@ public class ShowVideoActivity
 
                         binding.videoControl.setVisibility(GONE);
                         binding.getRoot().requestLayout();
-                        mainHandler.clear();
+                        mainHandler.freeze();
                     }
                 });
 
@@ -193,22 +194,31 @@ public class ShowVideoActivity
     }
 
     @SuppressLint("HandlerLeak")
-    public class HideControlHandler extends Handler {
+    public class HideControlHandler
+            extends Handler
+            implements HidingPlanner
+    {
         static final int MSG_HIDE_CONTROLS = 1;
 
         @Override
         public void handleMessage(Message msg) {
-            if (isLandscape()) {
-                hideControls();
+            if (msg.what == MSG_HIDE_CONTROLS) {
+                if (isLandscape()) {
+                    hideControls();
+                }
+            } else {
+                super.handleMessage(msg);
             }
         }
 
-        void clear() {
+        @Override
+        public void freeze() {
             removeCallbacksAndMessages(null);
         }
 
-        void hide() {
-            clear();
+        @Override
+        public void hideInMoments() {
+            freeze();
             sendEmptyMessageDelayed(HideControlHandler.MSG_HIDE_CONTROLS, 5000);
         }
     }
@@ -219,7 +229,7 @@ public class ShowVideoActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
 //            hideControls();
-            mainHandler.hide();
+            mainHandler.hideInMoments();
         } else {
             setMode(Mode.AUTO);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
@@ -260,7 +270,7 @@ public class ShowVideoActivity
     }
 
     void showControls() {
-        mainHandler.clear();
+        mainHandler.freeze();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
