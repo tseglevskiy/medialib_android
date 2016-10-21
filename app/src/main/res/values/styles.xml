@@ -8,4 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ControlButton">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="ControlButton2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="ControlButtonFrame">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
 </resources>

@@ -31,12 +31,11 @@
         </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
 
-        <Button
-            android:id="@+id/videoId"
-            android:layout_width="wrap_content"
+        <ru.roscha_akademii.medialib.viewvideo.view.VideoControl
+            android:id="@+id/videoControl"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Toggle Full Screen"
             app:layout_constraintBottom_toBottomOf="@+id/textureContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

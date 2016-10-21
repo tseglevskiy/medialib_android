@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#80000000"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/play"
+            style="@style/ControlButtonFrame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                style="@style/ControlButton2"
+                app:srcCompat="@drawable/ic_play_arrow_black_24dp"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/pause"
+            style="@style/ControlButtonFrame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/play"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                style="@style/ControlButton2"
+                app:srcCompat="@drawable/ic_pause_black_24dp"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/fullscreen"
+            style="@style/ControlButtonFrame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                style="@style/ControlButton2"
+                android:contentDescription="@string/fullscreen_control_description"
+                app:srcCompat="@drawable/ic_fullscreen_black_24dp"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fullscreen_exit"
+            style="@style/ControlButtonFrame"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/fullscreen"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                style="@style/ControlButton2"
+                android:contentDescription="@string/fullscreen_control_description"
+                app:srcCompat="@drawable/ic_fullscreen_exit_black_24dp"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:paddingTop="4dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/fullscreen_exit"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/time_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:paddingTop="4dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/pause"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <SeekBar
+            android:id="@+id/mediacontroller_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/time_current"
+            app:layout_constraintRight_toLeftOf="@id/time"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

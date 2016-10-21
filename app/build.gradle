@@ -33,6 +33,7 @@ android {
         targetSdkVersion 25
         versionCode appVersionCode.toInteger()
         versionName appVersionName // from gradle.properties
+        vectorDrawables.useSupportLibrary = true
 
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "ru.roscha_akademii.medialib.common.MockAppRunner"

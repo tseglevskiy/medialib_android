@@ -126,7 +126,7 @@ public class ShowVideoActivity
         playerHandler = new PlayerHandler();
         mainHandler = new HideControlHandler();
 
-        binding.videoId.setOnClickListener(v -> doToggleFullscreen());
+        binding.videoControl.setFullscreenButtonListener(() -> doToggleFullscreen());
 
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = getWindow().getDecorView();
@@ -139,7 +139,7 @@ public class ShowVideoActivity
                         // adjustments to your UI, such as showing the action bar or
                         // other navigational controls.
 
-                        binding.videoId.setVisibility(VISIBLE);
+                        binding.videoControl.setVisibility(VISIBLE);
                         mainHandler.hide();
                         binding.getRoot().requestLayout();
                     } else {
@@ -147,7 +147,7 @@ public class ShowVideoActivity
                         // adjustments to your UI, such as hiding the action bar or
                         // other navigational controls.
 
-                        binding.videoId.setVisibility(GONE);
+                        binding.videoControl.setVisibility(GONE);
                         binding.getRoot().requestLayout();
                         mainHandler.clear();
                     }
@@ -230,11 +230,7 @@ public class ShowVideoActivity
 
     void setMode(Mode mode) {
         this.mode = mode;
-        if (mode == Mode.FULLSCREEN) {
-            binding.videoId.setText("Normal");
-        } else {
-            binding.videoId.setText("Full screen");
-        }
+        binding.videoControl.setFullscreenMode(mode == Mode.FULLSCREEN);
     }
 
     @Override
@@ -295,7 +291,7 @@ public class ShowVideoActivity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        binding.videoId.setVisibility(GONE);
+        binding.videoControl.setVisibility(GONE);
         binding.getRoot().requestLayout();
     }
 
@@ -344,9 +340,12 @@ public class ShowVideoActivity
 
         player.setPlayWhenReady(true);
 
+        binding.videoControl.setPlayer(player);
+
     }
 
     private void deactivatePlayer() {
+        binding.videoControl.revokePlayer();
 
         player.stop();
 
