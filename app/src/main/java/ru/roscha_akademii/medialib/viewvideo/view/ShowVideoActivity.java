@@ -101,6 +101,16 @@ public class ShowVideoActivity
         }
 
         @Override
+        public void onPlay() {
+            keepScreenOn();
+        }
+
+        @Override
+        public void onPause() {
+            releaseScreen();
+        }
+
+        @Override
         public void gonnaFullScreen() {
             doToggleFullscreen();
         }
@@ -335,7 +345,21 @@ public class ShowVideoActivity
     }
 
     /*
-    Player
+     * Keep screen on
+     * https://developer.android.com/training/scheduling/wakelock.html
+     */
+
+    private void keepScreenOn() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void releaseScreen() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    /*
+     * Player
+     *
      */
 
 

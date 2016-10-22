@@ -170,10 +170,19 @@ public class VideoControlPresenterImpl
     }
 
     private void updatePlayPauseButton() {
-        if (!isVisible) return;
-        if (getView() == null) return;
-
         boolean playing = player != null && player.getPlayWhenReady();
+
+        if (callback != null) {
+            if (playing) {
+                callback.onPlay();
+            } else {
+                callback.onPause();
+
+            }
+        }
+
+        if (!isVisible || getView() == null) return;
+
         if (playing) {
             getView().setPlayPauseAction(VideoControlView.PlayPauseMode.PAUSE);
         } else {

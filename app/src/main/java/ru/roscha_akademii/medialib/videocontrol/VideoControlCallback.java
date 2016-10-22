@@ -5,6 +5,10 @@ public interface VideoControlCallback {
 
     void resumeAutohide();
 
+    void onPlay();
+
+    void onPause();
+
     void gonnaFullScreen();
 
     void gonnaNormalScreen();
