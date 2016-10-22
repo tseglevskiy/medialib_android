@@ -209,12 +209,12 @@ public class VideoControl
     @Override
     public void setPlayPauseAction(PlayPauseMode mode) {
         if (mode == PlayPauseMode.PLAY) {
-            binding.play.setVisibility(GONE);
-            binding.pause.setVisibility(VISIBLE);
-
-        } else if (mode == PlayPauseMode.PAUSE) {
             binding.play.setVisibility(VISIBLE);
             binding.pause.setVisibility(GONE);
+
+        } else if (mode == PlayPauseMode.PAUSE) {
+            binding.play.setVisibility(GONE);
+            binding.pause.setVisibility(VISIBLE);
         }
     }
 

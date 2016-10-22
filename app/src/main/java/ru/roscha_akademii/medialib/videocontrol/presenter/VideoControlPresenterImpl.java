@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.videocontrol.presenter;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -170,14 +171,16 @@ public class VideoControlPresenterImpl
     }
 
     private void updatePlayPauseButton() {
-        boolean playing = player != null && player.getPlayWhenReady();
+        boolean playing =
+                player != null
+                        && player.getPlayWhenReady()
+                        && player.getPlaybackState() != ExoPlayer.STATE_ENDED;
 
         if (callback != null) {
             if (playing) {
                 callback.onPlay();
             } else {
                 callback.onPause();
-
             }
         }
 
