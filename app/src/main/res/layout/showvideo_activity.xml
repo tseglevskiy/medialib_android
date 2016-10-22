@@ -31,7 +31,7 @@
         </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
 
-        <ru.roscha_akademii.medialib.viewvideo.view.VideoControl
+        <ru.roscha_akademii.medialib.videocontrol.view.VideoControl
             android:id="@+id/videoControl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -37,6 +37,8 @@ import ru.roscha_akademii.medialib.common.ActivityModule;
 import ru.roscha_akademii.medialib.common.MediaLibApplication;
 import ru.roscha_akademii.medialib.databinding.ShowvideoActivityBinding;
 import ru.roscha_akademii.medialib.net.model.Video;
+import ru.roscha_akademii.medialib.videocontrol.VideoControlCallback;
+import ru.roscha_akademii.medialib.videocontrol.view.VideoControlView;
 import ru.roscha_akademii.medialib.viewvideo.presenter.ShowVideoPresenter;
 
 import static android.view.View.GONE;
@@ -87,6 +89,27 @@ public class ShowVideoActivity
     @Inject
     ShowVideoPresenter injectedPresenter;
 
+    VideoControlCallback videoControlCallback = new VideoControlCallback() {
+        @Override
+        public void pauseAutohide() {
+            mainHandler.freeze();
+        }
+
+        @Override
+        public void resumeAutohide() {
+            mainHandler.hideInMoments();
+        }
+
+        @Override
+        public void gonnaFullScreen() {
+            doToggleFullscreen();
+        }
+
+        @Override
+        public void gonnaNormalScreen() {
+            doToggleFullscreen();
+        }
+    };
 
     SimpleExoPlayer.VideoListener videoListener = new StubVideoListener() {
         @Override
@@ -126,9 +149,6 @@ public class ShowVideoActivity
         playerHandler = new PlayerHandler();
         mainHandler = new HideControlHandler();
 
-        binding.videoControl.setFullscreenButtonListener(() -> doToggleFullscreen());
-        binding.videoControl.setHiddingPlanner(mainHandler);
-
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener
@@ -141,6 +161,7 @@ public class ShowVideoActivity
                         // other navigational controls.
 
                         binding.videoControl.setVisibility(VISIBLE);
+
                         mainHandler.hideInMoments();
                         binding.getRoot().requestLayout();
                     } else {
@@ -153,6 +174,8 @@ public class ShowVideoActivity
                         mainHandler.freeze();
                     }
                 });
+
+        binding.videoControl.setCallback(videoControlCallback);
 
         checkOrientation();
 
@@ -196,7 +219,6 @@ public class ShowVideoActivity
     @SuppressLint("HandlerLeak")
     public class HideControlHandler
             extends Handler
-            implements HidingPlanner
     {
         static final int MSG_HIDE_CONTROLS = 1;
 
@@ -211,13 +233,11 @@ public class ShowVideoActivity
             }
         }
 
-        @Override
-        public void freeze() {
+        void freeze() {
             removeCallbacksAndMessages(null);
         }
 
-        @Override
-        public void hideInMoments() {
+        void hideInMoments() {
             freeze();
             sendEmptyMessageDelayed(HideControlHandler.MSG_HIDE_CONTROLS, 5000);
         }
@@ -240,7 +260,11 @@ public class ShowVideoActivity
 
     void setMode(Mode mode) {
         this.mode = mode;
-        binding.videoControl.setFullscreenMode(mode == Mode.FULLSCREEN);
+        if (mode == Mode.FULLSCREEN) {
+            binding.videoControl.setFullscreenAction(VideoControlView.FullscreenMode.NORMAL);
+        } else {
+            binding.videoControl.setFullscreenAction(VideoControlView.FullscreenMode.FULL);
+        }
     }
 
     @Override
@@ -355,7 +379,7 @@ public class ShowVideoActivity
     }
 
     private void deactivatePlayer() {
-        binding.videoControl.revokePlayer();
+        binding.videoControl.releasePlayer();
 
         player.stop();
 
