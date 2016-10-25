@@ -4,9 +4,11 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'jacoco-android'
+//apply plugin: 'jacoco-android'
 
 
 buildscript {
@@ -19,7 +21,7 @@ buildscript {
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+//        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
     }
 }
 
@@ -53,6 +55,7 @@ android {
     }
     dataBinding {
         enabled = true
+        version = "2.2.2"
     }
 }
 
@@ -69,8 +72,8 @@ dependencies {
 //    compile project(':net')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // http://stackoverflow.com/a/30793984/1263771
-    apt 'com.android.databinding:compiler:1.+'
+    // kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // support libraries
     compile "com.android.support:appcompat-v7:$supportVersion"
@@ -88,8 +91,12 @@ dependencies {
 
     // dagger
     compile "com.google.dagger:dagger:$daggerVersion"
-    apt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
+
+    // data binding library
+    // http://stackoverflow.com/a/30793984/1263771
+    kapt "com.android.databinding:compiler:$android.dataBinding.version"
 
     // retrofit
     compile 'com.google.code.gson:gson:2.6.1'
@@ -115,7 +122,7 @@ dependencies {
     // StorIO
     compile "com.pushtorefresh.storio:sqlite:$storIoVersion"
     compile "com.pushtorefresh.storio:sqlite-annotations:$storIoVersion"
-    apt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
+    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
 
     // ExoPlayer
     compile 'com.google.android.exoplayer:exoplayer:r2.0.0'
@@ -125,6 +132,7 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
+    /*
     ///////////////////////////////////////////////
     // test
 
@@ -157,5 +165,5 @@ dependencies {
     androidTestApt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     androidTestCompile "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
-
+    */
 }
