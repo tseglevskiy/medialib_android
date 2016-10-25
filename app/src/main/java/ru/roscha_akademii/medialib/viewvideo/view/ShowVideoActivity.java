@@ -162,28 +162,30 @@ public class ShowVideoActivity
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener
-                (visibility -> {
-                    // Note that system bars will only be "visible" if none of the
-                    // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        // The system bars are visible. Make any desired
-                        // adjustments to your UI, such as showing the action bar or
-                        // other navigational controls.
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        // Note that system bars will only be "visible" if none of the
+                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            // The system bars are visible. Make any desired
+                            // adjustments to your UI, such as showing the action bar or
+                            // other navigational controls.
 
-                        binding.videoControl.setVisibility(VISIBLE);
+                            binding.videoControl.setVisibility(VISIBLE);
 
-                        mainHandler.hideInMoments();
-                        binding.getRoot().requestLayout();
-                    } else {
-                        // The system bars are NOT visible. Make any desired
-                        // adjustments to your UI, such as hiding the action bar or
-                        // other navigational controls.
+                            mainHandler.hideInMoments();
+                            binding.getRoot().requestLayout();
+                        } else {
+                            // The system bars are NOT visible. Make any desired
+                            // adjustments to your UI, such as hiding the action bar or
+                            // other navigational controls.
 
-                        binding.videoControl.setVisibility(GONE);
-                        binding.getRoot().requestLayout();
-                        mainHandler.freeze();
-                    }
-                });
+                            binding.videoControl.setVisibility(GONE);
+                            binding.getRoot().requestLayout();
+                            mainHandler.freeze();
+                        }
+                    }});
 
         binding.videoControl.setCallback(videoControlCallback);
 

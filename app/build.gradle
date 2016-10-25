@@ -6,8 +6,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'jacoco-android'
 
 
@@ -49,13 +47,12 @@ android {
             testCoverageEnabled = true
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     dataBinding {
         enabled = true
         version = "2.2.2"
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/java'
     }
 }
 

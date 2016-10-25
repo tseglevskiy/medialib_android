@@ -11,7 +11,7 @@ import java.util.List;
     public abstract class CommonListAdapter<D, B extends ViewDataBinding>
         extends RecyclerView.Adapter<CommonListAdapter.CommonHolder<B>>
 {
-    List<D> list;
+    private List<? extends D> list;
     private int layoutId;
     private OnItemClickListener clickListener;
 
@@ -21,7 +21,7 @@ import java.util.List;
         this.clickListener = clickListener;
     }
 
-    public void setList(List<D> list) {
+    public void setList(List<? extends D> list) {
         this.list = list;
     }
 
@@ -32,7 +32,7 @@ import java.util.List;
     }
 
     @Override
-    public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommonHolder<B> onCreateViewHolder(ViewGroup parent, int viewType) {
         B binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
                 layoutId,
@@ -40,7 +40,7 @@ import java.util.List;
                 false
         );
 
-        return new CommonHolder(binding);
+        return new CommonHolder<>(binding);
     }
 
     @Override

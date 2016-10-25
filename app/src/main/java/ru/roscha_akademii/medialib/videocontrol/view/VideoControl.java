@@ -56,11 +56,31 @@ public class VideoControl
         binding.mediacontrollerProgress.setMax(PROGRESS_BAR_MAX);
         binding.mediacontrollerProgress.setOnSeekBarChangeListener(positionListener);
 
-        binding.play.setOnClickListener(v -> getPresenter().gonnaPlay());
-        binding.pause.setOnClickListener(v -> getPresenter().gonnaPause());
+        binding.play.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPresenter().gonnaPlay();
+            }
+        });
+        binding.pause.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPresenter().gonnaPause();
+            }
+        });
 
-        binding.fullscreen.setOnClickListener(v -> getPresenter().gonnaFullScreen());
-        binding.fullscreenExit.setOnClickListener(v -> getPresenter().gonnaNormalScreen());
+        binding.fullscreen.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPresenter().gonnaFullScreen();
+            }
+        });
+        binding.fullscreenExit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPresenter().gonnaNormalScreen();
+            }
+        });
     }
 
     @Override

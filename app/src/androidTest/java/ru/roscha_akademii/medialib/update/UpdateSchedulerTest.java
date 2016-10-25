@@ -102,7 +102,7 @@ public class UpdateSchedulerTest {
         verify(editor, times(1)).apply();
 
         assertEquals(NOW, (long)captorForTime.getAllValues().get(0));
-        assertEquals(PREFS_UPDATE_SCHEDULE, captorForKey.getAllValues().get(0));
+        assertEquals(Companion.getPREFS_UPDATE_SCHEDULE(), captorForKey.getAllValues().get(0));
 
     }
 
