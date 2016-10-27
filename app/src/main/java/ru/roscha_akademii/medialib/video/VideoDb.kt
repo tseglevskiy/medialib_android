@@ -19,6 +19,7 @@ open class VideoDb(internal var db: StorIOSQLite) {
                 .executeAsBlocking()
 
     open fun getVideo(id: Long): Video {
+        try {
             return db
                     .get()
                     .listOfObjects(Video::class.java)
@@ -30,6 +31,9 @@ open class VideoDb(internal var db: StorIOSQLite) {
                             .build())
                     .prepare()
                     .executeAsBlocking()[0]
+        } catch (e: IndexOutOfBoundsException) {
+            throw UnexistingVideoException(e)
+        }
 
     }
 }

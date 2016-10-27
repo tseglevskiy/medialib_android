@@ -84,13 +84,11 @@ public class VideoDbStorIoTest {
      */
 
     @Test
-    @Ignore
     public void environment_inMemoryDb() {
         assertTrue("db filename for test has to be empty string", videoDbFileName.isEmpty());
     }
 
     @Test
-    @Ignore
     public void writeOneItem_readManually() {
         videoDb
                 .put()
@@ -122,7 +120,6 @@ public class VideoDbStorIoTest {
     }
 
     @Test
-    @Ignore
     public void writeTwoItems_readByStorIo() {
         videoDb
                 .put()
@@ -163,7 +160,6 @@ public class VideoDbStorIoTest {
     }
 
     @Test
-    @Ignore
     public void writeTwoItemsByThreeTimes_readByStorIo() {
         videoDb
                 .put()

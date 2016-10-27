@@ -84,13 +84,11 @@ public class VideoDbTest {
      */
 
     @Test
-    @Ignore
     public void environment_inMemoryDb() {
         assertTrue("db filename for test has to be empty string", videoDbFileName.isEmpty());
     }
 
     @Test
-    @Ignore
     public void emptyDb_readAllVideo() {
         List<Video> list = videoDb.getAllVideo();
 
@@ -99,7 +97,6 @@ public class VideoDbTest {
     }
 
     @Test
-    @Ignore
     public void twoVideos_readAllVideo() {
         videoDbStorIoHelper
                 .put()
@@ -123,7 +120,6 @@ public class VideoDbTest {
     }
 
     @Test
-    @Ignore
     public void twoVideos_readVideo_unexistingVideo() {
         videoDbStorIoHelper
                 .put()
@@ -141,13 +137,15 @@ public class VideoDbTest {
         assertNotEquals(unexistingId, video1.id);
         assertNotEquals(unexistingId, video2.id);
 
-        Video video = videoDb.getVideo(1999);
-
-        assertNull(video);
+        try {
+            videoDb.getVideo(1999);
+            fail("taking unexisting video has to throw UnexistingVideoException");
+        } catch (UnexistingVideoException e) {
+            // OK
+        }
     }
 
     @Test
-    @Ignore
     public void twoVideos_readVideo_oneVideo() {
         videoDbStorIoHelper
                 .put()

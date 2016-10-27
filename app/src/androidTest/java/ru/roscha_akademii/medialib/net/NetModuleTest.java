@@ -73,19 +73,16 @@ public class NetModuleTest {
     }
 
     @Test
-    @Ignore
     public void assetsFileExists() {
         assertTrue("test file should be exists", testVideoList.length() > 10);
     }
 
     @Test
-    @Ignore
     public void webServerMocked() {
         assertFalse("web server didn't mocked", injectedBaseUrl.equals(NetModule.Companion.getURL()));
     }
 
     @Test
-    @Ignore
     public void getListOfVideos() throws IOException, InterruptedException {
         Call<VideoAnswer> call = videoApi.videoList();
         Response<VideoAnswer> response = call.execute();
@@ -94,7 +91,7 @@ public class NetModuleTest {
         assertEquals(200, response.code());
 
         RecordedRequest request1 = server.takeRequest();
-        assertEquals("/tseglevskiy/medialib_android/raw/master/app/src/androidTest/assets/video.json", request1.getPath());
+        assertEquals("/tseglevskiy/medialib_android/app/src/androidTest/assets/video.json", request1.getPath());
 
         ArrayList<Video> videos = response.body().getList();
         assertNotNull(videos);

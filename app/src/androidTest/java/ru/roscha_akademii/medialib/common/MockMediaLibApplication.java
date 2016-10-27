@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class MockMediaLibApplication extends MediaLibApplication {
     public void setTestComponent(ApplicationComponent component) {
-        this.setTestComponent(component);
+        setComponent(component);
     }
 
     @Override
