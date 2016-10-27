@@ -13,22 +13,19 @@ import dagger.Provides
 import ru.roscha_akademii.medialib.net.model.Video
 import ru.roscha_akademii.medialib.net.model.VideoSQLiteTypeMapping
 
-const val VIDEO_DB = "videodb"
-const val VIDEO_DB_FILENAME = "video db filename"
-
 @Module
 open class VideoDbModule {
 
 
     @Provides
     @Singleton
-    internal fun providesVideoDb(@Named(VIDEO_DB) storio: StorIOSQLite): VideoDb {
+    internal fun providesVideoDb(@Named("video db") storio: StorIOSQLite): VideoDb {
         return VideoDb(storio)
     }
 
     @Provides
     @Singleton
-    @Named(VIDEO_DB)
+    @Named("video db")
     internal fun providesVideoDbSio(videoDbHelper: VideoDbSqliteHelper): StorIOSQLite {
         return DefaultStorIOSQLite
                 .builder()
@@ -41,7 +38,7 @@ open class VideoDbModule {
     @Singleton
     internal fun providesVideoDbHelper(
             context: Context,
-            @Named(VIDEO_DB_FILENAME) fileName: String?): VideoDbSqliteHelper {
+            @Named("video db filename") fileName: String?): VideoDbSqliteHelper {
 
         // null filename means in-memory
         // Dagger doesn't allow null values, so pass "" (empty string) instead null
@@ -52,7 +49,7 @@ open class VideoDbModule {
 
     @Provides
     @Singleton
-    @Named(VIDEO_DB_FILENAME)
+    @Named("video db filename")
     open fun providesVideoDbFileName(): String {
         return "video"
     }

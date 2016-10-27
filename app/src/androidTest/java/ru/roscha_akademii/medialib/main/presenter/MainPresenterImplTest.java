@@ -34,21 +34,21 @@ test data
     private static Video video1 = new Video();
 
     static {
-        video1.setId(1111);
-        video1.setDescription("description one");
-        video1.setPictureUrl("picture url one");
-        video1.setTitle("title one");
-        video1.setVideoUrl("video url one");
+        video1.id = 1111;
+        video1.description = "description one";
+        video1.pictureUrl = "picture url one";
+        video1.title = "title one";
+        video1.videoUrl = "video url one";
     }
 
     private static Video video2 = new Video();
 
     static {
-        video2.setId(2222);
-        video2.setDescription("description two");
-        video2.setPictureUrl("picture url two");
-        video2.setTitle("title two");
-        video2.setVideoUrl("video url two");
+        video2.id = 2222;
+        video2.description = "description two";
+        video2.pictureUrl = "picture url two";
+        video2.title = "title two";
+        video2.videoUrl = "video url two";
     }
 
 
@@ -86,8 +86,8 @@ test data
 
         ArrayList<Video> dstList = (ArrayList<Video>) listCaptor.getValue();
         assertEquals(2, dstList.size());
-        assertEquals(video1.getId(), dstList.get(0).getId());
-        assertEquals(video2.getId(), dstList.get(1).getId());
+        assertEquals(video1.id, dstList.get(0).id);
+        assertEquals(video2.id, dstList.get(1).id);
 
     }
 

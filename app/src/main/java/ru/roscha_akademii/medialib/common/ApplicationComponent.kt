@@ -17,10 +17,6 @@ import ru.roscha_akademii.medialib.video.VideoDb
 import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.video.VideoDbModule
 
-const val BASE_URL = "baseurl"
-const val VIDEO_DB = "videodb"
-const val VIDEO_DB_FILENAME = "video db filename"
-
 @Singleton
 @Component(modules = arrayOf(AndroidModule::class, NetModule::class, VideoDbModule::class, UpdateModule::class))
 interface ApplicationComponent {
@@ -46,19 +42,19 @@ interface ApplicationComponent {
 
     // NetModule
 
-    @Named(BASE_URL)
+    @Named("baseurl")
     fun serverBaseUrl(): String
 
     fun videoApi(): VideoApi
 
     // VideoDbModule
 
-    @Named(VIDEO_DB_FILENAME)
+    @Named("video db filename")
     fun videoDbFileName(): String
 
     fun videoDbSqliteHelper(): VideoDbSqliteHelper
 
-    @Named(VIDEO_DB)
+    @Named("video db")
     fun videoDbStorIo(): StorIOSQLite
 
     fun videoDb(): VideoDb

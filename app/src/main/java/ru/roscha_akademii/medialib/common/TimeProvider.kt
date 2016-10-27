@@ -4,7 +4,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TimeProvider @Inject
+open class TimeProvider @Inject
 internal constructor() {
 
     /**
@@ -13,7 +13,7 @@ internal constructor() {
 
      * @return текущее время, в миллисекундах от начала эпохи
      */
-    fun currentTimeMillis(): Long {
+    open fun currentTimeMillis(): Long {
         return System.currentTimeMillis()
     }
 }

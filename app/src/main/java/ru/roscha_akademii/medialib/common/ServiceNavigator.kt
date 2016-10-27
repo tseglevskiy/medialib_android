@@ -8,11 +8,11 @@ import javax.inject.Singleton
 import ru.roscha_akademii.medialib.update.UpdateService
 
 @Singleton
-class ServiceNavigator
+open class ServiceNavigator
 @Inject
 internal constructor(private val context: Context) {
 
-    fun startUpdate() {
+    open fun startUpdate() {
         context.startService(
                 UpdateService.getStartIntent(context))
     }

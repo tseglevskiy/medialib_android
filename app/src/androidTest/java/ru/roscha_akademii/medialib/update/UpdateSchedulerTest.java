@@ -17,7 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ru.roscha_akademii.medialib.update.UpdateScheduler.PREFS_UPDATE_SCHEDULE;
 
 public class UpdateSchedulerTest {
     private UpdateScheduler scheduler; // SUT
@@ -102,8 +101,9 @@ public class UpdateSchedulerTest {
         verify(editor, times(1)).apply();
 
         assertEquals(NOW, (long)captorForTime.getAllValues().get(0));
-        assertEquals(Companion.getPREFS_UPDATE_SCHEDULE(), captorForKey.getAllValues().get(0));
-
+        assertEquals(
+                UpdateScheduler.Constants.getPREFS_UPDATE_SCHEDULE(),
+                captorForKey.getAllValues().get(0));
     }
 
 }

@@ -5,9 +5,9 @@ import com.pushtorefresh.storio.sqlite.queries.Query
 
 import ru.roscha_akademii.medialib.net.model.Video
 
-class VideoDb(internal var db: StorIOSQLite) {
+open class VideoDb(internal var db: StorIOSQLite) {
 
-    val allVideo: List<Video>
+    open val allVideo: List<Video>
         get() = db
                 .get()
                 .listOfObjects(Video::class.java)
@@ -18,7 +18,7 @@ class VideoDb(internal var db: StorIOSQLite) {
                 .prepare()
                 .executeAsBlocking()
 
-    fun getVideo(id: Long): Video {
+    open fun getVideo(id: Long): Video {
             return db
                     .get()
                     .listOfObjects(Video::class.java)

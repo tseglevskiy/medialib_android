@@ -15,9 +15,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by tse on 19/10/16.
- */
 public class ShowVideoPresenterImplTest {
 
     private VideoDb videoDb;
@@ -32,13 +29,13 @@ public class ShowVideoPresenterImplTest {
         presenter = new ShowVideoPresenterImpl(videoDb); // SUT
     }
 
-    static Video video1 = new Video();
+    private static Video video1 = new Video();
     static {
-        video1.setId(1111);
-        video1.setDescription("description one");
-        video1.setPictureUrl("picture url one");
-        video1.setTitle("title one");
-        video1.setVideoUrl("video url one");
+        video1.id = 1111;
+        video1.description = "description one";
+        video1.pictureUrl = "picture url one";
+        video1.title = "title one";
+        video1.videoUrl = "video url one";
     }
 
     @Test
@@ -46,16 +43,16 @@ public class ShowVideoPresenterImplTest {
         when(videoDb.getVideo(anyLong())).thenReturn(video1);
 
         presenter.attachView(view);
-        presenter.start(video1.getId());
+        presenter.start(video1.id);
 
         ArgumentCaptor<Long> longCaptor = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Video> videoCaptor = ArgumentCaptor.forClass(Video.class);
 
         verify(videoDb, times(1)).getVideo(longCaptor.capture());
-        assertEquals((Long) video1.getId(), longCaptor.getAllValues().get(0));
+        assertEquals((Long)video1.id, longCaptor.getAllValues().get(0));
 
         verify(view, times(1)).showVideo(videoCaptor.capture());
-        assertEquals((Long) video1.getId(), (Long)videoCaptor.getAllValues().get(0).id);
+        assertEquals((Long)video1.id, (Long)videoCaptor.getAllValues().get(0).id);
 
     }
 

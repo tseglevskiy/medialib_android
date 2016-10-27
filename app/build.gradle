@@ -7,6 +7,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'jacoco-android'
+apply plugin: 'android-apt'
+
 
 
 buildscript {
@@ -129,7 +131,6 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
-    /*
     ///////////////////////////////////////////////
     // test
 
@@ -160,7 +161,8 @@ dependencies {
     }
 
     androidTestApt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     androidTestCompile "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
-    */
+
 }

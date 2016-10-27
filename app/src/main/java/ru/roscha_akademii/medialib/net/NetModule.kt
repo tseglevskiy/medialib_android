@@ -13,10 +13,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val BASE_URL = "baseurl"
-
-const val URL = "https://raw.githubusercontent.com/tseglevskiy/medialib_android/master/"
-
 @Module
 open class NetModule {
 
@@ -40,8 +36,8 @@ open class NetModule {
 
     @Provides
     @Singleton
-    @Named(BASE_URL)
-    internal open fun baseUrl(): String {
+    @Named("baseurl")
+    open fun baseUrl(): String {
         return URL
     }
 
@@ -50,7 +46,7 @@ open class NetModule {
     internal fun providesRetrofit(
             client: OkHttpClient,
             gson: Gson,
-            @Named(BASE_URL) baseUrl: String): Retrofit {
+            @Named("baseurl") baseUrl: String): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl).client(client).addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
@@ -60,4 +56,7 @@ open class NetModule {
         return retrofit.create(VideoApi::class.java)
     }
 
+    companion object {
+         val URL = "https://raw.githubusercontent.com/tseglevskiy/medialib_android/master/"
+    }
 }

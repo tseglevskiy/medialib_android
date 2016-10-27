@@ -21,8 +21,6 @@ import ru.roscha_akademii.medialib.net.VideoApi
 import ru.roscha_akademii.medialib.net.model.Video
 import ru.roscha_akademii.medialib.net.model.VideoAnswer
 
-const val VIDEO_DB = "videodb"
-
 class UpdateService : Service() {
 
     @Inject
@@ -31,7 +29,7 @@ class UpdateService : Service() {
     @Inject
     lateinit var api: VideoApi
 
-    @field:[Inject Named(VIDEO_DB)]
+    @field:[Inject Named("video db")]
     lateinit var videoDb: StorIOSQLite
 
     override fun onBind(intent: Intent): IBinder? {
