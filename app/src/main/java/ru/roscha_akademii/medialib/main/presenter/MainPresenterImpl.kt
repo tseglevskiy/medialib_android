@@ -14,14 +14,11 @@ class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
 
     override fun wannaUpdateVideoList() {
         updateScheduler.startNow()
-        if (view != null) {
-            view!!.showHelloToast()
-        }
+        view?.showHelloToast()
     }
 
     override fun start() {
         updateScheduler.startBySchedule()
-
         getAndDisplayVideoList()
     }
 
@@ -31,8 +28,6 @@ class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
 
     private fun getAndDisplayVideoList() {
         val list = videoDb.allVideo
-        if (view != null) {
-            view!!.showVideoList(list)
-        }
+        view?.showVideoList(list)
     }
 }

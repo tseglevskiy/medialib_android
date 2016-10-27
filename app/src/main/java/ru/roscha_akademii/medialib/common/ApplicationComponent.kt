@@ -17,9 +17,9 @@ import ru.roscha_akademii.medialib.video.VideoDb
 import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.video.VideoDbModule
 
-import ru.roscha_akademii.medialib.net.NetModule.BASE_URL
-import ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB
-import ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB_FILENAME
+const val BASE_URL = "baseurl"
+const val VIDEO_DB = "videodb"
+const val VIDEO_DB_FILENAME = "video db filename"
 
 @Singleton
 @Component(modules = arrayOf(AndroidModule::class, NetModule::class, VideoDbModule::class, UpdateModule::class))

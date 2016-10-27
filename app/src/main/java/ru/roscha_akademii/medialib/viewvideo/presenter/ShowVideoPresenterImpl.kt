@@ -11,8 +11,6 @@ class ShowVideoPresenterImpl(private val videoDb: VideoDb) : MvpBasePresenter<Sh
     override fun start(videoId: Long) {
         val video = videoDb.getVideo(videoId)
 
-        if (view != null) {
-            view!!.showVideo(video)
-        }
+        view?.showVideo(video)
     }
 }

@@ -21,7 +21,7 @@ import ru.roscha_akademii.medialib.net.VideoApi
 import ru.roscha_akademii.medialib.net.model.Video
 import ru.roscha_akademii.medialib.net.model.VideoAnswer
 
-import ru.roscha_akademii.medialib.video.VideoDbModule.VIDEO_DB
+const val VIDEO_DB = "videodb"
 
 class UpdateService : Service() {
 
@@ -58,14 +58,16 @@ class UpdateService : Service() {
     }
 
     internal fun update() {
-        val call = api.videoList
+        val call = api.videoList()
         call.enqueue(object : Callback<VideoAnswer> {
             override fun onResponse(call: Call<VideoAnswer>, response: Response<VideoAnswer>) {
                 try {
                     val answer = response.body()
-                    Log.d("happy", "got videos " + answer.list.size)
+                    Log.d("happy", "got videos " + answer.list?.size)
 
-                    saveVideos(answer.list)
+                    if (answer.list != null) {
+                        saveVideos(answer.list!!)
+                    }
 
                     updateScheduler.updateCompleted()
                 } catch (ignore: Exception) {

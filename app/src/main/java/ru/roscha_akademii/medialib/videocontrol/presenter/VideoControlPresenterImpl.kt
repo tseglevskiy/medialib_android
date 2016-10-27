@@ -3,13 +3,10 @@ package ru.roscha_akademii.medialib.videocontrol.presenter
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
-import android.util.Log
-
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Timeline
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
-
 import ru.roscha_akademii.medialib.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.videocontrol.view.VideoControlView
 import ru.roscha_akademii.medialib.viewvideo.view.StubExoPlayerEventListener
@@ -38,17 +35,15 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
         this.callback = callback
     }
 
-    override fun setPlayer(player: ExoPlayer?) {
-        if (this.player != null) {
-            this.player!!.removeListener(playerEventListener)
-        }
+    override fun setPlayer(player: ExoPlayer) {
+        this.player?.removeListener(playerEventListener)
         this.player = player
-        player?.addListener(playerEventListener)
+        player.addListener(playerEventListener)
         updateAll()
     }
 
     override fun revokePlayer() {
-        player!!.removeListener(playerEventListener)
+        player?.removeListener(playerEventListener)
         player = null
     }
 
@@ -58,28 +53,20 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
      */
 
     override fun gonnaPlay() {
-        if (player == null) return
-
-        player!!.playWhenReady = true
+        player?.playWhenReady = true
 
     }
 
     override fun gonnaPause() {
-        if (player == null) return
-
-        player!!.playWhenReady = false
+        player?.playWhenReady = false
     }
 
     override fun gonnaFullScreen() {
-        if (callback != null) {
-            callback!!.gonnaFullScreen()
-        }
+        callback?.gonnaFullScreen()
     }
 
     override fun gonnaNormalScreen() {
-        if (callback != null) {
-            callback!!.gonnaNormalScreen()
-        }
+        callback?.gonnaNormalScreen()
     }
 
     override fun setIsVisible() {
@@ -92,20 +79,13 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
     }
 
     override fun seekTo(progress: Int, max: Int) {
-        if (player != null) {
-            player!!.seekTo(positionValue(progress, max))
-        }
+        player?.seekTo(positionValue(progress, max))
     }
 
     private fun positionValue(progress: Int, max: Int): Long {
-        val duration = if (player == null)
-            C.TIME_UNSET
-        else
-            player!!.duration
-        return if (duration == C.TIME_UNSET)
-            0
-        else
-            duration * progress / max
+        val duration = player?.duration ?: C.TIME_UNSET
+
+        return if (duration != C.TIME_UNSET) duration * progress / max else 0
     }
 
     /*
@@ -126,9 +106,9 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
         val position = if (player == null) 0 else player!!.currentPosition
         val bufferedPosition = if (player == null) 0 else player!!.bufferedPosition
 
-        view!!.showTime(duration)
-        view!!.showCurrentTime(position)
-        view!!.showBuffered(bufferedPosition)
+        view?.showTime(duration)
+        view?.showCurrentTime(position)
+        view?.showBuffered(bufferedPosition)
 
         updateProgressHandler.clear()
 
@@ -156,20 +136,18 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
                 && player!!.playWhenReady
                 && player!!.playbackState != ExoPlayer.STATE_ENDED
 
-        if (callback != null) {
-            if (playing) {
-                callback!!.onPlay()
-            } else {
-                callback!!.onPause()
-            }
+        if (playing) {
+            callback?.onPlay()
+        } else {
+            callback?.onPause()
         }
 
         if (!isVisible || view == null) return
 
         if (playing) {
-            view!!.setPlayPauseAction(VideoControlView.PlayPauseMode.PAUSE)
+            view?.setPlayPauseAction(VideoControlView.PlayPauseMode.PAUSE)
         } else {
-            view!!.setPlayPauseAction(VideoControlView.PlayPauseMode.PLAY)
+            view?.setPlayPauseAction(VideoControlView.PlayPauseMode.PLAY)
         }
     }
 

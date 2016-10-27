@@ -6,6 +6,11 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper;
 
+/*
+Do not convert because
+https://github.com/pushtorefresh/storio/issues/614
+ */
+
 @StorIOSQLiteType(table = VideoDbSqliteHelper.VideoT.TABLE_NAME)
 public class Video {
     @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.ID, key = true)

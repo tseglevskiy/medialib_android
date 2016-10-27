@@ -73,6 +73,6 @@ class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView, CommonLis
     }
 
     override fun showVideoList(list: List<Video>) {
-        adapter.setList(list)
+        adapter.list = list
     }
 }
