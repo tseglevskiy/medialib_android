@@ -1,7 +1,6 @@
 package ru.roscha_akademii.medialib.videocontrol.view
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +14,12 @@ import java.util.Formatter
 import java.util.Locale
 
 import ru.roscha_akademii.medialib.R
-import ru.roscha_akademii.medialib.databinding.VideocontrolBinding
 import ru.roscha_akademii.medialib.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.videocontrol.VideoControlInterface
 import ru.roscha_akademii.medialib.videocontrol.presenter.VideoControlPresenter
 import ru.roscha_akademii.medialib.videocontrol.presenter.VideoControlPresenterImpl
+
+import kotlinx.android.synthetic.main.videocontrol.view.*
 
 /*
  * вдохновение и идеи для расшиpения этого класса можно брать в
@@ -30,20 +30,16 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 : MvpFrameLayout<VideoControlView, VideoControlPresenter>(context, attrs, defStyleAttr), VideoControlView, VideoControlInterface {
     private val PROGRESS_BAR_MAX = 1000
 
-    private val binding: VideocontrolBinding
-
     internal var callback: VideoControlCallback? = null
 
     internal val positionListener: SeekBar.OnSeekBarChangeListener
 
 
     init {
-        binding = DataBindingUtil.inflate<VideocontrolBinding>(
-                LayoutInflater.from(context),
-                R.layout.videocontrol,
-                this,
-                true)
-
+        LayoutInflater
+                .from(context)
+                .inflate(R.layout.videocontrol, this, true)
+        
         positionListener =
                 object : SeekBar.OnSeekBarChangeListener {
 
@@ -54,7 +50,7 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         if (fromUser) {
-                            binding.timeCurrent.text = stringForTime(filmDuration * progress / PROGRESS_BAR_MAX)
+                            timeCurrentField.text = stringForTime(filmDuration * progress / PROGRESS_BAR_MAX)
                         }
                     }
 
@@ -65,14 +61,14 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
                     }
                 }
 
-        binding.mediacontrollerProgress.max = PROGRESS_BAR_MAX
-        binding.mediacontrollerProgress.setOnSeekBarChangeListener(positionListener)
+        mediacontrollerProgress.max = PROGRESS_BAR_MAX
+        mediacontrollerProgress.setOnSeekBarChangeListener(positionListener)
 
-        binding.play.setOnClickListener { getPresenter().gonnaPlay() }
-        binding.pause.setOnClickListener { getPresenter().gonnaPause() }
+        playButton.setOnClickListener { getPresenter().gonnaPlay() }
+        pauseButton.setOnClickListener { getPresenter().gonnaPause() }
 
-        binding.fullscreen.setOnClickListener { getPresenter().gonnaFullScreen() }
-        binding.fullscreenExit.setOnClickListener { getPresenter().gonnaNormalScreen() }
+        fullscreenButton.setOnClickListener { getPresenter().gonnaFullScreen() }
+        fullscreenExitButton.setOnClickListener { getPresenter().gonnaNormalScreen() }
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
@@ -159,7 +155,6 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
         return (position * PROGRESS_BAR_MAX / filmDuration).toInt()
     }
 
-
     /*
      * VideoControlViewInterface
      *
@@ -167,40 +162,40 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     internal var filmDuration: Long = 0
 
-    override fun showTime(filmDuration: Long) {
-        this.filmDuration = filmDuration
-        binding.time.text = stringForTime(filmDuration)
+    override fun showTime(duration: Long) {
+        this.filmDuration = duration
+        timeField.text = stringForTime(duration)
     }
 
     override fun showCurrentTime(position: Long) {
         if (!dragging) {
-            binding.timeCurrent.text = stringForTime(position)
-            binding.mediacontrollerProgress.progress = progressBarValue(position)
+            timeCurrentField.text = stringForTime(position)
+            mediacontrollerProgress.progress = progressBarValue(position)
         }
     }
 
     override fun showBuffered(bufferedPosition: Long) {
-        binding.mediacontrollerProgress.secondaryProgress = progressBarValue(bufferedPosition)
+        mediacontrollerProgress.secondaryProgress = progressBarValue(bufferedPosition)
     }
 
     override fun setPlayPauseAction(mode: VideoControlView.PlayPauseMode) {
         if (mode === VideoControlView.PlayPauseMode.PLAY) {
-            binding.play.visibility = View.VISIBLE
-            binding.pause.visibility = View.GONE
+            playButton.visibility = View.VISIBLE
+            pauseButton.visibility = View.GONE
 
         } else if (mode === VideoControlView.PlayPauseMode.PAUSE) {
-            binding.play.visibility = View.GONE
-            binding.pause.visibility = View.VISIBLE
+            playButton.visibility = View.GONE
+            pauseButton.visibility = View.VISIBLE
         }
     }
 
     override fun setFullscreenAction(mode: VideoControlView.FullscreenMode) {
         if (mode === VideoControlView.FullscreenMode.FULL) {
-            binding.fullscreen.visibility = View.VISIBLE
-            binding.fullscreenExit.visibility = View.GONE
+            fullscreenButton.visibility = View.VISIBLE
+            fullscreenExitButton.visibility = View.GONE
         } else {
-            binding.fullscreen.visibility = View.GONE
-            binding.fullscreenExit.visibility = View.VISIBLE
+            fullscreenButton.visibility = View.GONE
+            fullscreenExitButton.visibility = View.VISIBLE
         }
     }
 

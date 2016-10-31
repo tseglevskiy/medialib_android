@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -33,7 +32,6 @@ import javax.inject.Inject
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.databinding.ShowvideoActivityBinding
 import ru.roscha_akademii.medialib.net.model.Video
 import ru.roscha_akademii.medialib.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.videocontrol.view.VideoControlView
@@ -41,6 +39,8 @@ import ru.roscha_akademii.medialib.viewvideo.presenter.ShowVideoPresenter
 
 import android.view.View.GONE
 import android.view.View.VISIBLE
+
+import kotlinx.android.synthetic.main.showvideo_activity.*
 
 /*
 логика реализована сейчас такая:
@@ -73,9 +73,9 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         set(mode) {
             field = mode
             if (mode == Mode.FULLSCREEN) {
-                binding.videoControl.setFullscreenAction(VideoControlView.FullscreenMode.NORMAL)
+                videoControl.setFullscreenAction(VideoControlView.FullscreenMode.NORMAL)
             } else {
-                binding.videoControl.setFullscreenAction(VideoControlView.FullscreenMode.FULL)
+                videoControl.setFullscreenAction(VideoControlView.FullscreenMode.FULL)
             }
         }
 
@@ -89,6 +89,9 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     @Inject
     lateinit var injectedPresenter: ShowVideoPresenter
 
+    fun requestLayout() {
+        findViewById(android.R.id.content).requestLayout()
+    }
 
     val videoControlCallback: VideoControlCallback by lazy {
         object : VideoControlCallback {
@@ -126,8 +129,8 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
             Log.d("happy", "video onVideoSizeChanged" + width + " " + height
                     + " " + unappliedRotationDegrees + " " + pixelWidthHeightRatio)
 
-            binding.textureContainer.setAspectRatio(if (height == 0) 1F else width * pixelWidthHeightRatio / height)
-            binding.root.requestLayout()
+            textureContainer.setAspectRatio(if (height == 0) 1F else width * pixelWidthHeightRatio / height)
+            requestLayout()
         }
 
     }
@@ -136,16 +139,14 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
     internal val textOutput by lazy { StubTextRendererOutput() }
 
-    val binding: ShowvideoActivityBinding by lazy {
-        DataBindingUtil.setContentView<ShowvideoActivityBinding>(this, R.layout.showvideo_activity)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as MediaLibApplication).component()!!.activityComponent(ActivityModule(this)).inject(this)
 
         super.onCreate(savedInstanceState)
 
-        binding.textureContainer.setAspectRatio(1.78f)
+        setContentView(R.layout.showvideo_activity)
+
+        textureContainer.setAspectRatio(1.78f)
 
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = window.decorView
@@ -157,22 +158,22 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
                 // adjustments to your UI, such as showing the action bar or
                 // other navigational controls.
 
-                binding.videoControl.setVisibility(VISIBLE)
+                videoControl.setVisibility(VISIBLE)
 
                 mainHandler.hideInMoments()
-                binding.root.requestLayout()
+                requestLayout()
             } else {
                 // The system bars are NOT visible. Make any desired
                 // adjustments to your UI, such as hiding the action bar or
                 // other navigational controls.
 
-                binding.videoControl.setVisibility(GONE)
-                binding.root.requestLayout()
+                videoControl.setVisibility(GONE)
+                requestLayout()
                 mainHandler.freeze()
             }
         }
 
-        binding.videoControl.setCallback(videoControlCallback)
+        videoControl.setCallback(videoControlCallback)
 
         checkOrientation()
 
@@ -282,7 +283,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
 
-        binding.root.requestLayout()
+        requestLayout()
     }
 
     internal fun hideControls() {
@@ -301,8 +302,8 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        binding.videoControl.setVisibility(GONE)
-        binding.root.requestLayout()
+        videoControl.setVisibility(GONE)
+        requestLayout()
     }
 
     internal enum class Mode {
@@ -338,7 +339,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         //        binding.player.setPlayer(player);
 
-        player.setVideoTextureView(binding.texture)
+        player.setVideoTextureView(textureView)
 
         player.setVideoListener(videoListener)
         player.addListener(eventListener)
@@ -364,13 +365,13 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         player.playWhenReady = true
 
-        binding.videoControl.setPlayer(player)
+        videoControl.setPlayer(player)
 
         this.player = player
     }
 
     private fun deactivatePlayer() {
-        binding.videoControl.releasePlayer()
+        videoControl.releasePlayer()
 
         player!!.stop()
 

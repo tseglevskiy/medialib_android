@@ -1,9 +1,7 @@
 package ru.roscha_akademii.medialib.common
 
-import java.util.ArrayList
-import java.util.HashSet
-
 import ru.roscha_akademii.medialib.common.CreateTableQueryBuilder.SqlType.INTEGER
+import java.util.*
 
 class CreateTableQueryBuilder(private val tableName: String?) {
     private var indexColumn: String? = null

@@ -1,38 +1,34 @@
 package ru.roscha_akademii.medialib.main.view
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.hannesdorfmann.mosby.mvp.MvpActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.ActivityModule
-import ru.roscha_akademii.medialib.common.CommonListAdapter
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.databinding.ActivityMainBinding
 import ru.roscha_akademii.medialib.main.presenter.MainPresenter
 import ru.roscha_akademii.medialib.net.model.Video
 import javax.inject.Inject
 
-class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView, CommonListAdapter.OnItemClickListener {
+class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView, VideoListAdapter.OnItemClickListener {
     @Inject
     lateinit var injectedPresenter: MainPresenter
 
     private val adapter = VideoListAdapter(this)
-
-    val binding : ActivityMainBinding by lazy {
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as MediaLibApplication).component()!!.activityComponent(ActivityModule(this)).inject(this)
 
         super.onCreate(savedInstanceState)
 
-        binding.list.layoutManager = LinearLayoutManager(this)
-        binding.list.adapter = adapter
+        setContentView(R.layout.activity_main)
+
+        list.layoutManager = LinearLayoutManager(this)
+        list.adapter = adapter
     }
 
     override fun onDestroy() {

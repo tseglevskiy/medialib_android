@@ -5,6 +5,7 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'jacoco-android'
 apply plugin: 'android-apt'
@@ -49,10 +50,6 @@ android {
             testCoverageEnabled = true
         }
     }
-    dataBinding {
-        enabled = true
-        version = "2.2.2"
-    }
     sourceSets {
         main.java.srcDirs += 'src/main/java'
     }
@@ -92,10 +89,6 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
-
-    // data binding library
-    // http://stackoverflow.com/a/30793984/1263771
-    kapt "com.android.databinding:compiler:$android.dataBinding.version"
 
     // retrofit
     compile 'com.google.code.gson:gson:2.6.1'
