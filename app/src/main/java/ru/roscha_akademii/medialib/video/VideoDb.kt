@@ -12,8 +12,8 @@ open class VideoDb(internal var db: StorIOSQLite) {
                 .get()
                 .listOfObjects(Video::class.java)
                 .withQuery(Query.builder()
-                        .table(VideoDbSqliteHelper.VideoT.TABLE_NAME)
-                        .orderBy(VideoDbSqliteHelper.VideoT.ID)
+                        .table(VideoTable.TABLE_NAME)
+                        .orderBy(VideoTable.ID)
                         .build())
                 .prepare()
                 .executeAsBlocking()
@@ -24,16 +24,17 @@ open class VideoDb(internal var db: StorIOSQLite) {
                     .get()
                     .listOfObjects(Video::class.java)
                     .withQuery(Query.builder()
-                            .table(VideoDbSqliteHelper.VideoT.TABLE_NAME)
-                            .where(VideoDbSqliteHelper.VideoT.ID + " = ?")
+                            .table(VideoTable.TABLE_NAME)
+                            .where(VideoTable.ID + " = ?")
                             .whereArgs(id)
-                            .orderBy(VideoDbSqliteHelper.VideoT.ID)
+                            .orderBy(VideoTable.ID)
                             .build())
                     .prepare()
                     .executeAsBlocking()[0]
         } catch (e: IndexOutOfBoundsException) {
             throw UnexistingVideoException(e)
         }
-
     }
+
+
 }

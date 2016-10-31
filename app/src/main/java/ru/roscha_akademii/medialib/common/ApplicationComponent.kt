@@ -1,12 +1,7 @@
 package ru.roscha_akademii.medialib.common
 
 import android.content.Context
-
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
-
-import javax.inject.Named
-import javax.inject.Singleton
-
 import dagger.Component
 import ru.roscha_akademii.medialib.net.NetModule
 import ru.roscha_akademii.medialib.net.VideoApi
@@ -14,8 +9,11 @@ import ru.roscha_akademii.medialib.update.UpdateModule
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.update.UpdateService
 import ru.roscha_akademii.medialib.video.VideoDb
-import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.video.VideoDbModule
+import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper
+import ru.roscha_akademii.medialib.videocardview.view.VideoCard
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(AndroidModule::class, NetModule::class, VideoDbModule::class, UpdateModule::class))
@@ -31,6 +29,7 @@ interface ApplicationComponent {
      */
 
     fun inject(updateService: UpdateService)
+    fun  inject(updateService: VideoCard)
 
     /*
     Using submodules requires providing explicit methods in the parent component.

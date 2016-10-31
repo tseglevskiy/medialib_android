@@ -1,12 +1,10 @@
 package ru.roscha_akademii.medialib.main.view
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import ru.roscha_akademii.medialib.R
-import ru.roscha_akademii.medialib.net.model.Video
-import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.videolist_item.view.*
+import android.widget.FrameLayout
+import ru.roscha_akademii.medialib.net.model.Video
+import ru.roscha_akademii.medialib.videocardview.view.VideoCard
 
 internal class VideoListAdapter(val clickListener: OnItemClickListener) : RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
     var list: List<Video>? = null
@@ -16,9 +14,11 @@ internal class VideoListAdapter(val clickListener: OnItemClickListener) : Recycl
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater
-        .from(parent.context)
-        .inflate(R.layout.videolist_item, parent, false)
+        val view = VideoCard(parent.context)
+        view.layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        )
 
         return MyViewHolder(view, clickListener)
     }
@@ -31,10 +31,9 @@ internal class VideoListAdapter(val clickListener: OnItemClickListener) : Recycl
         return list?.size ?: 0
     }
 
-    class MyViewHolder(view: View, val clickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
+    class MyViewHolder(view: VideoCard, val clickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
         fun show(item: Video) {
-            itemView.title.text = item.title
-            itemView.description.text = item.description
+            (itemView as VideoCard).videoId = item.id
             itemView.setOnClickListener { v -> clickListener.onItemClicked(item.id) }
         }
     }

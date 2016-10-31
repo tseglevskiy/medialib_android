@@ -9,37 +9,23 @@ import ru.roscha_akademii.medialib.common.CreateTableQueryBuilder;
 import static ru.roscha_akademii.medialib.common.CreateTableQueryBuilder.SqlType.STRING;
 
 public class VideoDbSqliteHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     VideoDbSqliteHelper(Context context, String tableName) {
         super(context, tableName, null, VERSION);
     }
 
-    public static class VideoT {
-        public static final String TABLE_NAME = "video";
-
-        public static final String ID = "_id";
-        public static final String TITLE = "title";
-        public static final String DESCRIPTION = "description";
-        public static final String PICTURE_URL = "picture_url";
-        public static final String VIDEO_URL = "video_url";
-    }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(new CreateTableQueryBuilder(VideoT.TABLE_NAME)
-                .index(VideoT.ID)
-                .column(VideoT.TITLE, STRING)
-                .column(VideoT.DESCRIPTION, STRING)
-                .column(VideoT.PICTURE_URL, STRING)
-                .column(VideoT.VIDEO_URL, STRING)
-                .build());
+        db.execSQL(VideoTable.createTable());
+        db.execSQL(VideoStorageTable.createTable());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO dummy upgrade
-        db.execSQL("drop table if exists " + VideoT.TABLE_NAME);
+        db.execSQL("drop table if exists " + VideoTable.TABLE_NAME);
+        db.execSQL("drop table if exists " + VideoStorageTable.TABLE_NAME);
         onCreate(db);
     }
 }

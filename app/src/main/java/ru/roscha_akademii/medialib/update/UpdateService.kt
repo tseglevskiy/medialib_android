@@ -40,7 +40,7 @@ class UpdateService : Service() {
         super.onCreate()
         Log.d("happy", "UpdateService onCreate")
 
-        (applicationContext as MediaLibApplication).component()!!.inject(this)
+        (applicationContext as MediaLibApplication).component.inject(this)
 
         update()
     }

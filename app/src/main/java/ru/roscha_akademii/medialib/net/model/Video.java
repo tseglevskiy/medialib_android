@@ -4,26 +4,26 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import ru.roscha_akademii.medialib.video.VideoDbSqliteHelper;
+import ru.roscha_akademii.medialib.video.VideoTable;
 
 /*
-Do not convert because
+Do not convert to Kotlin because
 https://github.com/pushtorefresh/storio/issues/614
  */
 
-@StorIOSQLiteType(table = VideoDbSqliteHelper.VideoT.TABLE_NAME)
+@StorIOSQLiteType(table = VideoTable.TABLE_NAME)
 public class Video {
-    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.ID, key = true)
+    @StorIOSQLiteColumn(name = VideoTable.ID, key = true)
     public long id;
 
-    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.TITLE)
+    @StorIOSQLiteColumn(name = VideoTable.TITLE)
     public String title;
 
-    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.PICTURE_URL)
+    @StorIOSQLiteColumn(name = VideoTable.PICTURE_URL)
     @SerializedName("picture")
     public String pictureUrl;
 
-    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.DESCRIPTION)
+    @StorIOSQLiteColumn(name = VideoTable.DESCRIPTION)
     @SerializedName("desc")
     public String description;
 
@@ -33,7 +33,7 @@ public class Video {
     @SerializedName("dt")
     public String issueDate;
 
-    @StorIOSQLiteColumn(name = VideoDbSqliteHelper.VideoT.VIDEO_URL)
+    @StorIOSQLiteColumn(name = VideoTable.VIDEO_URL)
     @SerializedName("video")
     public String videoUrl;
 }

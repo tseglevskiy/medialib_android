@@ -16,6 +16,13 @@ import ru.roscha_akademii.medialib.net.model.VideoSQLiteTypeMapping
 @Module
 open class VideoDbModule {
 
+    @Provides
+    @Singleton
+    internal fun providesVideoStorage(@Named("video db") storio: StorIOSQLite): VideoStorage {
+        return VideoStorage(storio)
+    }
+
+
 
     @Provides
     @Singleton

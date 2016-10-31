@@ -21,7 +21,7 @@ class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView, VideoList
     private val adapter = VideoListAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MediaLibApplication).component()!!.activityComponent(ActivityModule(this)).inject(this)
+        (application as MediaLibApplication).component.activityComponent(ActivityModule(this)).inject(this)
 
         super.onCreate(savedInstanceState)
 

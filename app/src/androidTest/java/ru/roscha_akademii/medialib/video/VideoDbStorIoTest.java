@@ -8,7 +8,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -98,15 +97,15 @@ public class VideoDbStorIoTest {
 
         Cursor cursor = videoDbSqliteHelper
                 .getReadableDatabase()
-                .rawQuery("select * from " + VideoDbSqliteHelper.VideoT.TABLE_NAME, null);
+                .rawQuery("select * from " + VideoTable.TABLE_NAME, null);
 
         assertEquals("added one object", 1, cursor.getCount());
 
-        int desriptionIdx = cursor.getColumnIndex(VideoDbSqliteHelper.VideoT.DESCRIPTION);
-        int idIdx = cursor.getColumnIndex(VideoDbSqliteHelper.VideoT.ID);
-        int titleIdx = cursor.getColumnIndex(VideoDbSqliteHelper.VideoT.TITLE);
-        int videoUrlIdx = cursor.getColumnIndex(VideoDbSqliteHelper.VideoT.VIDEO_URL);
-        int pictureUrlIdx = cursor.getColumnIndex(VideoDbSqliteHelper.VideoT.PICTURE_URL);
+        int desriptionIdx = cursor.getColumnIndex(VideoTable.DESCRIPTION);
+        int idIdx = cursor.getColumnIndex(VideoTable.ID);
+        int titleIdx = cursor.getColumnIndex(VideoTable.TITLE);
+        int videoUrlIdx = cursor.getColumnIndex(VideoTable.VIDEO_URL);
+        int pictureUrlIdx = cursor.getColumnIndex(VideoTable.PICTURE_URL);
 
         assertTrue(cursor.moveToFirst());
 
@@ -137,8 +136,8 @@ public class VideoDbStorIoTest {
                 .get()
                 .listOfObjects(Video.class)
                 .withQuery(Query.builder()
-                        .table(VideoDbSqliteHelper.VideoT.TABLE_NAME)
-                        .orderBy(VideoDbSqliteHelper.VideoT.ID)
+                        .table(VideoTable.TABLE_NAME)
+                        .orderBy(VideoTable.ID)
                         .build())
                 .prepare()
                 .executeAsBlocking();
@@ -183,8 +182,8 @@ public class VideoDbStorIoTest {
                 .get()
                 .listOfObjects(Video.class)
                 .withQuery(Query.builder()
-                        .table(VideoDbSqliteHelper.VideoT.TABLE_NAME)
-                        .orderBy(VideoDbSqliteHelper.VideoT.ID)
+                        .table(VideoTable.TABLE_NAME)
+                        .orderBy(VideoTable.ID)
                         .build())
                 .prepare()
                 .executeAsBlocking();

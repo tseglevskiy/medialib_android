@@ -140,7 +140,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     internal val textOutput by lazy { StubTextRendererOutput() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MediaLibApplication).component()!!.activityComponent(ActivityModule(this)).inject(this)
+        (application as MediaLibApplication).component.activityComponent(ActivityModule(this)).inject(this)
 
         super.onCreate(savedInstanceState)
 
