@@ -4,12 +4,12 @@ import android.app.Activity
 
 import dagger.Module
 import dagger.Provides
-import ru.roscha_akademii.medialib.main.presenter.MainPresenter
-import ru.roscha_akademii.medialib.main.presenter.MainPresenterImpl
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenter
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
 import ru.roscha_akademii.medialib.update.UpdateScheduler
-import ru.roscha_akademii.medialib.video.VideoDb
-import ru.roscha_akademii.medialib.viewvideo.presenter.ShowVideoPresenter
-import ru.roscha_akademii.medialib.viewvideo.presenter.ShowVideoPresenterImpl
+import ru.roscha_akademii.medialib.video.model.local.VideoDb
+import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
+import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 
 @Module
 class ActivityModule(private val activity: Activity) {

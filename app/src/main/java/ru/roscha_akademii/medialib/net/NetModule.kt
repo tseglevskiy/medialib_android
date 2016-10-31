@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.roscha_akademii.medialib.video.model.remote.VideoApi
 
 @Module
 open class NetModule {
@@ -48,12 +49,6 @@ open class NetModule {
             gson: Gson,
             @Named("baseurl") baseUrl: String): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl).client(client).addConverterFactory(GsonConverterFactory.create(gson)).build()
-    }
-
-    @Provides
-    @Singleton
-    internal fun providesVideoApi(retrofit: Retrofit): VideoApi {
-        return retrofit.create(VideoApi::class.java)
     }
 
     companion object {

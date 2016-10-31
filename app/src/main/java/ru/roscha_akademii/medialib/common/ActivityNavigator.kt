@@ -2,7 +2,7 @@ package ru.roscha_akademii.medialib.common
 
 import android.app.Activity
 
-import ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity
+import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity
 
 open class ActivityNavigator internal constructor(private val activity: Activity) {
 

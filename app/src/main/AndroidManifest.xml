@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="ru.roscha_akademii.medialib.main.view.MainActivity">
+        <activity android:name="ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -20,7 +20,7 @@
         </activity>
 
         <activity
-            android:name="ru.roscha_akademii.medialib.viewvideo.view.ShowVideoActivity"
+            android:name="ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity"
             android:configChanges="orientation|screenSize"/>
 
         <service android:name="ru.roscha_akademii.medialib.update.UpdateService"/>

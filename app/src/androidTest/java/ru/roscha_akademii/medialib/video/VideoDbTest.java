@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,7 +14,10 @@ import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
-import ru.roscha_akademii.medialib.net.model.Video;
+import ru.roscha_akademii.medialib.video.model.remote.Video;
+import ru.roscha_akademii.medialib.video.model.UnexistingVideoException;
+import ru.roscha_akademii.medialib.video.model.local.VideoDb;
+import ru.roscha_akademii.medialib.video.model.VideoDbModule;
 
 import static org.junit.Assert.*;
 

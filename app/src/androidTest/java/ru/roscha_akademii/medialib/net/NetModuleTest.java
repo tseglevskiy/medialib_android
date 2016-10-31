@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,8 +21,9 @@ import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
-import ru.roscha_akademii.medialib.net.model.Video;
-import ru.roscha_akademii.medialib.net.model.VideoAnswer;
+import ru.roscha_akademii.medialib.video.model.remote.Video;
+import ru.roscha_akademii.medialib.video.model.remote.VideoAnswer;
+import ru.roscha_akademii.medialib.video.model.remote.VideoApi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

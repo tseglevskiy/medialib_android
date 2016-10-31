@@ -17,9 +17,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.net.VideoApi
-import ru.roscha_akademii.medialib.net.model.Video
-import ru.roscha_akademii.medialib.net.model.VideoAnswer
+import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.VideoAnswer
+import ru.roscha_akademii.medialib.video.model.remote.VideoApi
 
 class UpdateService : Service() {
 
