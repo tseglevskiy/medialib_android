@@ -1,5 +1,7 @@
 package ru.roscha_akademii.medialib.video.showlist.list.view
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
@@ -70,5 +72,11 @@ class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListO
 
     override fun showVideoList(list: List<Video>) {
         adapter.list = list
+    }
+
+    companion object {
+        fun getStartIntent(context: Context): Intent {
+            return Intent(context, ListOfVideoActivity::class.java)
+        }
     }
 }

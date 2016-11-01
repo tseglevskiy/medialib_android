@@ -8,6 +8,7 @@ import ru.roscha_akademii.medialib.video.model.remote.VideoApi
 import ru.roscha_akademii.medialib.update.UpdateModule
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.update.UpdateService
+import ru.roscha_akademii.medialib.video.event.DownloadNotificationClickReceiver
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
@@ -29,7 +30,8 @@ interface ApplicationComponent {
      */
 
     fun inject(updateService: UpdateService)
-    fun  inject(updateService: VideoCard)
+    fun inject(updateService: VideoCard)
+    fun inject(downloadNotificationClickReceiver: DownloadNotificationClickReceiver)
 
     /*
     Using submodules requires providing explicit methods in the parent component.
