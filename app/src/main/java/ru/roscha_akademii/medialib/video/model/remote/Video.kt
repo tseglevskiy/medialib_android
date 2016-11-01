@@ -6,7 +6,7 @@ class Video {
     constructor() {
     }
 
-    constructor(id: Long, title: String?, pictureUrl: String?, description: String?, videoUrl: String?) {
+    constructor(id: Long, title: String?, pictureUrl: String?, description: String?, videoUrl: String) {
         this.id = id
         this.title = title
         this.pictureUrl = pictureUrl
@@ -31,6 +31,6 @@ class Video {
 //    var issueDate: String? = null
 
     @SerializedName("video")
-    var videoUrl: String? = null
+    lateinit var videoUrl: String
 
 }

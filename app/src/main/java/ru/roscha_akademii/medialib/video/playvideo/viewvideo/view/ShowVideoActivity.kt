@@ -199,8 +199,8 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         deactivatePlayer()
     }
 
-    override fun showVideo(video: Video) {
-        url = video.videoUrl
+    override fun showVideo(url: String) {
+        this.url = url
     }
 
     class PlayerHandler : Handler() {
