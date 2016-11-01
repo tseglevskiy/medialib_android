@@ -106,7 +106,7 @@ class VideoStorage(internal val db: StorIOSQLite,
         request.setTitle(video.title)
 //        request.setDescription("description description description")
         request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_NOTIFICATIONS, "video_$id.mp4")
-//        request.setVisibleInDownloadsUi(false)
+        request.setVisibleInDownloadsUi(false)
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
         val downloadRef = downloadManager.enqueue(request)
