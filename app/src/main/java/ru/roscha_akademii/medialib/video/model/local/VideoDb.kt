@@ -2,10 +2,8 @@ package ru.roscha_akademii.medialib.video.model.local
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.Query
-
-import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.model.UnexistingVideoException
-import ru.roscha_akademii.medialib.video.model.local.VideoTable
+import ru.roscha_akademii.medialib.video.model.remote.Video
 
 open class VideoDb(internal var db: StorIOSQLite) {
 

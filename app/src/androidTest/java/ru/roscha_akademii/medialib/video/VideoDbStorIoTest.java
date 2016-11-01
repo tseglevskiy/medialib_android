@@ -65,20 +65,20 @@ public class VideoDbStorIoTest {
      */
     private static Video video1 = new Video();
     static {
-        video1.id = 1111;
-        video1.description = "description one";
-        video1.pictureUrl = "picture url one";
-        video1.title = "title one";
-        video1.videoUrl = "video url one";
+        video1.setId(1111);
+        video1.setDescription("description one");
+        video1.setPictureUrl("picture url one");
+        video1.setTitle("title one");
+        video1.setVideoUrl("video url one");
     }
 
     private static Video video2 = new Video();
     static {
-        video2.id = 2222;
-        video2.description = "description two";
-        video2.pictureUrl = "picture url two";
-        video2.title = "title two";
-        video2.videoUrl = "video url two";
+        video2.setId(2222);
+        video2.setDescription("description two");
+        video2.setPictureUrl("picture url two");
+        video2.setTitle("title two");
+        video2.setVideoUrl("video url two");
     }
 
     /*
@@ -112,11 +112,11 @@ public class VideoDbStorIoTest {
 
         assertTrue(cursor.moveToFirst());
 
-        assertEquals(video1.id, cursor.getLong(idIdx));
-        assertEquals(video1.description, cursor.getString(desriptionIdx));
-        assertEquals(video1.title, cursor.getString(titleIdx));
-        assertEquals(video1.videoUrl, cursor.getString(videoUrlIdx));
-        assertEquals(video1.pictureUrl, cursor.getString(pictureUrlIdx));
+        assertEquals(video1.getId(), cursor.getLong(idIdx));
+        assertEquals(video1.getDescription(), cursor.getString(desriptionIdx));
+        assertEquals(video1.getTitle(), cursor.getString(titleIdx));
+        assertEquals(video1.getVideoUrl(), cursor.getString(videoUrlIdx));
+        assertEquals(video1.getPictureUrl(), cursor.getString(pictureUrlIdx));
 
         cursor.close();
     }
@@ -147,17 +147,17 @@ public class VideoDbStorIoTest {
 
         assertEquals(2, readedList.size());
 
-        assertEquals(video1.id, readedList.get(0).id);
-        assertEquals(video1.description, readedList.get(0).description);
-        assertEquals(video1.title, readedList.get(0).title);
-        assertEquals(video1.videoUrl, readedList.get(0).videoUrl);
-        assertEquals(video1.pictureUrl, readedList.get(0).pictureUrl);
+        assertEquals(video1.getId(), readedList.get(0).getId());
+        assertEquals(video1.getDescription(), readedList.get(0).getDescription());
+        assertEquals(video1.getTitle(), readedList.get(0).getTitle());
+        assertEquals(video1.getVideoUrl(), readedList.get(0).getVideoUrl());
+        assertEquals(video1.getPictureUrl(), readedList.get(0).getPictureUrl());
 
-        assertEquals(video2.id, readedList.get(1).id);
-        assertEquals(video2.description, readedList.get(1).description);
-        assertEquals(video2.title, readedList.get(1).title);
-        assertEquals(video2.videoUrl, readedList.get(1).videoUrl);
-        assertEquals(video2.pictureUrl, readedList.get(1).pictureUrl);
+        assertEquals(video2.getId(), readedList.get(1).getId());
+        assertEquals(video2.getDescription(), readedList.get(1).getDescription());
+        assertEquals(video2.getTitle(), readedList.get(1).getTitle());
+        assertEquals(video2.getVideoUrl(), readedList.get(1).getVideoUrl());
+        assertEquals(video2.getPictureUrl(), readedList.get(1).getPictureUrl());
 
     }
 

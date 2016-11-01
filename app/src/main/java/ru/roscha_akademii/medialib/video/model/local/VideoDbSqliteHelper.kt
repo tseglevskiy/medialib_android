@@ -20,6 +20,6 @@ class VideoDbSqliteHelper internal constructor(context: Context, dbName: String?
     }
 
     companion object {
-        private val VERSION = 2
+        private val VERSION = 4
     }
 }

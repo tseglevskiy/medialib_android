@@ -98,10 +98,10 @@ public class NetModuleTest {
         assertEquals(2, videos.size());
 
         Video v1 = videos.get(0);
-        assertEquals(12345, v1.id);
-        assertEquals("название один", v1.title);
-        assertEquals("http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg", v1.pictureUrl);
-        assertEquals("описание один", v1.description);
+        assertEquals(12345, v1.getId());
+        assertEquals("название один", v1.getTitle());
+        assertEquals("http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg", v1.getPictureUrl());
+        assertEquals("описание один", v1.getDescription());
     }
 
 }

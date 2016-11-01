@@ -113,8 +113,8 @@ dependencies {
 
     // StorIO
     compile "com.pushtorefresh.storio:sqlite:$storIoVersion"
-    compile "com.pushtorefresh.storio:sqlite-annotations:$storIoVersion"
-    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
+//    compile "com.pushtorefresh.storio:sqlite-annotations:$storIoVersion"
+//    kapt "com.pushtorefresh.storio:sqlite-annotations-processor:$storIoVersion"
 
     // ExoPlayer
     compile 'com.google.android.exoplayer:exoplayer:r2.0.0'

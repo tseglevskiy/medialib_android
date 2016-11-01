@@ -9,6 +9,7 @@ public class VideoStorageTable {
     public static final String STATUS = "status";
     public static final String LOCAL_URI = "local_uri";
     public static final String DOWNLOAD_ID = "download_id";
+    public static final String PERCENT = "percent";
 
     public static String createTable() {
         return new CreateTableQueryBuilder(VideoStorageTable.TABLE_NAME)
@@ -16,6 +17,7 @@ public class VideoStorageTable {
                 .column(VideoStorageTable.STATUS, CreateTableQueryBuilder.SqlType.INTEGER)
                 .column(VideoStorageTable.LOCAL_URI, CreateTableQueryBuilder.SqlType.STRING)
                 .column(VideoStorageTable.DOWNLOAD_ID, CreateTableQueryBuilder.SqlType.INTEGER)
+                .column(VideoStorageTable.PERCENT, CreateTableQueryBuilder.SqlType.INTEGER)
                 .build();
     }
 }

@@ -64,21 +64,21 @@ public class VideoDbTest {
     private static Video video1 = new Video();
 
     static {
-        video1.id = 1111;
-        video1.description = "description one";
-        video1.pictureUrl = "picture url one";
-        video1.title = "title one";
-        video1.videoUrl = "video url one";
+        video1.setId(1111);
+        video1.setDescription("description one");
+        video1.setPictureUrl("picture url one");
+        video1.setTitle("title one");
+        video1.setVideoUrl("video url one");
     }
 
     private static Video video2 = new Video();
 
     static {
-        video2.id = 2222;
-        video2.description = "description two";
-        video2.pictureUrl = "picture url two";
-        video2.title = "title two";
-        video2.videoUrl = "video url two";
+        video2.setId(2222);
+        video2.setDescription("description two");
+        video2.setPictureUrl("picture url two");
+        video2.setTitle("title two");
+        video2.setVideoUrl("video url two");
     }
 
     /*
@@ -117,8 +117,8 @@ public class VideoDbTest {
         assertNotNull(list);
         assertEquals(2, list.size());
 
-        assertEquals(video1.id, list.get(0).id);
-        assertEquals(video2.id, list.get(1).id);
+        assertEquals(video1.getId(), list.get(0).getId());
+        assertEquals(video2.getId(), list.get(1).getId());
     }
 
     @Test
@@ -136,8 +136,8 @@ public class VideoDbTest {
                 .executeAsBlocking();
 
         long unexistingId = 3333;
-        assertNotEquals(unexistingId, video1.id);
-        assertNotEquals(unexistingId, video2.id);
+        assertNotEquals(unexistingId, video1.getId());
+        assertNotEquals(unexistingId, video2.getId());
 
         try {
             videoDb.getVideo(1999);
@@ -161,15 +161,15 @@ public class VideoDbTest {
                 .prepare()
                 .executeAsBlocking();
 
-        Video video = videoDb.getVideo(video1.id);
+        Video video = videoDb.getVideo(video1.getId());
 
-        assertEquals(video1.id, video.id);
-        assertEquals(video1.description, video.description);
+        assertEquals(video1.getId(), video.getId());
+        assertEquals(video1.getDescription(), video.getDescription());
 
-        video = videoDb.getVideo(video2.id);
+        video = videoDb.getVideo(video2.getId());
 
-        assertEquals(video2.id, video.id);
-        assertEquals(video2.description, video.description);
+        assertEquals(video2.getId(), video.getId());
+        assertEquals(video2.getDescription(), video.getDescription());
 
     }
 }

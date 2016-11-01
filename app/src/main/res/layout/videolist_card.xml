@@ -33,7 +33,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleField"/>
 
-    <TextView
+    <Button
         android:id="@+id/statusField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

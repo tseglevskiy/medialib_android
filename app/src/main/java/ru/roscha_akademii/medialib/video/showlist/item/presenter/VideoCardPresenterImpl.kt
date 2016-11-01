@@ -22,8 +22,8 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorag
     fun updateView() {
         if (videoId != null) {
             val video = videoDb.getVideo(videoId!!)
-            view?.showDescription(video.description)
-            view?.showTitle(video.title)
+            view?.showDescription(video.description ?: "-")
+            view?.showTitle(video.title ?: "-")
             updateStatus()
         } else {
             view?.showDescription("-")
@@ -43,12 +43,14 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorag
     }
 
     override fun saveLocal() {
-        Log.d("happy", "saveLocal()")
+        if (videoId != null) {
+            videoStorage.saveLocal(videoId!!)
+        }
     }
 
     override fun removeLocal() {
-        Log.d("happy", "removeLocal()")
+        if (videoId != null) {
+            videoStorage.removeLocal(videoId!!)
+        }
     }
-
-
 }
