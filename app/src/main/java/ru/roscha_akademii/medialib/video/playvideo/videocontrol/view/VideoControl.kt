@@ -132,8 +132,8 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
     private val formatBuilder = StringBuilder()
     private val formatter = Formatter(formatBuilder, Locale.getDefault())
 
-    private fun stringForTime(timeMs: Long): String {
-        var timeMs = timeMs
+    private fun stringForTime(timeMsSrc: Long): String {
+        var timeMs = timeMsSrc
         if (timeMs == C.TIME_UNSET) {
             timeMs = 0
         }

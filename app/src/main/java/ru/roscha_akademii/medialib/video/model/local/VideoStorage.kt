@@ -30,7 +30,7 @@ class VideoStorage(internal val db: StorIOSQLite,
         if (record.status == StorageStatus.LOCAL) return
 
         val query = DownloadManager.Query()
-        val downloadId = record.downloadId ?: return
+        val downloadId = record.downloadId
         query.setFilterById(downloadId)
         val cursor = downloadManager.query(query)
 
