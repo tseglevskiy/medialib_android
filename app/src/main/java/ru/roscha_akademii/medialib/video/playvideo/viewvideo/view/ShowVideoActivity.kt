@@ -39,6 +39,7 @@ import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideo
 
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import com.squareup.leakcanary.RefWatcher
 
 import kotlinx.android.synthetic.main.showvideo_activity.*
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubExoPlayerEventListener
@@ -91,6 +92,9 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
     @Inject
     lateinit var injectedPresenter: ShowVideoPresenter
+
+    @Inject
+    lateinit var refWatcher: RefWatcher
 
     fun requestLayout() {
         findViewById(android.R.id.content).requestLayout()
@@ -372,28 +376,28 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     private fun deactivatePlayer() {
         videoControl.releasePlayer()
 
-        player!!.stop()
+        player?.stop()
 
         savedPosition = player!!.currentPosition
 
         playerHandler.removeCallbacksAndMessages(null)
 
-        player!!.release()
+        player?.release()
 
-        player!!.setVideoListener(null)
-        player!!.removeListener(eventListener)
-        player!!.setTextOutput(null)
+        player?.setVideoListener(null)
+        player?.removeListener(eventListener)
+        player?.setTextOutput(null)
 
-        (application as MediaLibApplication).refWatcher()!!.watch(videoSource)
+        refWatcher.watch(videoSource)
         videoSource = null
 
-        (application as MediaLibApplication).refWatcher()!!.watch(dataSourceFactory)
+        refWatcher.watch(dataSourceFactory)
         dataSourceFactory = null
 
-        (application as MediaLibApplication).refWatcher()!!.watch(extractorsFactory)
+        refWatcher.watch(extractorsFactory)
         extractorsFactory = null
 
-        (application as MediaLibApplication).refWatcher()!!.watch(player)
+        refWatcher.watch(player)
         player = null
 
     }

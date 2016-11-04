@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.hannesdorfmann.mosby.mvp.MvpActivity
+import com.squareup.leakcanary.RefWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.ActivityModule
@@ -19,6 +20,9 @@ import javax.inject.Inject
 class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListOfVideoView, VideoListAdapter.OnItemClickListener {
     @Inject
     lateinit var injectedPresenter: MainPresenter
+
+    @Inject
+    lateinit var refWatcher: RefWatcher
 
     private val adapter = VideoListAdapter(this)
 
@@ -36,7 +40,7 @@ class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListO
     override fun onDestroy() {
         super.onDestroy()
 
-        (application as MediaLibApplication).refWatcher()!!.watch(presenter)
+        refWatcher.watch(presenter)
     }
 
     override fun onStart() {

@@ -10,7 +10,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.Query
 import java.io.FileNotFoundException
 
-class VideoStorage(internal val db: StorIOSQLite,
+open class VideoStorage(internal val db: StorIOSQLite,
                    val videoDb: VideoDb,
                    val context: Context,
                    val contentResolver: ContentResolver,

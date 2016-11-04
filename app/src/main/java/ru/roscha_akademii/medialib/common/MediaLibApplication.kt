@@ -11,11 +11,13 @@ import com.squareup.leakcanary.RefWatcher
 import io.fabric.sdk.android.Fabric
 
 open class MediaLibApplication : Application() {
-    val component: ApplicationComponent by lazy {
-        DaggerApplicationComponent.builder().androidModule(AndroidModule(this, refWatcher)).build()
-    }
+    var _component: ApplicationComponent? = null
+    val component: ApplicationComponent
+        get() {
+            return _component!!
+        }
 
-    private var refWatcher: RefWatcher? = null
+    lateinit var refWatcher: RefWatcher
 
     override fun onCreate() {
         if (BuildConfig.DEBUG) {
@@ -37,12 +39,16 @@ open class MediaLibApplication : Application() {
         }
 
         super.onCreate()
+
         refWatcher = LeakCanary.install(this)
+
+        if (_component == null) {
+            _component = DaggerApplicationComponent
+                    .builder()
+                    .androidModule(AndroidModule(this, refWatcher))
+                    .build()
+        }
+
         Fabric.with(this, Crashlytics())
     }
-
-    fun refWatcher(): RefWatcher? {
-        return refWatcher
-    }
-
 }

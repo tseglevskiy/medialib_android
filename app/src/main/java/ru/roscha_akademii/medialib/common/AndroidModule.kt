@@ -14,7 +14,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class AndroidModule(private val application: MediaLibApplication, private val refWatcher: RefWatcher?) {
+class AndroidModule(private val application: MediaLibApplication, private val refWatcher: RefWatcher) {
 
     @Provides
     @Singleton
@@ -24,7 +24,7 @@ class AndroidModule(private val application: MediaLibApplication, private val re
 
     @Provides
     @Singleton
-    internal fun providesRefWatcher(): RefWatcher? {
+    internal fun providesRefWatcher(): RefWatcher {
         return refWatcher
     }
 

@@ -31,25 +31,18 @@ public class MainPresenterImplTest {
     /*
 test data
  */
-    private static Video video1 = new Video();
+    private static Video video1 = new Video(
+            1111,
+            "title one",
+            "picture url one",
+            "description one",
+            "video url one");
 
-    static {
-        video1.setId(1111);
-        video1.setDescription("description one");
-        video1.setPictureUrl("picture url one");
-        video1.setTitle("title one");
-        video1.setVideoUrl("video url one");
-    }
-
-    private static Video video2 = new Video();
-
-    static {
-        video2.setId(2222);
-        video2.setDescription("description two");
-        video2.setPictureUrl("picture url two");
-        video2.setTitle("title two");
-        video2.setVideoUrl("video url two");
-    }
+    private static Video video2 = new Video(2222,
+            "title two",
+            "picture url two",
+            "description two",
+            "video url two");
 
 
     @Before
