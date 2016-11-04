@@ -1,29 +1,10 @@
 package ru.roscha_akademii.medialib.video.model.local
 
-class VideoStorageRecord {
-    constructor(id: Long, downloadId: Long) {
-        this.id = id
-        this.downloadId = downloadId
-    }
-
-    constructor(id: Long, downloadId: Long, localUri: String?, status: StorageStatus, percent: Int?) {
-        this.id = id
-        this.localUri = localUri
-        this.status = status
-        this.downloadId = downloadId
-        this.percent = percent
-    }
-
-    var id: Long = 0
-    var downloadId: Long
-    var localUri: String? = null
-    var status: StorageStatus = StorageStatus.REMOTE
-    var percent: Int? = null
-
-    override fun toString(): String {
-        return "VideoStorageRecord: $id $downloadId $status $localUri"
-    }
-}
+data class VideoStorageRecord (val id: Long,
+                               val downloadId: Long,
+                               var localUri: String? = null,
+                               var status: StorageStatus = StorageStatus.REMOTE,
+                               var percent: Int? = null)
 
 enum class StorageStatus(val value: Int) {
     REMOTE(1), PROGRESS(2), LOCAL(3);

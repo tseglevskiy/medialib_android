@@ -48,12 +48,12 @@ class VideoStorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
     internal class GetResolver : DefaultGetResolver<VideoStorageRecord>() {
         override fun mapFromCursor(cursor: Cursor): VideoStorageRecord {
             return VideoStorageRecord(
-                    cursor.getLong(cursor.getColumnIndex(VideoStorageTable.ID)),
-                    cursor.getLong(cursor.getColumnIndex(VideoStorageTable.DOWNLOAD_ID)),
-                    cursor.getString(cursor.getColumnIndex(VideoStorageTable.LOCAL_URI)),
-                    StorageStatus.fromInt(
+                    id = cursor.getLong(cursor.getColumnIndex(VideoStorageTable.ID)),
+                    downloadId = cursor.getLong(cursor.getColumnIndex(VideoStorageTable.DOWNLOAD_ID)),
+                    localUri = cursor.getString(cursor.getColumnIndex(VideoStorageTable.LOCAL_URI)),
+                    status = StorageStatus.fromInt(
                             cursor.getInt(cursor.getColumnIndex(VideoStorageTable.STATUS))),
-                    cursor.getInt(cursor.getColumnIndex(VideoStorageTable.PERCENT))
+                    percent = cursor.getInt(cursor.getColumnIndex(VideoStorageTable.PERCENT))
             )
         }
     }
