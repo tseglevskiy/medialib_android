@@ -276,9 +276,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     internal fun showControls() {
         mainHandler.freeze()
 
-        if (supportActionBar != null) {
-            supportActionBar!!.show()
-        }
+        supportActionBar?.show()
 
         decorView!!.systemUiVisibility = 0
         window.setFlags(
@@ -290,9 +288,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     }
 
     internal fun hideControls() {
-        if (supportActionBar != null) {
-            supportActionBar!!.hide()
-        }
+        supportActionBar?.hide()
 
         // спрятать элементы навигации и включить фулскрин
         var visibilityFlags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
