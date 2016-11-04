@@ -2,35 +2,25 @@ package ru.roscha_akademii.medialib.video.model.remote
 
 import com.google.gson.annotations.SerializedName
 
-class Video {
-    constructor() {
-    }
+data class Video(
+        val id: Long,
 
-    constructor(id: Long, title: String?, pictureUrl: String?, description: String?, videoUrl: String) {
-        this.id = id
-        this.title = title
-        this.pictureUrl = pictureUrl
-        this.description = description
-        this.videoUrl = videoUrl
-    }
+        val title: String? = null,
 
-    var id: Long = 0
+        @SerializedName("picture")
+        val pictureUrl: String? = null,
 
-    var title: String? = null
+        @SerializedName("desc")
+        val description: String? = null,
 
-    @SerializedName("picture")
-    var pictureUrl: String? = null
-
-    @SerializedName("desc")
-    var description: String? = null
-
-//    @SerializedName("length")
+        //    @SerializedName("length")
 //    var duration: String? = null
 
 //    @SerializedName("dt")
 //    var issueDate: String? = null
 
-    @SerializedName("video")
-    lateinit var videoUrl: String
+        @SerializedName("video")
+        val videoUrl: String
+)
 
-}
+
