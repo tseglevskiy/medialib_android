@@ -7,6 +7,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.*
@@ -226,6 +227,10 @@ class VideoStorageTest() {
         videoStorage.checkDownloadStatus(inProgressTestRecord.id)
 
         verify(downloadManager, times(1)).query(any())
+
+        val captor = ArgumentCaptor.forClass(Long::class.java)
+        verify(downloadManager, times(1)).remove(captor.capture())
+        assertEquals(inProgressTestRecord.downloadId, captor.allValues[0])
 
         val record = videoStorage.getRecord(inProgressTestRecord.id)
         assertNull(record)
