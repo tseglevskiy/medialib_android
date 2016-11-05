@@ -29,11 +29,12 @@ open class VideoStorage(internal val db: StorIOSQLite,
         val record = getRecord(id) ?: return
         checkDownloadStatus(record)
     }
+
     fun checkDownloadStatus(record: VideoStorageRecord) {
         if (record.status == StorageStatus.LOCAL) return
 
-        val query = DownloadManager.Query()
         val downloadId = record.downloadId
+        val query = DownloadManager.Query()
         query.setFilterById(downloadId)
         val cursor = downloadManager.query(query)
 
@@ -116,7 +117,6 @@ open class VideoStorage(internal val db: StorIOSQLite,
     }
 
     fun removeLocal(videoId: Long) {
-        checkDownloadStatus(videoId)
         val record = getRecord(videoId) ?: return
 
         downloadManager.remove(record.downloadId)
