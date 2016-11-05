@@ -17,7 +17,7 @@ class VideoStorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
         GetResolver(),
         DeleteResolver()) {
 
-    internal class PutResolver : DefaultPutResolver<VideoStorageRecord>() {
+    class PutResolver : DefaultPutResolver<VideoStorageRecord>() {
         public override fun mapToInsertQuery(obj: VideoStorageRecord): InsertQuery {
             return InsertQuery.builder()
                     .table(VideoStorageTable.TABLE_NAME)
@@ -45,7 +45,7 @@ class VideoStorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
         }
     }
 
-    internal class GetResolver : DefaultGetResolver<VideoStorageRecord>() {
+    class GetResolver : DefaultGetResolver<VideoStorageRecord>() {
         override fun mapFromCursor(cursor: Cursor): VideoStorageRecord {
             return VideoStorageRecord(
                     id = cursor.getLong(cursor.getColumnIndex(VideoStorageTable.ID)),
@@ -58,7 +58,7 @@ class VideoStorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
         }
     }
 
-    internal class DeleteResolver : DefaultDeleteResolver<VideoStorageRecord>() {
+    class DeleteResolver : DefaultDeleteResolver<VideoStorageRecord>() {
         public override fun mapToDeleteQuery(`object`: VideoStorageRecord): DeleteQuery {
             return DeleteQuery.builder()
                     .table(VideoStorageTable.TABLE_NAME)
