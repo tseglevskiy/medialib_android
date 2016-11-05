@@ -14,42 +14,32 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class AndroidModule(private val application: MediaLibApplication, private val refWatcher: RefWatcher) {
+open class AndroidModule(private val application: MediaLibApplication,
+                         private val refWatcher: RefWatcher) {
 
     @Provides
     @Singleton
-    internal fun providesContext(): Context {
-        return application
-    }
+    internal fun providesContext(): Context = application
 
     @Provides
     @Singleton
-    internal fun providesRefWatcher(): RefWatcher {
-        return refWatcher
-    }
+    internal fun providesRefWatcher() = refWatcher
 
     @Provides
     @Singleton
-    internal fun providesResources(): Resources {
-        return application.resources
-    }
+    internal fun providesResources() = application.resources
 
     @Provides
     @Singleton
-    internal fun providesDownloadManager(): DownloadManager {
-        return application.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    }
+    internal open fun providesDownloadManager()
+            = application.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
     @Provides
     @Singleton
-    internal fun providesContentResolver(): ContentResolver {
-        return application.contentResolver
-    }
+    internal fun providesContentResolver() = application.contentResolver
 
-            @Provides
+    @Provides
     @Singleton
-    internal fun providesSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences("app", Context.MODE_PRIVATE)
-    }
-
+    internal fun providesSharedPreferences(context: Context)
+            = context.getSharedPreferences("app", Context.MODE_PRIVATE)
 }

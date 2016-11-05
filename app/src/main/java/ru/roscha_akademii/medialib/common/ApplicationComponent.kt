@@ -12,6 +12,7 @@ import ru.roscha_akademii.medialib.video.event.DownloadNotificationClickReceiver
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
+import ru.roscha_akademii.medialib.video.model.local.VideoStorage
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCard
 import javax.inject.Named
 import javax.inject.Singleton
@@ -59,6 +60,8 @@ interface ApplicationComponent {
     fun videoDbStorIo(): StorIOSQLite
 
     fun videoDb(): VideoDb
+
+    fun videoStorage(): VideoStorage
 
     // UpdateModule
 

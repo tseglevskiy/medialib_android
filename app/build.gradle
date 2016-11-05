@@ -37,6 +37,7 @@ android {
         versionCode appVersionCode.toInteger()
         versionName appVersionName // from gradle.properties
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
 
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "ru.roscha_akademii.medialib.common.MockAppRunner"
@@ -63,10 +64,13 @@ def googlePlayVersion = '9.6.1'
 def okHttpVersion = '3.2.0'
 def storIoVersion = '1.11.0'
 def mockitoVersion = '1.10.19'
+def mockitoKotlinVersion = '0.11.0'
 
 dependencies {
 //    compile project(':net')
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:multidex:1.0.1'
 
     // kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -29,51 +29,46 @@ open class VideoDbModule {
                                       context: Context,
                                       contentResolver: ContentResolver,
                                       downloadManager: DownloadManager)
-            : VideoStorage {
-        return VideoStorage(storio, videoDb, context, contentResolver, downloadManager)
-    }
+            : VideoStorage
+            = VideoStorage(storio, videoDb, context, contentResolver, downloadManager)
 
     @Provides
     @Singleton
-    internal fun providesVideoDb(@Named("video db") storio: StorIOSQLite): VideoDb {
-        return VideoDb(storio)
-    }
+    internal fun providesVideoDb(@Named("video db") storio: StorIOSQLite)
+            : VideoDb
+            = VideoDb(storio)
 
     @Provides
     @Singleton
     @Named("video db")
-    internal fun providesVideoDbSio(videoDbHelper: VideoDbSqliteHelper): StorIOSQLite {
-        return DefaultStorIOSQLite
-                .builder()
-                .sqliteOpenHelper(videoDbHelper)
-                .addTypeMapping(Video::class.java, VideoMapping())
-                .addTypeMapping(VideoStorageRecord::class.java, VideoStorageRecordMapping())
-                .build()
-    }
+    internal fun providesVideoDbSio(videoDbHelper: VideoDbSqliteHelper)
+            : StorIOSQLite
+            = DefaultStorIOSQLite
+            .builder()
+            .sqliteOpenHelper(videoDbHelper)
+            .addTypeMapping(Video::class.java, VideoMapping())
+            .addTypeMapping(VideoStorageRecord::class.java, VideoStorageRecordMapping())
+            .build()
 
     @Provides
     @Singleton
-    internal fun providesVideoDbHelper(
-            context: Context,
-            @Named("video db filename") fileName: String?): VideoDbSqliteHelper {
-
-        // null filename means in-memory
-        // Dagger doesn't allow null values, so pass "" (empty string) instead null
-        return VideoDbSqliteHelper(
-                context,
-                if (fileName?.isEmpty() ?: false) null else fileName) // transform "" => null
-    }
+    internal fun providesVideoDbHelper(context: Context,
+                                       @Named("video db filename") fileName: String?)
+            : VideoDbSqliteHelper
+            // null filename means in-memory
+            // Dagger doesn't allow null values, so pass "" (empty string) instead null
+            = VideoDbSqliteHelper(context, if (fileName?.isEmpty() ?: false) null else fileName) // transform "" => null
 
     @Provides
     @Singleton
     @Named("video db filename")
-    open fun providesVideoDbFileName(): String {
-        return "video"
-    }
+    open fun providesVideoDbFileName()
+            : String
+            = "video"
 
     @Provides
     @Singleton
-    internal fun providesVideoApi(retrofit: Retrofit): VideoApi {
-        return retrofit.create(VideoApi::class.java)
-    }
+    internal fun providesVideoApi(retrofit: Retrofit)
+            : VideoApi
+            = retrofit.create(VideoApi::class.java)
 }

@@ -1,17 +1,15 @@
 package ru.roscha_akademii.medialib.common
 
-import android.app.Application
 import android.os.StrictMode
+import android.support.multidex.MultiDexApplication
 import com.crashlytics.android.BuildConfig
-
 import com.crashlytics.android.Crashlytics
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
-
 import io.fabric.sdk.android.Fabric
 
-open class MediaLibApplication : Application() {
-    var _component: ApplicationComponent? = null
+open class MediaLibApplication : MultiDexApplication() {
+    protected var _component: ApplicationComponent? = null
     val component: ApplicationComponent
         get() {
             return _component!!

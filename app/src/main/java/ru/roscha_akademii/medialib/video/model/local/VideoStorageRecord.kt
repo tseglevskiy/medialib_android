@@ -4,7 +4,7 @@ data class VideoStorageRecord (val id: Long,
                                val downloadId: Long,
                                var localUri: String? = null,
                                var status: StorageStatus = StorageStatus.REMOTE,
-                               var percent: Int? = null)
+                               var percent: Int = 0)
 
 enum class StorageStatus(val value: Int) {
     REMOTE(1), PROGRESS(2), LOCAL(3);
