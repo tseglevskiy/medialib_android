@@ -54,13 +54,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/java'
     }
+
 }
 
 def supportVersion = '25.0.0'
 def daggerVersion = '2.6.1'
 def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
-def googlePlayVersion = '9.6.1'
+def googlePlayVersion = '9.8.0'
 def okHttpVersion = '3.2.0'
 def storIoVersion = '1.11.0'
 def mockitoVersion = '1.10.19'
