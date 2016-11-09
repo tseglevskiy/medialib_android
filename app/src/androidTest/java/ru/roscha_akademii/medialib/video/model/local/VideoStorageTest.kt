@@ -16,6 +16,7 @@ import ru.roscha_akademii.medialib.common.AndroidModule
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent
 import ru.roscha_akademii.medialib.common.MockMediaLibApplication
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
+import ru.roscha_akademii.medialib.whenever
 
 
 class VideoStorageTest() {
@@ -252,7 +253,5 @@ class VideoStorageTest() {
     private fun VideoStorageRecord.saveForTest() {
         storIo.put().`object`(this).prepare().executeAsBlocking()
     }
-
-    fun <T> whenever(methodCall: T): OngoingStubbing<T> = Mockito.`when`(methodCall)!!
 
 }
