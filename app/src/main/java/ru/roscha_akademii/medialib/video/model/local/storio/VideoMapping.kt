@@ -9,8 +9,8 @@ import com.pushtorefresh.storio.sqlite.operations.put.DefaultPutResolver
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
+import org.joda.time.LocalDate
 import ru.roscha_akademii.medialib.video.model.local.VideoTable
-
 import ru.roscha_akademii.medialib.video.model.remote.Video
 
 class VideoMapping : SQLiteTypeMapping<Video>(
@@ -41,6 +41,8 @@ class VideoMapping : SQLiteTypeMapping<Video>(
             contentValues.put(VideoTable.DESCRIPTION, obj.description)
             contentValues.put(VideoTable.ID, obj.id)
             contentValues.put(VideoTable.TITLE, obj.title)
+            contentValues.put(VideoTable.DURATION, obj.duration)
+            contentValues.put(VideoTable.DATE, obj.issueDate.toString())
 
             return contentValues
         }
@@ -49,11 +51,15 @@ class VideoMapping : SQLiteTypeMapping<Video>(
     internal class GetResolver : DefaultGetResolver<Video>() {
         override fun mapFromCursor(cursor: Cursor): Video {
             return Video(
-                    cursor.getLong(cursor.getColumnIndex(VideoTable.ID)),
-                    cursor.getString(cursor.getColumnIndex(VideoTable.TITLE)),
-                    cursor.getString(cursor.getColumnIndex(VideoTable.PICTURE_URL)),
-                    cursor.getString(cursor.getColumnIndex(VideoTable.DESCRIPTION)),
-                    cursor.getString(cursor.getColumnIndex(VideoTable.VIDEO_URL)))
+                    id = cursor.getLong(cursor.getColumnIndex(VideoTable.ID)),
+                    title = cursor.getString(cursor.getColumnIndex(VideoTable.TITLE)),
+                    pictureUrl = cursor.getString(cursor.getColumnIndex(VideoTable.PICTURE_URL)),
+                    description = cursor.getString(cursor.getColumnIndex(VideoTable.DESCRIPTION)),
+                    videoUrl = cursor.getString(cursor.getColumnIndex(VideoTable.VIDEO_URL)),
+                    duration = cursor.getString(cursor.getColumnIndex(VideoTable.DURATION)),
+                    issueDate = LocalDate.parse(
+                            cursor.getString(cursor.getColumnIndex(VideoTable.DATE)))
+            )
         }
     }
 

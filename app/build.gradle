@@ -124,6 +124,9 @@ dependencies {
     // ExoPlayer
     compile 'com.google.android.exoplayer:exoplayer:r2.0.0'
 
+    // Joda Time
+    compile 'net.danlew:android.joda:2.9.4.1'
+
     // LeakCanary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'

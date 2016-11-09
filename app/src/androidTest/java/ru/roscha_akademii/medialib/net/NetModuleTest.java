@@ -6,11 +6,14 @@ import android.support.test.InstrumentationRegistry;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -98,13 +101,16 @@ public class NetModuleTest {
 
         ArrayList<Video> videos = response.body().getList();
         assertNotNull(videos);
-        assertEquals(2, videos.size());
+        assertEquals(3, videos.size());
 
         Video v1 = videos.get(0);
-        assertEquals(12345, v1.getId());
-        assertEquals("название один", v1.getTitle());
-        assertEquals("http://jsonparsing.parseapp.com/jsonData/images/avengers.jpg", v1.getPictureUrl());
-        assertEquals("описание один", v1.getDescription());
+        assertEquals(13, v1.getId());
+        assertEquals("Мазыкская игрушка. Елочка", v1.getTitle());
+        assertEquals("http://video.roscha-akademii.ru/img/movie/preview/13.jpg", v1.getPictureUrl());
+        assertEquals("http://video.roscha-akademii.ru/img/movie/video/video1.mp4", v1.getVideoUrl());
+        assertTrue(v1.getDescription().length() > 10);
+        assertEquals("0:43 мин.", v1.getDuration());
+        assertEquals(LocalDate.parse("2016-02-16"), v1.getIssueDate());
     }
 
 }

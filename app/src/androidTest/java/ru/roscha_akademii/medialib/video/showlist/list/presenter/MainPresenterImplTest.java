@@ -1,10 +1,12 @@
 package ru.roscha_akademii.medialib.video.showlist.list.presenter;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ru.roscha_akademii.medialib.common.ActivityNavigator;
@@ -36,13 +38,17 @@ test data
             "title one",
             "picture url one",
             "description one",
-            "video url one");
+            "video url one",
+            LocalDate.parse("2000-01-01"),
+            "0:01");
 
     private static Video video2 = new Video(2222,
             "title two",
             "picture url two",
             "description two",
-            "video url two");
+            "video url two",
+            LocalDate.parse("2001-02-02"),
+            "0:02");
 
 
     @Before

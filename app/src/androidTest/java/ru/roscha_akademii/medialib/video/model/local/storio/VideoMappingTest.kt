@@ -1,6 +1,7 @@
 package ru.roscha_akademii.medialib.video.model.local.storio
 
 import android.database.MatrixCursor
+import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,11 +15,13 @@ class VideoMappingTest {
     lateinit internal var getResolver: VideoMapping.GetResolver
 
     val video1 = Video(
-            1111,
-            "title one",
-            "picture url one",
-            "description one",
-            "video url one")
+            id = 1111,
+            title = "title one",
+            pictureUrl = "picture url one",
+            description = "description one",
+            videoUrl = "video url one",
+            duration = "0:05",
+            issueDate = LocalDate.parse("2000-01-02"))
 
     @Before
     fun setUp() {
@@ -44,12 +47,14 @@ class VideoMappingTest {
     fun mapToContentValues() {
         val values = putResolver.mapToContentValues(video1)
 
-        assertEquals(5, values.size())
+        assertEquals(7, values.size())
         assertEquals(video1.id, values.get(VideoTable.ID))
         assertEquals(video1.videoUrl, values.get(VideoTable.VIDEO_URL))
         assertEquals(video1.title, values.get(VideoTable.TITLE))
         assertEquals(video1.description, values.get(VideoTable.DESCRIPTION))
         assertEquals(video1.pictureUrl, values.get(VideoTable.PICTURE_URL))
+        assertEquals(video1.duration, values.get(VideoTable.DURATION))
+        assertEquals(video1.issueDate.toString(), values.get(VideoTable.DATE))
     }
 
     @Test
@@ -66,19 +71,24 @@ class VideoMappingTest {
                 VideoTable.TITLE,
                 VideoTable.DESCRIPTION,
                 VideoTable.VIDEO_URL,
-                VideoTable.PICTURE_URL
+                VideoTable.PICTURE_URL,
+                VideoTable.DURATION,
+                VideoTable.DATE
         ))
-        val row = cursor.newRow()
+
+        cursor.newRow()
                 .add(video1.id)
                 .add(video1.title)
                 .add(video1.description)
                 .add(video1.videoUrl)
                 .add(video1.pictureUrl)
+                .add(video1.duration)
+                .add(video1.issueDate.toString())
         cursor.moveToFirst()
 
         val video = getResolver.mapFromCursor(cursor)
 
-        assert(video1.equals(video))
+        assertEquals(video1, video)
     }
 
     @Test

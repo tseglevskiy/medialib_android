@@ -5,9 +5,11 @@ import android.support.test.InstrumentationRegistry;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import ru.roscha_akademii.medialib.common.AndroidModule;
@@ -66,13 +68,17 @@ public class VideoDbTest {
             "title one",
             "picture url one",
             "description one",
-            "video url one");
+            "video url one",
+            LocalDate.parse("2000-01-01"),
+            "0:01");
 
     private static Video video2 = new Video(2222,
             "title two",
             "picture url two",
             "description two",
-            "video url two");
+            "video url two",
+            LocalDate.parse("2001-02-02"),
+            "0:02");
 
     /*
     tests

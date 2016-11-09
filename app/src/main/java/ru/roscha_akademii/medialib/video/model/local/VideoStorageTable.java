@@ -3,6 +3,8 @@ package ru.roscha_akademii.medialib.video.model.local;
 import ru.roscha_akademii.medialib.common.CreateTableQueryBuilder;
 
 public class VideoStorageTable {
+    public static final int VERSION = 3;
+
     public static final String TABLE_NAME = "video_storage";
 
     public static final String ID = "_id";

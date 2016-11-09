@@ -1,8 +1,11 @@
 package ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+
+import java.util.Date;
 
 import ru.roscha_akademii.medialib.video.model.local.VideoStorage;
 import ru.roscha_akademii.medialib.video.model.remote.Video;
@@ -37,7 +40,10 @@ public class ShowVideoPresenterImplTest {
             "title one",
             "picture url one",
             "description one",
-            "video url one");
+            "video url one",
+            LocalDate.parse("2000-01-01"),
+            "0:01");
+
 
 
     @Test
