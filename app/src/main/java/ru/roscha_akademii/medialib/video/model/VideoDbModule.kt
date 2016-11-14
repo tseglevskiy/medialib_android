@@ -13,24 +13,16 @@ import javax.inject.Singleton
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import ru.roscha_akademii.medialib.storage.Storage
+import ru.roscha_akademii.medialib.storage.VideoStorageRecord
 import ru.roscha_akademii.medialib.video.model.local.*
 import ru.roscha_akademii.medialib.video.model.local.storio.VideoMapping
-import ru.roscha_akademii.medialib.video.model.local.storio.VideoStorageRecordMapping
+import ru.roscha_akademii.medialib.storage.StorageRecordMapping
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
 
 @Module
 open class VideoDbModule {
-
-    @Provides
-    @Singleton
-    internal fun providesVideoStorage(@Named("video db") storio: StorIOSQLite,
-                                      videoDb: VideoDb,
-                                      context: Context,
-                                      contentResolver: ContentResolver,
-                                      downloadManager: DownloadManager)
-            : VideoStorage
-            = VideoStorage(storio, videoDb, context, contentResolver, downloadManager)
 
     @Provides
     @Singleton
@@ -47,7 +39,6 @@ open class VideoDbModule {
             .builder()
             .sqliteOpenHelper(videoDbHelper)
             .addTypeMapping(Video::class.java, VideoMapping())
-            .addTypeMapping(VideoStorageRecord::class.java, VideoStorageRecordMapping())
             .build()
 
     @Provides

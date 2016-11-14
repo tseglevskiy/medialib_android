@@ -8,7 +8,7 @@ import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenter
 import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.local.VideoStorage
+import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 
@@ -31,8 +31,8 @@ class ActivityModule(private val activity: Activity) {
 
     @Provides
     @ActivityScope
-    internal fun providesShowVideoPresenter(videoDb: VideoDb, videoStorage: VideoStorage): ShowVideoPresenter {
-        return ShowVideoPresenterImpl(videoDb, videoStorage)
+    internal fun providesShowVideoPresenter(videoDb: VideoDb, storage: Storage): ShowVideoPresenter {
+        return ShowVideoPresenterImpl(videoDb, storage)
     }
 
 

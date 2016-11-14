@@ -1,6 +1,6 @@
-package ru.roscha_akademii.medialib.video.model.local
+package ru.roscha_akademii.medialib.storage
 
-data class VideoStorageRecord (val id: Long,
+data class VideoStorageRecord (val remoteUri: String,
                                val downloadId: Long,
                                var localUri: String? = null,
                                var status: StorageStatus = StorageStatus.REMOTE,
@@ -10,7 +10,7 @@ enum class StorageStatus(val value: Int) {
     REMOTE(1), PROGRESS(2), LOCAL(3);
 
     companion object {
-        private val map = StorageStatus.values().associateBy(StorageStatus::value)
+        private val map = values().associateBy(StorageStatus::value)
 
         fun fromInt(type: Int?): StorageStatus {
             return try {

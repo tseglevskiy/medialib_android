@@ -7,9 +7,9 @@ import com.hannesdorfmann.mosby.mvp.layout.MvpFrameLayout
 import kotlinx.android.synthetic.main.videolist_card.view.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.video.model.local.StorageStatus
+import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.local.VideoStorage
+import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.showlist.item.VideoCardInterface
 import ru.roscha_akademii.medialib.video.showlist.item.presenter.VideoCardPresenter
 import ru.roscha_akademii.medialib.video.showlist.item.presenter.VideoCardPresenterImpl
@@ -21,7 +21,7 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     lateinit var videoDb: VideoDb
 
     @Inject
-    lateinit var videoStorage: VideoStorage
+    lateinit var storage: Storage
 
     override var videoId: Long? = null
         set(value) {
@@ -41,7 +41,7 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     override fun createPresenter(): VideoCardPresenter {
-        return VideoCardPresenterImpl(videoDb, videoStorage) // TODO move to dagger
+        return VideoCardPresenterImpl(videoDb, storage) // TODO move to dagger
     }
 
     override fun onAttachedToWindow() {

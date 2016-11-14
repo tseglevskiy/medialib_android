@@ -1,4 +1,4 @@
-package ru.roscha_akademii.medialib.video.model.local
+package ru.roscha_akademii.medialib.storage
 
 import android.app.DownloadManager
 import android.content.ContentResolver
@@ -10,27 +10,26 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.Query
 import java.io.FileNotFoundException
 
-open class VideoStorage(internal val db: StorIOSQLite,
-                   val videoDb: VideoDb,
+open class StorageImpl(internal val db: StorIOSQLite,
                    val context: Context,
                    val contentResolver: ContentResolver,
-                   val downloadManager: DownloadManager) {
+                   val downloadManager: DownloadManager) : Storage {
 
-    fun getStatus(id: Long): StorageStatus {
-        checkDownloadStatus(id)
-        checkLocalUri(id)
+    override fun getStatus(remoteUri: String): StorageStatus {
+        checkDownloadStatus(remoteUri)
+        checkLocalUri(remoteUri)
 
-        val rerord = getRecord(id)
+        val rerord = getRecord(remoteUri)
         Log.d("happy", rerord.toString())
         return rerord?.status ?: StorageStatus.REMOTE
     }
 
-    fun checkDownloadStatus(id: Long) {
-        val record = getRecord(id) ?: return
+    override fun checkDownloadStatus(remoteUri: String) {
+        val record = getRecord(remoteUri) ?: return
         checkDownloadStatus(record)
     }
 
-    fun checkDownloadStatus(record: VideoStorageRecord) {
+    override fun checkDownloadStatus(record: VideoStorageRecord) {
         if (record.status == StorageStatus.LOCAL) return
 
         val downloadId = record.downloadId
@@ -75,49 +74,54 @@ open class VideoStorage(internal val db: StorIOSQLite,
             }
 
         // DownloadManager.STATUS_FAILED
-            else -> removeLocal(record.id)
+            else -> removeLocal(record.remoteUri)
         }
 
     }
 
-    fun checkLocalUri(id: Long) {
-        val record = getRecord(id) ?: return
+    override fun checkLocalUri(remoteUri: String) {
+        val record = getRecord(remoteUri) ?: return
         val uriStr = record.localUri ?: return
 
         try {
             val inps = contentResolver.openInputStream(Uri.parse(uriStr))
             inps.close()
         } catch (e: FileNotFoundException) {
-            removeLocal(id)
+            removeLocal(remoteUri)
         }
     }
 
-    fun getPercent(id: Long): Int {
-        return getRecord(id)?.percent?.toInt() ?: return 0
+    override fun getPercent(remoteUri: String): Int {
+        return getRecord(remoteUri)?.percent?.toInt() ?: return 0
     }
 
-    fun saveLocal(id: Long) {
-        checkDownloadStatus(id)
-        if (getRecord(id) != null) return
+    override fun saveLocal(remoteUri: String, title: String, visible: Boolean) {
+        checkDownloadStatus(remoteUri)
+        if (getRecord(remoteUri) != null) return
+        Log.d("happy", "wtf?")
 
-        val video = videoDb.getVideo(id)
-        val uri = Uri.parse(video.videoUrl)
+        val uri = Uri.parse(remoteUri)
 
         val request = DownloadManager.Request(uri)
-        request.setTitle(video.title)
+        request.setTitle(title)
 //        request.setDescription("description description description")
-        request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_NOTIFICATIONS, "video_$id.mp4")
+        request.setDestinationInExternalFilesDir(
+                context,
+                Environment.DIRECTORY_NOTIFICATIONS,
+                remoteUri.hashCode().toString())
         request.setVisibleInDownloadsUi(false)
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+        request.setNotificationVisibility(
+                if (visible) DownloadManager.Request.VISIBILITY_VISIBLE
+                else DownloadManager.Request.VISIBILITY_HIDDEN)
 
         val downloadRef = downloadManager.enqueue(request)
-        VideoStorageRecord(id, downloadRef).save()
+        VideoStorageRecord(remoteUri, downloadRef).save()
 
-        checkDownloadStatus(id)
+        checkDownloadStatus(remoteUri)
     }
 
-    fun removeLocal(videoId: Long) {
-        val record = getRecord(videoId) ?: return
+    override fun removeLocal(remoteUri: String) {
+        val record = getRecord(remoteUri) ?: return
 
         downloadManager.remove(record.downloadId)
 
@@ -132,15 +136,14 @@ open class VideoStorage(internal val db: StorIOSQLite,
         db.delete().`object`(this).prepare().executeAsBlocking()
     }
 
-    fun getRecord(id: Long): VideoStorageRecord? {
+    fun getRecord(remoteUri: String): VideoStorageRecord? {
         return try {
             db.get()
                     .listOfObjects(VideoStorageRecord::class.java)
                     .withQuery(Query.builder()
-                            .table(VideoStorageTable.TABLE_NAME)
-                            .where(VideoStorageTable.ID + " = ?")
-                            .whereArgs(id)
-                            .orderBy(VideoStorageTable.ID)
+                            .table(StorageTable.TABLE_NAME)
+                            .where(StorageTable.REMOTE_URI + " = ?")
+                            .whereArgs(remoteUri)
                             .build())
                     .prepare()
                     .executeAsBlocking()[0]
@@ -151,6 +154,11 @@ open class VideoStorage(internal val db: StorIOSQLite,
             null
         }
     }
+
+    override fun getLocalUriIfAny(remoteUri: String): String {
+        return getRecord(remoteUri)?.localUri ?: remoteUri
+    }
+
 
 }
 

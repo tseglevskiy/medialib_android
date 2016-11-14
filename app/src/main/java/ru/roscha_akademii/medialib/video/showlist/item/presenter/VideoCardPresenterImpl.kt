@@ -3,12 +3,12 @@ package ru.roscha_akademii.medialib.video.showlist.item.presenter
 import android.os.Handler
 import android.os.Message
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
-import ru.roscha_akademii.medialib.video.model.local.StorageStatus
+import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.local.VideoStorage
+import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCardView
 
-class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorage)
+class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
 : MvpBasePresenter<VideoCardView>(), VideoCardPresenter {
     override var videoId: Long? = null
         set(value) {
@@ -35,8 +35,10 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorag
 
     override fun updateStatus() {
         if (videoId != null) {
-            val status = videoStorage.getStatus(videoId!!)
-            val percent = videoStorage.getPercent(videoId!!)
+            val video = videoDb.getVideo(videoId!!)
+
+            val status = storage.getStatus(video.videoUrl)
+            val percent = storage.getPercent(video.videoUrl)
             view?.showStatus(status, percent)
 
             if (status == StorageStatus.PROGRESS && view != null) {
@@ -50,17 +52,21 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorag
     }
 
     override fun saveLocal() {
-        if (videoId != null) {
-            videoStorage.saveLocal(videoId!!)
-        }
+        if (videoId == null) return
+
+        val video = videoDb.getVideo(videoId!!)
+        storage.saveLocal(video.videoUrl, video.title ?: "", true)
+
         updateStatus()
         updateHandler.start()
     }
 
     override fun removeLocal() {
-        if (videoId != null) {
-            videoStorage.removeLocal(videoId!!)
-        }
+        if (videoId == null) return
+
+        val video = videoDb.getVideo(videoId!!)
+        storage.removeLocal(video.videoUrl)
+
         updateStatus()
     }
 
@@ -70,7 +76,7 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val videoStorage: VideoStorag
 
     inner class UpdateHandler : Handler() {
         override fun handleMessage(msg: Message?) {
-            when(msg?.what) {
+            when (msg?.what) {
                 MSG_UPDATE -> {
                     updateStatus()
                 }
