@@ -67,6 +67,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
+
+            <ru.roscha_akademii.medialib.storage.widget.view.DownloadControl
+                android:id="@+id/statusField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

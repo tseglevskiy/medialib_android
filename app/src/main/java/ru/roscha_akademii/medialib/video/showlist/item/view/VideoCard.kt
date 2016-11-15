@@ -1,6 +1,7 @@
 package ru.roscha_akademii.medialib.video.showlist.item.view
 
 import android.content.Context
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -52,46 +53,18 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        presenter?.videoId = videoId
+        handler.post {
+            presenter?.videoId = videoId
+        }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        presenter?.stop()
-    }
-
-//    override fun showDescription(desc: String) {
+    //    override fun showDescription(desc: String) {
 //        descriptionField.text = desc
 //    }
 //
     override fun showTitle(title: String) {
         titleField.text = title
-    }
-
-    override fun showStatus(status: StorageStatus, percent: Int?) {
-        when(status) {
-            StorageStatus.LOCAL -> {
-                statusField.text = "on device"
-                statusField.setOnClickListener {
-                    presenter?.removeLocal()
-                }
-            }
-
-            StorageStatus.PROGRESS -> {
-                statusField.text = "$percent%"
-                statusField.setOnClickListener {
-                    presenter?.removeLocal()
-                }
-            }
-
-            else -> {
-                statusField.text = "in cloud"
-                statusField.setOnClickListener {
-                    presenter?.saveLocal()
-                }
-            }
-
-        }
+        statusField.title = title
     }
 
     override fun showDuration(duration: String?) {
@@ -121,5 +94,9 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         } else {
             imageField.visibility = View.GONE
         }
+    }
+
+    override fun showStatus(url: String) {
+        statusField.url = url
     }
 }

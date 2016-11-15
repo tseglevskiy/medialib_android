@@ -14,6 +14,7 @@ import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.storage.Storage
+import ru.roscha_akademii.medialib.storage.widget.view.DownloadControl
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCard
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,8 +33,9 @@ interface ApplicationComponent {
      */
 
     fun inject(updateService: UpdateService)
-    fun inject(updateService: VideoCard)
+    fun inject(videoCard: VideoCard)
     fun inject(downloadNotificationClickReceiver: DownloadNotificationClickReceiver)
+    fun inject(downloadControl: DownloadControl)
 
     /*
     Using submodules requires providing explicit methods in the parent component.

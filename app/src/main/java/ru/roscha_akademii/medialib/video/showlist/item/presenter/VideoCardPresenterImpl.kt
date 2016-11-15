@@ -1,11 +1,8 @@
 package ru.roscha_akademii.medialib.video.showlist.item.presenter
 
-import android.os.Handler
-import android.os.Message
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
-import ru.roscha_akademii.medialib.storage.StorageStatus
-import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.storage.Storage
+import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCardView
 
 class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
@@ -16,88 +13,21 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
             updateView()
         }
 
-    override fun stop() {
-        updateHandler.stop()
-    }
-
     fun updateView() {
         videoId?.let {
             val video = videoDb.getVideo(it)
 //            view?.showDescription(video.description ?: "-")
 
-            with(video) {
-                view?.showTitle(title ?: "-")
-                view?.showDate(issueDate)
-                view?.showDuration(duration)
-                view?.showImage(pictureUrl?.let { storage.getLocalUriIfAny(it) })
-            }
-            updateStatus()
-        }
-
-    }
-
-    override fun updateStatus() {
-        if (videoId != null) {
-            val video = videoDb.getVideo(videoId!!)
-
-            val status = storage.getStatus(video.videoUrl)
-            val percent = storage.getPercent(video.videoUrl)
-            view?.showStatus(status, percent)
-
-            if (status == StorageStatus.PROGRESS && view != null) {
-                updateHandler.start()
-            }
-
-            view?.showStatus(status, percent)
-        } else {
-            view?.showStatus(StorageStatus.REMOTE, 0)
-        }
-    }
-
-    override fun saveLocal() {
-        if (videoId == null) return
-
-        val video = videoDb.getVideo(videoId!!)
-        storage.saveLocal(video.videoUrl, video.title ?: "", true)
-
-        updateStatus()
-        updateHandler.start()
-    }
-
-    override fun removeLocal() {
-        if (videoId == null) return
-
-        val video = videoDb.getVideo(videoId!!)
-        storage.removeLocal(video.videoUrl)
-
-        updateStatus()
-    }
-
-    val updateHandler: UpdateHandler by lazy {
-        UpdateHandler()
-    }
-
-    inner class UpdateHandler : Handler() {
-        override fun handleMessage(msg: Message?) {
-            when (msg?.what) {
-                MSG_UPDATE -> {
-                    updateStatus()
+            view?.let {
+                with(video) {
+                    it.showTitle(title ?: "-")
+                    it.showDate(issueDate)
+                    it.showDuration(duration)
+                    it.showImage(pictureUrl?.let { storage.getLocalUriIfAny(it) })
+                    it.showStatus(videoUrl)
                 }
-
-                else -> super.handleMessage(msg)
             }
         }
-
-        fun start() {
-            removeMessages(MSG_UPDATE)
-            sendEmptyMessageDelayed(MSG_UPDATE, 3000)
-        }
-
-        fun stop() {
-            removeMessages(MSG_UPDATE)
-        }
-
-
     }
 
     companion object {

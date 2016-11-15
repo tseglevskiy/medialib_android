@@ -35,7 +35,6 @@ import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.common.widget.AspectRatioFrameLayout
 import ru.roscha_akademii.medialib.common.widget.heightMatchParent
 import ru.roscha_akademii.medialib.common.widget.heightWrapContent
-import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
@@ -206,18 +205,29 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         this.url = url
     }
 
+    override fun showStatus(url: String) {
+        mainHandler.post {
+            statusField.url = url
+        }
+    }
+
     override fun showDescription(desc: String?) {
-        if (desc != null) {
-            descriptionField.visibility = VISIBLE
-            descriptionField.loadDataWithBaseURL("", desc, "text/html", "utf-8", "")
-        } else {
-            descriptionField.visibility = GONE
+        mainHandler.post {
+            if (desc != null) {
+                descriptionField.visibility = VISIBLE
+                descriptionField.loadDataWithBaseURL("", desc, "text/html", "utf-8", "")
+            } else {
+                descriptionField.visibility = GONE
+            }
         }
     }
 
     override fun showTitle(title: String?) {
-        title?.let {
-            supportActionBar?.title = it
+        mainHandler.post {
+            title?.let {
+                supportActionBar?.title = it
+                statusField.title = it
+            }
         }
     }
 
@@ -244,7 +254,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         }
 
         internal fun freeze() {
-            removeCallbacksAndMessages(null)
+            removeMessages(MSG_HIDE_CONTROLS)
         }
 
         internal fun hideInMoments() {

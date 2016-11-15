@@ -56,10 +56,10 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toLeftOf="@+id/durationField"/>
 
-    <Button
+    <ru.roscha_akademii.medialib.storage.widget.view.DownloadControl
         android:id="@+id/statusField"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent"

@@ -9,11 +9,11 @@ interface VideoCardView : MvpView {
 
 //    fun showDescription(desc: String)
 
-    fun showStatus(status: StorageStatus, percent: Int?)
-
     fun showDuration(duration: String?)
 
     fun showDate(date: LocalDate?)
 
     fun showImage(url: String?)
+
+    fun showStatus(url: String)
 }

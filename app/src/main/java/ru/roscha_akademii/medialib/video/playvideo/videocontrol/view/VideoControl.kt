@@ -34,7 +34,6 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     internal val positionListener: SeekBar.OnSeekBarChangeListener
 
-
     init {
         LayoutInflater
                 .from(context)

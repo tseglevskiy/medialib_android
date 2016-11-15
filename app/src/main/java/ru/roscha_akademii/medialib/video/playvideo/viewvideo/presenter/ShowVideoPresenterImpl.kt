@@ -22,6 +22,7 @@ class ShowVideoPresenterImpl(val videoDb: VideoDb,
 
         view?.let {
             it.showVideo(url)
+            it.showStatus(video.videoUrl)
 
             it.showDescription(video.description)
             it.showTitle(video.title)
