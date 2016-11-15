@@ -67,8 +67,8 @@ class UpdateService : Service() {
                     val answer = response.body()
                     Log.d("happy", "got videos " + answer.list?.size)
 
-                    if (answer.list != null) {
-                        saveVideos(answer.list!!)
+                    answer.list?.let {
+                        saveVideos(it)
                     }
 
                     updateScheduler.updateCompleted()
@@ -86,14 +86,16 @@ class UpdateService : Service() {
     }
 
     internal fun saveVideos(list: ArrayList<Video>) {
-        videoDb.put().objects(list).prepare().executeAsBlocking()
+        videoDb
+                .put()
+                .objects(list)
+                .prepare()
+                .executeAsBlocking()
 
-        for (video in list) {
-            if (video.pictureUrl != null) {
-                storage.saveLocal(video.pictureUrl, "image", false)
-            }
-        }
-
+        list
+                .map { it.pictureUrl }
+                .filterNotNull()
+                .forEach { storage.saveLocal(it, "image", false) }
     }
 
     companion object {
