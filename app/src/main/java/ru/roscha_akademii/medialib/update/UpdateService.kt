@@ -64,10 +64,7 @@ class UpdateService : Service() {
         call.enqueue(object : Callback<VideoAnswer> {
             override fun onResponse(call: Call<VideoAnswer>, response: Response<VideoAnswer>) {
                 try {
-                    val answer = response.body()
-                    Log.d("happy", "got videos " + answer.list?.size)
-
-                    answer.list?.let {
+                    response.body()?.list?.let {
                         saveVideos(it)
                     }
 
