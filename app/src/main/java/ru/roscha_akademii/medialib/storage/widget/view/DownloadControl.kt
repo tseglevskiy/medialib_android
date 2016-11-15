@@ -10,6 +10,7 @@ import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.StorageStatus
+import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.storage.widget.DownloadControlInterface
 import ru.roscha_akademii.medialib.storage.widget.presenter.DownloadControlPresenter
 import ru.roscha_akademii.medialib.storage.widget.presenter.DownloadControlPresenterImpl
@@ -19,7 +20,7 @@ class DownloadControl @JvmOverloads constructor(context: Context, attrs: Attribu
 : MvpFrameLayout<DownloadControlView, DownloadControlPresenter>(context, attrs, defStyleAttr), DownloadControlView, DownloadControlInterface {
     @Inject
     lateinit var storage: Storage
-    
+
     val mainHandler: Handler by lazy {
         Handler()
     }
@@ -45,44 +46,50 @@ class DownloadControl @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
     init {
-        (context.applicationContext as MediaLibApplication)
-                .component
-                .inject(this)
-
-        LayoutInflater
-                .from(context)
-                .inflate(R.layout.downloadcontrol, this, true)
-    }
-
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        presenter?.stop()
-    }
-
-    override fun showStatus(status: StorageStatus, percent: Int?) {
-        when(status) {
-            StorageStatus.LOCAL -> {
-                downloadControlStatusField.text = "on device"
-                downloadControlStatusField.setOnClickListener {
-                    presenter?.removeLocal()
-                }
-            }
-
-            StorageStatus.PROGRESS -> {
-                downloadControlStatusField.text = "$percent%"
-                downloadControlStatusField.setOnClickListener {
-                    presenter?.removeLocal()
-                }
-            }
-
+        val app = context.applicationContext
+        when (app) {
+            is MediaLibApplication -> app
+                    .component
+                    .inject(this)
             else -> {
-                downloadControlStatusField.text = "in cloud"
-                downloadControlStatusField.setOnClickListener {
-                    presenter?.saveLocal()
-                }
+                storage = StorageStub()
             }
+        }
 
+            LayoutInflater
+                    .from(context)
+                    .inflate(R.layout.downloadcontrol, this, true)
+        }
+
+
+        override fun onDetachedFromWindow() {
+            super.onDetachedFromWindow()
+            presenter?.stop()
+        }
+
+        override fun showStatus(status: StorageStatus, percent: Int?) {
+            when (status) {
+                StorageStatus.LOCAL -> {
+                    downloadControlStatusField.text = "on device"
+                    downloadControlStatusField.setOnClickListener {
+                        presenter?.removeLocal()
+                    }
+                }
+
+                StorageStatus.PROGRESS -> {
+                    downloadControlStatusField.text = "$percent%"
+                    downloadControlStatusField.setOnClickListener {
+                        presenter?.removeLocal()
+                    }
+                }
+
+                else -> {
+                    downloadControlStatusField.text = "in cloud"
+                    downloadControlStatusField.setOnClickListener {
+                        presenter?.saveLocal()
+                    }
+                }
+
+            }
         }
     }
-}

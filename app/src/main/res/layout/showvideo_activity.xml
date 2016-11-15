@@ -23,7 +23,7 @@
             android:id="@+id/textureContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
