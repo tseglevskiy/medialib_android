@@ -12,8 +12,9 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.WindowManager
-
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -26,25 +27,22 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.hannesdorfmann.mosby.mvp.MvpActivity
-
-import javax.inject.Inject
-
+import com.squareup.leakcanary.RefWatcher
+import kotlinx.android.synthetic.main.showvideo_activity.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.common.widget.AspectRatioFrameLayout
+import ru.roscha_akademii.medialib.common.widget.heightMatchParent
+import ru.roscha_akademii.medialib.common.widget.heightWrapContent
+import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
-
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import com.squareup.leakcanary.RefWatcher
-
-import kotlinx.android.synthetic.main.showvideo_activity.*
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubExoPlayerEventListener
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubTextRendererOutput
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubVideoListener
+import javax.inject.Inject
 
 /*
 логика реализована сейчас такая:
@@ -155,6 +153,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         textureContainer.setAspectRatio(1.78f)
 
+
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = window.decorView
         decorView!!.setOnSystemUiVisibilityChangeListener { visibility ->
@@ -182,7 +181,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         videoControl.setCallback(videoControlCallback)
 
-        checkOrientation()
+        showOrHideByOrientation(isLandscape)
 
         getPresenter().start(videoId)
     }
@@ -205,6 +204,19 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
     override fun showVideo(url: String) {
         this.url = url
+    }
+
+    override fun showDescription(desc: String?) {
+        if (desc != null) {
+            descriptionField.visibility = VISIBLE
+            descriptionField.loadDataWithBaseURL("", desc, "text/html", "utf-8", "")
+        } else {
+            descriptionField.visibility = GONE
+        }
+    }
+
+    override fun showStatus(status: StorageStatus, percent: Int?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     class PlayerHandler : Handler() {
@@ -257,23 +269,26 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         val newOrientation = newConfig.orientation
-        if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            hideControls()
-        } else {
-            showControls()
-        }
+        showOrHideByOrientation(newOrientation == Configuration.ORIENTATION_LANDSCAPE)
     }
 
     internal val isLandscape: Boolean
         get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    internal fun checkOrientation() {
-
+    internal fun showOrHideByOrientation(isLandscape: Boolean) {
         if (isLandscape) {
+            hideDetails()
             hideControls()
+
+            textureContainer.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT)
+            textureContainer.heightMatchParent()
 
         } else {
             showControls()
+            showDetails()
+
+            textureContainer.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH)
+            textureContainer.heightWrapContent()
         }
     }
 
@@ -307,6 +322,16 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         videoControl.setVisibility(GONE)
         requestLayout()
+    }
+
+    internal fun showDetails() {
+        allDataLayout.visibility = VISIBLE
+        switchedScroll.scrollable = true
+    }
+
+    internal fun hideDetails() {
+        allDataLayout.visibility = GONE
+        switchedScroll.scrollable = false
     }
 
     internal enum class Mode {
@@ -411,4 +436,5 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
             return intent
         }
     }
+
 }

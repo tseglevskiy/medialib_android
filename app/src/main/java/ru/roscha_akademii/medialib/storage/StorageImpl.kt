@@ -98,7 +98,6 @@ open class StorageImpl(internal val db: StorIOSQLite,
     override fun saveLocal(remoteUri: String, title: String, visible: Boolean) {
         checkDownloadStatus(remoteUri)
         if (getRecord(remoteUri) != null) return
-        Log.d("happy", "wtf?")
 
         val uri = Uri.parse(remoteUri)
 

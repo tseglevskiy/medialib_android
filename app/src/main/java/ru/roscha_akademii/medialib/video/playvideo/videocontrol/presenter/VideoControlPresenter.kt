@@ -7,7 +7,7 @@ import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCall
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 
 interface VideoControlPresenter : MvpPresenter<VideoControlView> {
-    fun setCallback(callback: VideoControlCallback)
+    fun setCallback(callback: VideoControlCallback?)
 
     fun setPlayer(player: ExoPlayer)
 

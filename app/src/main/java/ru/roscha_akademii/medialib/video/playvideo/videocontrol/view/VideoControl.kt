@@ -39,7 +39,7 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
         LayoutInflater
                 .from(context)
                 .inflate(R.layout.videocontrol, this, true)
-        
+
         positionListener =
                 object : SeekBar.OnSeekBarChangeListener {
 
@@ -86,8 +86,11 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
     override fun createPresenter(): VideoControlPresenter {
         val presenter = VideoControlPresenterImpl()
 
-        presenter.setCallback(callback!!)
-        presenter.setPlayer(player!!)
+        presenter.setCallback(callback)
+        player?.let {
+            presenter.setPlayer(it)
+        }
+
         if (visibility == View.VISIBLE) {
             presenter.setIsVisible()
         } else {
@@ -99,9 +102,7 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     override fun setCallback(callback: VideoControlCallback) {
         this.callback = callback
-        if (getPresenter() != null) {
-            getPresenter().setCallback(callback)
-        }
+        getPresenter()?.setCallback(callback)
     }
 
     /*
@@ -113,13 +114,11 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     override fun setPlayer(player: ExoPlayer) {
         this.player = player
-        if (getPresenter() != null) {
-            getPresenter().setPlayer(player)
-        }
+        getPresenter()?.setPlayer(player)
     }
 
     override fun releasePlayer() {
-        getPresenter().revokePlayer()
+        getPresenter()?.revokePlayer()
     }
 
     /*

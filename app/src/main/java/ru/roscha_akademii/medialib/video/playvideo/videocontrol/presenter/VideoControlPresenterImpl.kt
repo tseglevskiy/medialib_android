@@ -31,7 +31,7 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
     }
     private var callback: VideoControlCallback? = null
 
-    override fun setCallback(callback: VideoControlCallback) {
+    override fun setCallback(callback: VideoControlCallback?) {
         this.callback = callback
     }
 
