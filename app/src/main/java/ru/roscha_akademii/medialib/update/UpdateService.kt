@@ -17,6 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.roscha_akademii.medialib.common.MediaLibApplication
+import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.model.remote.VideoAnswer
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
@@ -28,6 +29,9 @@ class UpdateService : Service() {
 
     @Inject
     lateinit var api: VideoApi
+
+    @Inject
+    lateinit var storage: Storage
 
     @field:[Inject Named("video db")]
     lateinit var videoDb: StorIOSQLite
@@ -83,6 +87,12 @@ class UpdateService : Service() {
 
     internal fun saveVideos(list: ArrayList<Video>) {
         videoDb.put().objects(list).prepare().executeAsBlocking()
+
+        for (video in list) {
+            if (video.pictureUrl != null) {
+                storage.saveLocal(video.pictureUrl, "image", false)
+            }
+        }
 
     }
 

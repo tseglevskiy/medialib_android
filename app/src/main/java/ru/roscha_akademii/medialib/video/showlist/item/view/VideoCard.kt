@@ -3,8 +3,11 @@ package ru.roscha_akademii.medialib.video.showlist.item.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import com.hannesdorfmann.mosby.mvp.layout.MvpFrameLayout
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.videolist_card.view.*
+import org.joda.time.LocalDate
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.storage.StorageStatus
@@ -22,6 +25,9 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     @Inject
     lateinit var storage: Storage
+
+    @Inject
+    lateinit var picasso: Picasso
 
     override var videoId: Long? = null
         set(value) {
@@ -54,10 +60,10 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         presenter?.stop()
     }
 
-    override fun showDescription(desc: String) {
-        descriptionField.text = desc
-    }
-
+//    override fun showDescription(desc: String) {
+//        descriptionField.text = desc
+//    }
+//
     override fun showTitle(title: String) {
         titleField.text = title
     }
@@ -88,4 +94,32 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
+    override fun showDuration(duration: String?) {
+        if (duration != null) {
+            durationField.text = duration
+            durationField.visibility = View.VISIBLE
+        } else {
+            durationField.visibility = View.GONE
+        }
+    }
+
+    override fun showDate(date: LocalDate?) {
+        if (date != null) {
+            dateField.text = date.toString()
+            dateField.visibility = View.VISIBLE
+        } else {
+            dateField.visibility = View.GONE
+        }
+    }
+
+    override fun showImage(url: String?) {
+        if (url != null) {
+            picasso.load(url)
+                    .fit()
+                    .centerCrop().into(imageField)
+            imageField.visibility = View.VISIBLE
+        } else {
+            imageField.visibility = View.GONE
+        }
+    }
 }

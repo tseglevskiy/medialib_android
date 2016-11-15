@@ -132,6 +132,9 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     ///////////////////////////////////////////////
     // test
 

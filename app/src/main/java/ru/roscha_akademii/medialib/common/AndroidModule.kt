@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 
 import com.squareup.leakcanary.RefWatcher
+import com.squareup.picasso.Picasso
 
 import javax.inject.Singleton
 
@@ -42,4 +43,8 @@ open class AndroidModule(private val application: MediaLibApplication,
     @Singleton
     internal fun providesSharedPreferences(context: Context)
             = context.getSharedPreferences("app", Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    internal fun providesPicasso(context: Context) = Picasso.with(context)
 }

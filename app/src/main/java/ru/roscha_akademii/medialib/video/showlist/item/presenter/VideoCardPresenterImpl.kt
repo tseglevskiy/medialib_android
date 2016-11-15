@@ -21,14 +21,17 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
     }
 
     fun updateView() {
-        if (videoId != null) {
-            val video = videoDb.getVideo(videoId!!)
-            view?.showDescription(video.description ?: "-")
-            view?.showTitle(video.title ?: "-")
+        videoId?.let {
+            val video = videoDb.getVideo(it)
+//            view?.showDescription(video.description ?: "-")
+
+            with(video) {
+                view?.showTitle(title ?: "-")
+                view?.showDate(issueDate)
+                view?.showDuration(duration)
+                view?.showImage(pictureUrl?.let { storage.getLocalUriIfAny(it) })
+            }
             updateStatus()
-        } else {
-            view?.showDescription("-")
-            view?.showTitle("-")
         }
 
     }
