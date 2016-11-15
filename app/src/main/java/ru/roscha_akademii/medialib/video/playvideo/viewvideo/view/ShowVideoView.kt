@@ -10,6 +10,5 @@ interface ShowVideoView : MvpView {
 
     fun showDescription(desc: String?)
 
-    fun showStatus(status: StorageStatus, percent: Int?)
-
+    fun showTitle(title: String?)
 }

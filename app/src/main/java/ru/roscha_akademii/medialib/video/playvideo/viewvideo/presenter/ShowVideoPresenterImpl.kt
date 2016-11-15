@@ -19,9 +19,12 @@ class ShowVideoPresenterImpl(val videoDb: VideoDb,
         storage.checkLocalUri(video.videoUrl)
 
         val url = storage.getLocalUriIfAny(video.videoUrl)
-        view?.showVideo(url)
 
-        view?.showDescription(video.description)
-        view
+        view?.let {
+            it.showVideo(url)
+
+            it.showDescription(video.description)
+            it.showTitle(video.title)
+        }
     }
 }

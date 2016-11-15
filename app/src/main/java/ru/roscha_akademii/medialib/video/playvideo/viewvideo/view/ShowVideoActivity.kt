@@ -215,8 +215,10 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         }
     }
 
-    override fun showStatus(status: StorageStatus, percent: Int?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showTitle(title: String?) {
+        title?.let {
+            supportActionBar?.title = it
+        }
     }
 
     class PlayerHandler : Handler() {
