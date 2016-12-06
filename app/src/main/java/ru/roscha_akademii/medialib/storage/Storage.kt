@@ -16,4 +16,6 @@ interface Storage {
     fun removeLocal(remoteUri: String)
 
     fun getLocalUriIfAny(remoteUri: String): String
+
+    fun cleanExceptThese(alive: Set<String>)
 }

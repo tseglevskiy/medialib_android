@@ -14,7 +14,7 @@ class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
 
     override fun wannaUpdateVideoList() {
         updateScheduler.startNow()
-        view?.showHelloToast()
+//        view?.showHelloToast()
     }
 
     override fun start() {

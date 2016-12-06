@@ -93,6 +93,14 @@ class UpdateService : Service() {
                 .map { it.pictureUrl }
                 .filterNotNull()
                 .forEach { storage.saveLocal(it, "image", false) }
+
+        val listToSave = list
+                .flatMap { listOf(it.videoUrl, it.pictureUrl) }
+                .filterNotNull()
+                .toSet()
+
+        storage
+                .cleanExceptThese(listToSave)
     }
 
     companion object {

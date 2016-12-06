@@ -45,6 +45,9 @@ class StorageTest() {
                 .videoDbModule(object : VideoDbModule() {
                     override fun providesVideoDbFileName() = "" // in-memory database for tests
                 })
+                .storageModule(object : StorageModule() {
+                    override fun providesStorageDbFileName() = "" // in-memory database for tests
+                })
                 .build()
 
         app.setTestComponent(component)
@@ -268,9 +271,49 @@ class StorageTest() {
         verifyZeroInteractions(downloadManager)
     }
 
+    /**
+     * нужно проверить очистку лишних записей
+     */
+    @Test
+    fun clean() {
+        val testRecord1 = VideoStorageRecord(
+                remoteUri = "remote_uri_1",
+                downloadId = 111,
+                status = StorageStatus.LOCAL,
+                localUri = "http://example.com/a1.data",
+                percent = 100)
+        testRecord1.saveForTest()
+
+        val testRecord2 = VideoStorageRecord(
+                remoteUri = "remote_uri_2",
+                downloadId = 112,
+                status = StorageStatus.LOCAL,
+                localUri = "http://example.com/a2.data",
+                percent = 100)
+        testRecord2.saveForTest()
+
+        val testRecord3 = VideoStorageRecord(
+                remoteUri = "remote_uri_3",
+                downloadId = 113,
+                status = StorageStatus.LOCAL,
+                localUri = "http://example.com/a3.data",
+                percent = 100)
+        testRecord3.saveForTest()
+
+        assertNotNull(storage.getRecord(testRecord1.remoteUri))
+        assertNotNull(storage.getRecord(testRecord2.remoteUri))
+        assertNotNull(storage.getRecord(testRecord3.remoteUri))
+
+        storage.cleanExceptThese(arrayOf(testRecord1.remoteUri, testRecord2.remoteUri).toSet())
+
+        assertNotNull(storage.getRecord(testRecord1.remoteUri))
+        assertNotNull(storage.getRecord(testRecord2.remoteUri))
+        assertNull(storage.getRecord(testRecord3.remoteUri)) // removed
+    }
 
 
-//    @Test
+
+    //    @Test
 //    fun getStatusForExistingRecord() {
 //        val testRecord = VideoStorageRecord(
 //                id = 1,

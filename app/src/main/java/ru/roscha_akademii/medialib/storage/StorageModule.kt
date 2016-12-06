@@ -35,7 +35,7 @@ open class StorageModule() {
     @Provides
     @Singleton
     @Named("storage db")
-    internal fun providesVideoDbSio(videoDbHelper: VideoDbSqliteHelper)
+    internal fun providesStorageDbSio(videoDbHelper: VideoDbSqliteHelper)
             : StorIOSQLite
             = DefaultStorIOSQLite
             .builder()
@@ -46,7 +46,7 @@ open class StorageModule() {
 
     @Provides
     @Singleton
-    internal fun providesVideoDbHelper(context: Context,
+    internal fun providesStorageDbHelper(context: Context,
                                        @Named("storage db filename") fileName: String?)
             : StorageDbSqliteHelper
             // null filename means in-memory
@@ -56,7 +56,7 @@ open class StorageModule() {
     @Provides
     @Singleton
     @Named("storage db filename")
-    open fun providesVideoDbFileName()
+    open fun providesStorageDbFileName()
             : String
             = "storage"
 

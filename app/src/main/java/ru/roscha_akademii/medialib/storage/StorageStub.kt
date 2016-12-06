@@ -20,4 +20,6 @@ class StorageStub : Storage {
     override fun removeLocal(remoteUri: String) {}
 
     override fun getLocalUriIfAny(remoteUri: String): String = remoteUri
+
+    override fun cleanExceptThese(alive: Set<String>) {}
 }

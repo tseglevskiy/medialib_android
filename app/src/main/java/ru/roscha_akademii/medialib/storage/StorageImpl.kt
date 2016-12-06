@@ -7,13 +7,14 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
+import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.Query
 import java.io.FileNotFoundException
 
 open class StorageImpl(internal val db: StorIOSQLite,
-                   val context: Context,
-                   val contentResolver: ContentResolver,
-                   val downloadManager: DownloadManager) : Storage {
+                       val context: Context,
+                       val contentResolver: ContentResolver,
+                       val downloadManager: DownloadManager) : Storage {
 
     override fun getStatus(remoteUri: String): StorageStatus {
         checkDownloadStatus(remoteUri)
@@ -159,5 +160,38 @@ open class StorageImpl(internal val db: StorIOSQLite,
     }
 
 
+    override fun cleanExceptThese(alive: Set<String>) {
+        val cursor = db.get()
+                .cursor()
+                .withQuery(Query.builder()
+                        .table(StorageTable.TABLE_NAME)
+                        .columns(StorageTable.REMOTE_URI)
+                        .build())
+                .prepare()
+                .executeAsBlocking()
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val url = cursor.getString(0)
+                    if (!alive.contains(url)) {
+                        db.delete()
+                                .byQuery(DeleteQuery.builder()
+                                        .table(StorageTable.TABLE_NAME)
+                                        .where(StorageTable.REMOTE_URI + "=?")
+                                        .whereArgs(url)
+                                        .build())
+                                .prepare()
+                                .executeAsBlocking()
+
+                    }
+                } while (cursor.moveToNext())
+            }
+
+        } finally {
+            cursor.close()
+        }
+
+    }
 }
 
