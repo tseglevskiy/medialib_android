@@ -1,5 +1,6 @@
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
 }
 
 apply plugin: 'com.android.application'
@@ -42,17 +43,23 @@ android {
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "ru.roscha_akademii.medialib.common.MockAppRunner"
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles fileTree('proguard').asList().toArray()
         }
         debug {
-            testCoverageEnabled = true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles fileTree('proguard').asList().toArray()
         }
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/java'
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
 }
@@ -61,11 +68,12 @@ def supportVersion = '25.0.0'
 def daggerVersion = '2.6.1'
 def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
-def googlePlayVersion = '9.8.0'
+def googlePlayVersion = '10.0.1'
 def okHttpVersion = '3.2.0'
 def storIoVersion = '1.11.0'
 def mockitoVersion = '1.10.19'
 def mockitoKotlinVersion = '0.11.0'
+def moxyVersion = '1.4.4'
 
 dependencies {
 //    compile project(':net')
@@ -84,7 +92,7 @@ dependencies {
 
     // http://stackoverflow.com/questions/37615379/travis-ci-build-doesnt-work-with-android-constraint-layout
     // https://code.google.com/p/android/issues/detail?id=212128
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 
     // google play services
     compile "com.google.android.gms:play-services-location:$googlePlayVersion"
@@ -106,6 +114,13 @@ dependencies {
 //    compile 'io.reactivex:rxandroid:1.2.1'
 //    compile 'io.reactivex:rxjava:1.1.6'
 //    compile 'pl.charmas.android:android-reactive-location:0.10@aar'
+
+
+    // Moxy MVP
+//    compile "com.arello-mobile:moxy:$moxyVersion"
+//    compile "com.arello-mobile:moxy-android:$moxyVersion"
+//    compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
+//    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
 
     // Mosby MVP
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
