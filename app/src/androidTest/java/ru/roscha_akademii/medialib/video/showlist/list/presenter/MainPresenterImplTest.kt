@@ -1,22 +1,24 @@
 package ru.roscha_akademii.medialib.video.showlist.list.presenter
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
 import org.joda.time.LocalDate
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.mockito.Matchers.anyObject
 import ru.roscha_akademii.medialib.common.ActivityNavigator
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
+import ru.roscha_akademii.medialib.video.showlist.list.view.`ListOfVideoView$$State`
 import java.util.*
 
 class MainPresenterImplTest {
     /*
-test data
-*/
+     * test data
+     */
     val video1 = Video(
             id = 1111,
             title = "title one",
@@ -40,24 +42,25 @@ test data
 
     lateinit var updateScheduler: UpdateScheduler
     lateinit var view: ListOfVideoView
+    lateinit var viewState: `ListOfVideoView$$State`
     lateinit var videoDb: VideoDb
     lateinit var navigator: ActivityNavigator
 
     @Before
     fun setUp() {
         updateScheduler = mock<UpdateScheduler>()
-
         videoDb = mock<VideoDb>()
-        view = mock<ListOfVideoView>()
         navigator = mock<ActivityNavigator>()
+        view = mock<ListOfVideoView>()
+        viewState = mock<`ListOfVideoView$$State`>()
 
         presenter = MainPresenterImpl(updateScheduler, videoDb, navigator)
+        presenter.attachView(view)
+        presenter.setViewState(viewState)
     }
 
     @Test
     fun start() {
-        presenter.start()
-
         verify(updateScheduler, times(1)).startBySchedule()
     }
 

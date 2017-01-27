@@ -25,7 +25,7 @@ class ActivityModule(private val activity: Activity) {
     @ActivityScope
     internal fun providesMainPresenter(scheduler: UpdateScheduler,
                                        videoDb: VideoDb,
-                                       navigator: ActivityNavigator): MainPresenter {
+                                       navigator: ActivityNavigator): MainPresenterImpl {
         return MainPresenterImpl(scheduler, videoDb, navigator)
     }
 

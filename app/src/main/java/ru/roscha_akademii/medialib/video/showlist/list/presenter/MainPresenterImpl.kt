@@ -1,25 +1,26 @@
 package ru.roscha_akademii.medialib.video.showlist.list.presenter
 
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
-
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import ru.roscha_akademii.medialib.common.ActivityNavigator
-import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
-import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
+import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
 
+@InjectViewState
 class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
                         private val videoDb: VideoDb,
-                        private val navigator: ActivityNavigator) : MvpBasePresenter<ListOfVideoView>(), MainPresenter {
+                        private val navigator: ActivityNavigator) : MvpPresenter<ListOfVideoView>(), MainPresenter {
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        updateScheduler.startBySchedule()
+        getAndDisplayVideoList()
+    }
 
     override fun wannaUpdateVideoList() {
         updateScheduler.startNow()
 //        view?.showHelloToast()
-    }
-
-    override fun start() {
-        updateScheduler.startBySchedule()
-        getAndDisplayVideoList()
     }
 
     override fun wannaOpenVideo(id: Long) {
@@ -28,6 +29,6 @@ class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
 
     private fun getAndDisplayVideoList() {
         val list = videoDb.allVideo
-        view?.showVideoList(list)
+        viewState.showVideoList(list)
     }
 }

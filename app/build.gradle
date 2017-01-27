@@ -46,12 +46,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree('proguard').asList().toArray()
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree('proguard').asList().toArray()
         }
@@ -117,10 +117,10 @@ dependencies {
 
 
     // Moxy MVP
-//    compile "com.arello-mobile:moxy:$moxyVersion"
-//    compile "com.arello-mobile:moxy-android:$moxyVersion"
-//    compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
-//    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+    compile "com.arello-mobile:moxy:$moxyVersion"
+    compile "com.arello-mobile:moxy-android:$moxyVersion"
+    compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
 
     // Mosby MVP
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'

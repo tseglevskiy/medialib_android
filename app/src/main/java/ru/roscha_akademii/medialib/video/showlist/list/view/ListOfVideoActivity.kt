@@ -7,27 +7,39 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.hannesdorfmann.mosby.mvp.MvpActivity
-import com.squareup.leakcanary.RefWatcher
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.roscha_akademii.medialib.R
+import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenter
 import ru.roscha_akademii.medialib.video.model.remote.Video
-import javax.inject.Inject
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
 
-class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListOfVideoView, VideoListAdapter.OnItemClickListener {
-    @Inject
-    lateinit var injectedPresenter: MainPresenter
+class ListOfVideoActivity : MvpAppCompatActivity(), ListOfVideoView, VideoListAdapter.OnItemClickListener {
+    companion object {
+        fun getStartIntent(context: Context): Intent {
+            return Intent(context, ListOfVideoActivity::class.java)
+        }
+    }
 
-    @Inject
-    lateinit var refWatcher: RefWatcher
+    lateinit var activityComponent: ActivityComponent
+
+    @InjectPresenter
+    lateinit var presenter: MainPresenterImpl
+
+    @ProvidePresenter
+    fun createPresenter(): MainPresenterImpl {
+        return activityComponent.mainPresenter()
+    }
 
     private val adapter = VideoListAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MediaLibApplication).component.activityComponent(ActivityModule(this)).inject(this)
+        activityComponent = (application as MediaLibApplication).component.activityComponent(ActivityModule(this))
+//        activityComponent.inject(this)
 
         super.onCreate(savedInstanceState)
 
@@ -37,20 +49,6 @@ class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListO
         list.adapter = adapter
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        refWatcher.watch(presenter)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        getPresenter().start()
-    }
-
-    override fun createPresenter(): MainPresenter {
-        return injectedPresenter
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.video_list, menu)
@@ -59,7 +57,7 @@ class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListO
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_refresh) {
-            getPresenter().wannaUpdateVideoList()
+            presenter.wannaUpdateVideoList()
             return true
         } else {
             return super.onOptionsItemSelected(item)
@@ -71,16 +69,11 @@ class ListOfVideoActivity : MvpActivity<ListOfVideoView, MainPresenter>(), ListO
     }
 
     override fun onItemClicked(id: Long) {
-        getPresenter().wannaOpenVideo(id)
+        presenter.wannaOpenVideo(id)
     }
 
     override fun showVideoList(list: List<Video>) {
         adapter.list = list
     }
 
-    companion object {
-        fun getStartIntent(context: Context): Intent {
-            return Intent(context, ListOfVideoActivity::class.java)
-        }
-    }
 }
