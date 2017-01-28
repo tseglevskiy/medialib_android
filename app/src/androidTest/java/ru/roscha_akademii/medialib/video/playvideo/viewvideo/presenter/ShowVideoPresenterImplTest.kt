@@ -1,5 +1,6 @@
 package ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter
 
+import com.nhaarman.mockito_kotlin.mock
 import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -12,12 +13,14 @@ import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoView
+import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.`ShowVideoView$$State`
 
 class ShowVideoPresenterImplTest {
 
     lateinit var videoDb: VideoDb
     lateinit var presenter: ShowVideoPresenterImpl
     lateinit var view: ShowVideoView
+    lateinit var viewState: `ShowVideoView$$State`
     lateinit var storage: Storage
 
     private val video1 = Video(
@@ -32,13 +35,22 @@ class ShowVideoPresenterImplTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        videoDb = mock(VideoDb::class.java)
+        videoDb = mock<VideoDb>()
         storage = StorageStub()
-        view = mock(ShowVideoView::class.java)
+        view = mock<ShowVideoView>()
+        viewState = mock<`ShowVideoView$$State`>()
 
         presenter = ShowVideoPresenterImpl(videoDb, storage) // SUT
     }
 
+    @Test
+    fun attachView() {
+        presenter.attachView(view)
+        presenter.setViewState(viewState)
+
+        verifyNoMoreInteractions(view)
+        verifyNoMoreInteractions(viewState)
+    }
 
     @Test
     @Throws(Exception::class)
@@ -46,6 +58,7 @@ class ShowVideoPresenterImplTest {
         `when`(videoDb.getVideo(anyLong())).thenReturn(video1)
 
         presenter.attachView(view)
+        presenter.setViewState(viewState)
         presenter.start(video1.id)
 
         val longCaptor = ArgumentCaptor.forClass(Long::class.java)

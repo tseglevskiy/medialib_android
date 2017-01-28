@@ -31,7 +31,7 @@ class ActivityModule(private val activity: Activity) {
 
     @Provides
     @ActivityScope
-    internal fun providesShowVideoPresenter(videoDb: VideoDb, storage: Storage): ShowVideoPresenter {
+    internal fun providesShowVideoPresenter(videoDb: VideoDb, storage: Storage): ShowVideoPresenterImpl {
         return ShowVideoPresenterImpl(videoDb, storage)
     }
 

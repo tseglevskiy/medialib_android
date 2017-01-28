@@ -15,6 +15,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.WindowManager
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -30,6 +33,7 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.squareup.leakcanary.RefWatcher
 import kotlinx.android.synthetic.main.showvideo_activity.*
 import ru.roscha_akademii.medialib.R
+import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.common.widget.AspectRatioFrameLayout
@@ -38,6 +42,7 @@ import ru.roscha_akademii.medialib.common.widget.heightWrapContent
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
+import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubExoPlayerEventListener
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubTextRendererOutput
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubVideoListener
@@ -53,12 +58,35 @@ import javax.inject.Inject
 если нажата - остаемся в горизонтальном расположении независимо от положения телефона
  */
 
-class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), ShowVideoView {
+class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
+
+    companion object {
+        private val EXTRA_ID = "id"
+
+        fun getStartIntent(context: Context, id: Long): Intent {
+            val intent = Intent(context, ShowVideoActivity::class.java)
+            intent.putExtra(EXTRA_ID, id)
+            return intent
+        }
+    }
 
     private var player: SimpleExoPlayer? = null
     internal var dataSourceFactory: DataSource.Factory? = null
     internal var extractorsFactory: ExtractorsFactory? = null
     internal var videoSource: MediaSource? = null
+
+    lateinit var activityComponent: ActivityComponent
+
+    @InjectPresenter
+    lateinit var presenter: ShowVideoPresenterImpl
+
+    @ProvidePresenter
+    fun createPresenter(): ShowVideoPresenterImpl {
+        return activityComponent.showVideoPresenterImpl()
+    }
+
+    @Inject
+    lateinit var refWatcher: RefWatcher
 
     val playerHandler: PlayerHandler by lazy {
         PlayerHandler()
@@ -68,7 +96,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         HideControlHandler()
     }
 
-    private var decorView: View? = null
+    lateinit var decorView: View
 
     internal var mode = Mode.AUTO
         set(mode) {
@@ -86,12 +114,6 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
     val videoId: Long
         get() = intent.getLongExtra(EXTRA_ID, -1)
-
-    @Inject
-    lateinit var injectedPresenter: ShowVideoPresenter
-
-    @Inject
-    lateinit var refWatcher: RefWatcher
 
     fun requestLayout() {
         findViewById(android.R.id.content).requestLayout()
@@ -144,7 +166,8 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
     internal val textOutput by lazy { StubTextRendererOutput() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as MediaLibApplication).component.activityComponent(ActivityModule(this)).inject(this)
+        activityComponent = (application as MediaLibApplication).component.activityComponent(ActivityModule(this))
+        activityComponent.inject(this)
 
         super.onCreate(savedInstanceState)
 
@@ -152,10 +175,9 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         textureContainer.setAspectRatio(1.78f)
 
-
         // https://developer.android.com/training/system-ui/visibility.html
         decorView = window.decorView
-        decorView!!.setOnSystemUiVisibilityChangeListener { visibility ->
+        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
             // Note that system bars will only be "visible" if none of the
             // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
@@ -182,17 +204,15 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         showOrHideByOrientation(isLandscape)
 
-        getPresenter().start(videoId)
-    }
-
-    override fun createPresenter(): ShowVideoPresenter {
-        return injectedPresenter
+        presenter.start(videoId)
     }
 
     override fun onStart() {
         super.onStart()
 
-        activatePlayer(url)
+        decorView.post {
+            activatePlayer(url)
+        }
     }
 
     override fun onStop() {
@@ -371,7 +391,6 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
 
     private fun activatePlayer(url: String?) {
-
         val player = ExoPlayerFactory.newSimpleInstance(
                 this, // контекст
                 DefaultTrackSelector(playerHandler), // TrackSelector
@@ -392,8 +411,9 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         extractorsFactory = DefaultExtractorsFactory()
 
+        val uri = Uri.parse(url)
         videoSource = ExtractorMediaSource(
-                Uri.parse(url), // uri источника
+                uri, // uri источника
                 dataSourceFactory, // DataSource.Factory
                 extractorsFactory, // ExtractorsFactory
                 playerHandler, // Handler для получения событий от плеера
@@ -415,6 +435,7 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
 
         player?.stop()
 
+        // не надо ли этот savedPosition передать во viewPresenter, чтобы сохранить во viewState?
         savedPosition = player!!.currentPosition
 
         playerHandler.removeCallbacksAndMessages(null)
@@ -438,15 +459,4 @@ class ShowVideoActivity : MvpActivity<ShowVideoView, ShowVideoPresenter>(), Show
         player = null
 
     }
-
-    companion object {
-        private val EXTRA_ID = "id"
-
-        fun getStartIntent(context: Context, id: Long): Intent {
-            val intent = Intent(context, ShowVideoActivity::class.java)
-            intent.putExtra(EXTRA_ID, id)
-            return intent
-        }
-    }
-
 }
