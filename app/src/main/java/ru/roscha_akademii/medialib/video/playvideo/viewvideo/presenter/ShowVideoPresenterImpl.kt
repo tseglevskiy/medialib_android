@@ -23,10 +23,11 @@ class ShowVideoPresenterImpl(val videoDb: VideoDb,
 
         val url = storage.getLocalUriIfAny(video.videoUrl)
 
-        viewState.showVideo(url)
-        viewState.showStatus(video.videoUrl)
+
+        viewState.showStatus(video.videoUrl, video.title)
 
         viewState.showDescription(video.description)
-        viewState.showTitle(video.title)
+
+        viewState.showVideo(url)
     }
 }

@@ -1,9 +1,6 @@
 package ru.roscha_akademii.medialib.storage.widget.presenter
 
-import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import ru.roscha_akademii.medialib.storage.widget.view.DownloadControlView
-
-interface DownloadControlPresenter : MvpPresenter<DownloadControlView> {
+interface DownloadControlPresenter {
     var url: String?
 
     var title: String?

@@ -225,9 +225,9 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
         this.url = url
     }
 
-    override fun showStatus(url: String) {
+    override fun showStatus(url: String, title: String?) {
         mainHandler.post {
-            statusField.url = url
+            statusField.downloadUrl(mvpDelegate, url, title)
         }
     }
 
@@ -242,14 +242,6 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
         }
     }
 
-    override fun showTitle(title: String?) {
-        mainHandler.post {
-            title?.let {
-                supportActionBar?.title = it
-                statusField.title = it
-            }
-        }
-    }
 
     class PlayerHandler : Handler() {
         override fun handleMessage(msg: Message) {

@@ -64,7 +64,7 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 //
     override fun showTitle(title: String) {
         titleField.text = title
-        statusField.title = title
+//        statusField.title = title // STOPSHIP
     }
 
     override fun showDuration(duration: String?) {
@@ -97,6 +97,6 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     override fun showStatus(url: String) {
-        statusField.url = url
+//        statusField.downloadUrl(mvpDelegate, url) // STOPSHIP
     }
 }

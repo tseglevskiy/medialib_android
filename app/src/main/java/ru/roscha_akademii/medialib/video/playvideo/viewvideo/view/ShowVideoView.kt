@@ -5,9 +5,7 @@ import com.arellomobile.mvp.MvpView
 interface ShowVideoView : MvpView {
     fun showVideo(url: String)
 
-    fun showStatus(url: String)
+    fun showStatus(url: String, title: String?)
 
     fun showDescription(desc: String?)
-
-    fun showTitle(title: String?)
 }

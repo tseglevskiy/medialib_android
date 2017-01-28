@@ -2,14 +2,17 @@ package ru.roscha_akademii.medialib.storage.widget.presenter
 
 import android.os.Handler
 import android.os.Message
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.storage.widget.view.DownloadControlView
 import ru.roscha_akademii.medialib.video.showlist.item.presenter.VideoCardPresenterImpl
 
+@InjectViewState
 class DownloadControlPresenterImpl(val storage: Storage)
-: MvpBasePresenter<DownloadControlView>(), DownloadControlPresenter {
+: MvpPresenter<DownloadControlView>(), DownloadControlPresenter {
     override var url: String? = null
         set(value) {
             field = value
@@ -40,15 +43,15 @@ class DownloadControlPresenterImpl(val storage: Storage)
 
             val status = storage.getStatus(url!!)
             val percent = storage.getPercent(url!!)
-            view?.showStatus(status, percent)
+            viewState.showStatus(status, percent)
 
-            if (status == StorageStatus.PROGRESS && view != null) {
+            if (status == StorageStatus.PROGRESS) {
                 updateHandler.start()
             }
 
-            view?.showStatus(status, percent)
+            viewState.showStatus(status, percent)
         } else {
-            view?.showStatus(StorageStatus.REMOTE, 0)
+            viewState.showStatus(StorageStatus.REMOTE, 0)
         }
     }
 
