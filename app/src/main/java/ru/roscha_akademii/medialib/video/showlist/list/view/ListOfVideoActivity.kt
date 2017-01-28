@@ -35,7 +35,7 @@ class ListOfVideoActivity : MvpAppCompatActivity(), ListOfVideoView, VideoListAd
         return activityComponent.mainPresenter()
     }
 
-    private val adapter = VideoListAdapter(this)
+    lateinit var adapter: VideoListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent = (application as MediaLibApplication).component.activityComponent(ActivityModule(this))
@@ -44,6 +44,8 @@ class ListOfVideoActivity : MvpAppCompatActivity(), ListOfVideoView, VideoListAd
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        adapter = VideoListAdapter(mvpDelegate, this)
 
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = adapter

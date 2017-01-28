@@ -3,15 +3,17 @@ package ru.roscha_akademii.medialib.video.playvideo.videocontrol.presenter
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Timeline
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubExoPlayerEventListener
 
-class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoControlPresenter {
+@InjectViewState
+class VideoControlPresenterImpl : MvpPresenter<VideoControlView>(), VideoControlPresenter {
     private var player: ExoPlayer? = null
     private var isVisible = false
 
@@ -100,15 +102,14 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
 
     private fun updateProgress() {
         if (!isVisible) return
-        if (view == null) return
 
         val duration = if (player == null) 0 else player!!.duration
         val position = if (player == null) 0 else player!!.currentPosition
         val bufferedPosition = if (player == null) 0 else player!!.bufferedPosition
 
-        view?.showTime(duration)
-        view?.showCurrentTime(position)
-        view?.showBuffered(bufferedPosition)
+        viewState.showTime(duration)
+        viewState.showCurrentTime(position)
+        viewState.showBuffered(bufferedPosition)
 
         updateProgressHandler.clear()
 
@@ -142,12 +143,12 @@ class VideoControlPresenterImpl : MvpBasePresenter<VideoControlView>(), VideoCon
             callback?.onPause()
         }
 
-        if (!isVisible || view == null) return
+        if (!isVisible) return
 
         if (playing) {
-            view?.setPlayPauseAction(VideoControlView.PlayPauseMode.PAUSE)
+            viewState.setPlayPauseAction(VideoControlView.PlayPauseMode.PAUSE)
         } else {
-            view?.setPlayPauseAction(VideoControlView.PlayPauseMode.PLAY)
+            viewState.setPlayPauseAction(VideoControlView.PlayPauseMode.PLAY)
         }
     }
 

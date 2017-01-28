@@ -1,12 +1,9 @@
 package ru.roscha_akademii.medialib.video.playvideo.videocontrol.presenter
 
 import com.google.android.exoplayer2.ExoPlayer
-import com.hannesdorfmann.mosby.mvp.MvpPresenter
-
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
-import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
 
-interface VideoControlPresenter : MvpPresenter<VideoControlView> {
+interface VideoControlPresenter {
     fun setCallback(callback: VideoControlCallback?)
 
     fun setPlayer(player: ExoPlayer)

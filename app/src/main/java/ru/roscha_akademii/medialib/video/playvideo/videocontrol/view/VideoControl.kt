@@ -4,22 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.SeekBar
-
+import com.arellomobile.mvp.MvpDelegate
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
-import com.hannesdorfmann.mosby.mvp.layout.MvpFrameLayout
-
-import java.util.Formatter
-import java.util.Locale
-
+import kotlinx.android.synthetic.main.videocontrol.view.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlInterface
-import ru.roscha_akademii.medialib.video.playvideo.videocontrol.presenter.VideoControlPresenter
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.presenter.VideoControlPresenterImpl
-
-import kotlinx.android.synthetic.main.videocontrol.view.*
+import java.util.*
 
 /*
  * вдохновение и идеи для расшиpения этого класса можно брать в
@@ -27,9 +24,10 @@ import kotlinx.android.synthetic.main.videocontrol.view.*
  */
 
 class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-: MvpFrameLayout<VideoControlView, VideoControlPresenter>(context, attrs, defStyleAttr), VideoControlView, VideoControlInterface {
+: FrameLayout(context, attrs, defStyleAttr), VideoControlView, VideoControlInterface {
     private val PROGRESS_BAR_MAX = 1000
 
+    private lateinit var parentDelegate: MvpDelegate<*>
     internal var callback: VideoControlCallback? = null
 
     internal val positionListener: SeekBar.OnSeekBarChangeListener
@@ -55,7 +53,7 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
                     override fun onStopTrackingTouch(seekBar: SeekBar) {
                         dragging = false
-                        getPresenter().seekTo(seekBar.progress, seekBar.max)
+                        presenter.seekTo(seekBar.progress, seekBar.max)
                         if (callback != null) callback!!.resumeAutohide()
                     }
                 }
@@ -63,26 +61,30 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
         mediacontrollerProgress.max = PROGRESS_BAR_MAX
         mediacontrollerProgress.setOnSeekBarChangeListener(positionListener)
 
-        playButton.setOnClickListener { getPresenter().gonnaPlay() }
-        pauseButton.setOnClickListener { getPresenter().gonnaPause() }
+        playButton.setOnClickListener { presenter.gonnaPlay() }
+        pauseButton.setOnClickListener { presenter.gonnaPause() }
 
-        fullscreenButton.setOnClickListener { getPresenter().gonnaFullScreen() }
-        fullscreenExitButton.setOnClickListener { getPresenter().gonnaNormalScreen() }
+        fullscreenButton.setOnClickListener { presenter.gonnaFullScreen() }
+        fullscreenExitButton.setOnClickListener { presenter.gonnaNormalScreen() }
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
 
-        if (getPresenter() != null) {
+        if (presenter != null) {
             if (visibility == View.VISIBLE) {
-                getPresenter().setIsVisible()
+                presenter.setIsVisible()
             } else {
-                getPresenter().setIsInvisible()
+                presenter.setIsInvisible()
             }
         }
     }
+    
+    @InjectPresenter
+    lateinit var presenter: VideoControlPresenterImpl
 
-    override fun createPresenter(): VideoControlPresenter {
+    @ProvidePresenter
+    fun createPresenter(): VideoControlPresenterImpl {
         val presenter = VideoControlPresenterImpl()
 
         presenter.setCallback(callback)
@@ -99,9 +101,16 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
         return presenter
     }
 
-    override fun setCallback(callback: VideoControlCallback) {
+    override fun setCallback(parentDelegate: MvpDelegate<*>, callback: VideoControlCallback) {
         this.callback = callback
-        getPresenter()?.setCallback(callback)
+
+        val mvpDelegate = MvpDelegate<VideoControl>(this)
+        mvpDelegate.setParentDelegate(parentDelegate, callback.hashCode().toString())
+
+        mvpDelegate.onCreate()
+        mvpDelegate.onAttach()
+
+        presenter.setCallback(callback)
     }
 
     /*
@@ -113,11 +122,11 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     override fun setPlayer(player: ExoPlayer) {
         this.player = player
-        getPresenter()?.setPlayer(player)
+        presenter.setPlayer(player)
     }
 
     override fun releasePlayer() {
-        getPresenter()?.revokePlayer()
+        presenter.revokePlayer()
     }
 
     /*

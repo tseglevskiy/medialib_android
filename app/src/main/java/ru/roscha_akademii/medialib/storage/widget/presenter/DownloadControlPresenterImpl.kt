@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.Message
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.storage.widget.view.DownloadControlView

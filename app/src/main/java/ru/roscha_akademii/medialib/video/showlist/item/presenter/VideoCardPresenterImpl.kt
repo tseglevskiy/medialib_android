@@ -1,12 +1,14 @@
 package ru.roscha_akademii.medialib.video.showlist.item.presenter
 
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCardView
 
+@InjectViewState
 class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
-: MvpBasePresenter<VideoCardView>(), VideoCardPresenter {
+    : MvpPresenter<VideoCardView>(), VideoCardPresenter {
     override var videoId: Long? = null
         set(value) {
             field = value
@@ -18,14 +20,12 @@ class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
             val video = videoDb.getVideo(it)
 //            view?.showDescription(video.description ?: "-")
 
-            view?.let {
-                with(video) {
-                    it.showTitle(title ?: "-")
-                    it.showDate(issueDate)
-                    it.showDuration(duration)
-                    it.showImage(pictureUrl?.let { storage.getLocalUriIfAny(it) })
-                    it.showStatus(videoUrl)
-                }
+            with(video) {
+                viewState.showTitle(title ?: "-")
+                viewState.showDate(issueDate)
+                viewState.showDuration(duration)
+                viewState.showImage(pictureUrl?.let { storage.getLocalUriIfAny(it) })
+                viewState.showStatus(videoUrl)
             }
         }
     }

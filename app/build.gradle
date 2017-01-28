@@ -127,8 +127,8 @@ dependencies {
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
 
     // Mosby MVP
-    compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
-    compile 'com.hannesdorfmann.mosby:viewstate:2.0.1'
+//    compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
+//    compile 'com.hannesdorfmann.mosby:viewstate:2.0.1'
 
     // fabric.io
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {

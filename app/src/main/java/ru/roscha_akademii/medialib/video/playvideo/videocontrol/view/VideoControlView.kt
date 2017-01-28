@@ -1,6 +1,6 @@
 package ru.roscha_akademii.medialib.video.playvideo.videocontrol.view
 
-import com.hannesdorfmann.mosby.mvp.MvpView
+import com.arellomobile.mvp.MvpView
 
 interface VideoControlView : MvpView {
     fun showTime(duration: Long)

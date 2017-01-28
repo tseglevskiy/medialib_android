@@ -29,7 +29,6 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.squareup.leakcanary.RefWatcher
 import kotlinx.android.synthetic.main.showvideo_activity.*
 import ru.roscha_akademii.medialib.R
@@ -41,7 +40,6 @@ import ru.roscha_akademii.medialib.common.widget.heightMatchParent
 import ru.roscha_akademii.medialib.common.widget.heightWrapContent
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.VideoControlCallback
 import ru.roscha_akademii.medialib.video.playvideo.videocontrol.view.VideoControlView
-import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenter
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubExoPlayerEventListener
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.tools.StubTextRendererOutput
@@ -173,6 +171,8 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
 
         setContentView(R.layout.showvideo_activity)
 
+        videoControl.setCallback(mvpDelegate, videoControlCallback)
+
         textureContainer.setAspectRatio(1.78f)
 
         // https://developer.android.com/training/system-ui/visibility.html
@@ -200,10 +200,10 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
             }
         }
 
-        videoControl.setCallback(videoControlCallback)
 
         showOrHideByOrientation(isLandscape)
 
+        statusField.parentDelegate = mvpDelegate
         presenter.start(videoId)
     }
 
@@ -227,7 +227,8 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
 
     override fun showStatus(url: String, title: String?) {
         mainHandler.post {
-            statusField.downloadUrl(mvpDelegate, url, title)
+            statusField.url = url
+            statusField.title = title
         }
     }
 

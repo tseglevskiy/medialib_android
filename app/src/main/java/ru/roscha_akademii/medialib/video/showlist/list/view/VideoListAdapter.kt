@@ -1,12 +1,15 @@
 package ru.roscha_akademii.medialib.video.showlist.list.view
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.arellomobile.mvp.MvpDelegate
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCard
 
-internal class VideoListAdapter(val clickListener: OnItemClickListener) : RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
+class VideoListAdapter(val parentDelegate: MvpDelegate<*>, val clickListener: OnItemClickListener)
+    : RecyclerView.Adapter<VideoListAdapter.MyViewHolder>() {
     var list: List<Video>? = null
         set(list) {
             field = list
@@ -19,6 +22,8 @@ internal class VideoListAdapter(val clickListener: OnItemClickListener) : Recycl
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
         )
+        Log.d("happy", "parent delegate " + parentDelegate)
+        view.parentDeleagate = parentDelegate
 
         return MyViewHolder(view, clickListener)
     }
@@ -33,8 +38,10 @@ internal class VideoListAdapter(val clickListener: OnItemClickListener) : Recycl
 
     class MyViewHolder(view: VideoCard, val clickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
         fun show(item: Video) {
-            (itemView as VideoCard).videoId = item.id
-            itemView.setOnClickListener { v -> clickListener.onItemClicked(item.id) }
+            (itemView as VideoCard).let {
+                it.videoId = item.id
+                it.setOnClickListener { v -> clickListener.onItemClicked(item.id) }
+            }
         }
     }
 

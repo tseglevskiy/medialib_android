@@ -34,28 +34,38 @@ class DownloadControl @JvmOverloads constructor(context: Context,
         Handler()
     }
 
-    private lateinit var parentDelegate: MvpDelegate<*>
-    private lateinit var url: String
-    private var title: String? = null
+    override var url: String? = null
+        set(value) {
+            field = value
+
+            mainHandler.post {
+                presenter.url = value
+            }
+        }
+
+    override var title: String? = null
+        set(value) {
+            field = value
+
+            mainHandler.post {
+                presenter.title = value
+            }
+        }
 
     @InjectPresenter
     lateinit var presenter: DownloadControlPresenterImpl
 
-    override fun downloadUrl(parentDelegate: MvpDelegate<*>, url: String, title: String?) {
-        this.parentDelegate = parentDelegate
-        this.url = url
+    override var parentDelegate: MvpDelegate<*>? = null
+        set(value) {
+            field = value
 
-        val mvpDelegate = MvpDelegate<DownloadControl>(this)
-        mvpDelegate.setParentDelegate(parentDelegate, url)
+            val mvpDelegate = MvpDelegate<DownloadControl>(this)
+            mvpDelegate.setParentDelegate(value, hashCode().toString())
 
-        mvpDelegate.onCreate()
-        mvpDelegate.onAttach()
-
-        mainHandler.post {
-            presenter.url = url
-            presenter.title = title
+            mvpDelegate.onCreate()
+            mvpDelegate.onAttach()
         }
-    }
+
 
     @ProvidePresenter
     fun createPresenter(): DownloadControlPresenterImpl {
