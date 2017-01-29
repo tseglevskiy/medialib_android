@@ -2,10 +2,6 @@ package ru.roscha_akademii.medialib.net
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-
-import javax.inject.Named
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,8 +9,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.joda.time.LocalDate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.roscha_akademii.medialib.net.LocalDateDeserializer
-import ru.roscha_akademii.medialib.video.model.remote.VideoApi
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 open class NetModule {

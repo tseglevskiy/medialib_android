@@ -1,6 +1,7 @@
 package ru.roscha_akademii.medialib.common
 
 import dagger.Subcomponent
+import ru.roscha_akademii.medialib.mainscreen.presenter.MainScreenPresenter
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity
 import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
@@ -12,6 +13,8 @@ interface ActivityComponent {
     fun mainPresenter(): MainPresenterImpl
 
     fun showVideoPresenterImpl(): ShowVideoPresenterImpl
+
+    fun mainScreenPresenter(): MainScreenPresenter
 
     fun inject(activity: ListOfVideoActivity)
 
