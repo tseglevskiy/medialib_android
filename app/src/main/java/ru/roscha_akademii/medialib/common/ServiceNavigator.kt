@@ -2,12 +2,10 @@ package ru.roscha_akademii.medialib.common
 
 import android.content.Context
 import android.content.Intent
-
+import ru.roscha_akademii.medialib.mainscreen.view.MainScreenActivity
+import ru.roscha_akademii.medialib.update.UpdateService
 import javax.inject.Inject
 import javax.inject.Singleton
-
-import ru.roscha_akademii.medialib.update.UpdateService
-import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoActivity
 
 @Singleton
 open class ServiceNavigator
@@ -20,7 +18,7 @@ internal constructor(private val context: Context) {
     }
 
     open fun startVideoList() {
-        val intent = ListOfVideoActivity.getStartIntent(context)
+        val intent = MainScreenActivity.getStartIntent(context)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
     }

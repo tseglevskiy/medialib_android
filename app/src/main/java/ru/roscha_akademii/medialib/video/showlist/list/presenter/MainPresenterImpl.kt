@@ -8,19 +8,12 @@ import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
 
 @InjectViewState
-class MainPresenterImpl(internal var updateScheduler: UpdateScheduler,
-                        private val videoDb: VideoDb,
+class MainPresenterImpl(private val videoDb: VideoDb,
                         private val navigator: ActivityNavigator) : MvpPresenter<ListOfVideoView>(), MainPresenter {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        updateScheduler.startBySchedule()
         getAndDisplayVideoList()
-    }
-
-    override fun wannaUpdateVideoList() {
-        updateScheduler.startNow()
-//        view?.showHelloToast()
     }
 
     override fun wannaOpenVideo(id: Long) {

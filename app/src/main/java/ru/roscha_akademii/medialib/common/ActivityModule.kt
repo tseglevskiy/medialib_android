@@ -21,10 +21,9 @@ class ActivityModule(private val activity: Activity) {
 
     @Provides
     @ActivityScope
-    internal fun providesMainPresenter(scheduler: UpdateScheduler,
-                                       videoDb: VideoDb,
+    internal fun providesMainPresenter(videoDb: VideoDb,
                                        navigator: ActivityNavigator): MainPresenterImpl {
-        return MainPresenterImpl(scheduler, videoDb, navigator)
+        return MainPresenterImpl(videoDb, navigator)
     }
 
     @Provides
@@ -35,9 +34,7 @@ class ActivityModule(private val activity: Activity) {
 
     @Provides
     @ActivityScope
-    internal fun provideMainScreenPresenter(): MainScreenPresenter {
-        return MainScreenPresenter()
+    internal fun provideMainScreenPresenter(scheduler: UpdateScheduler): MainScreenPresenter {
+        return MainScreenPresenter(scheduler)
     }
-
-
 }

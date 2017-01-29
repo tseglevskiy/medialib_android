@@ -3,4 +3,6 @@
     <string name="update">Update</string>
     <string name="fullscreen_control_description">Switch to full screen</string>
     <string name="fullscreen_exit_control_description">Switch to normal display mode</string>
+    <string name="video">Video</string>
+    <string name="books">Books</string>
 </resources>

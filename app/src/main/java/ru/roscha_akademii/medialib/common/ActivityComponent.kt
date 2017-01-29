@@ -5,7 +5,7 @@ import ru.roscha_akademii.medialib.mainscreen.presenter.MainScreenPresenter
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity
 import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
-import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoActivity
+import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoFragment
 
 @ActivityScope
 @Subcomponent(modules = arrayOf(ActivityModule::class))
@@ -16,7 +16,7 @@ interface ActivityComponent {
 
     fun mainScreenPresenter(): MainScreenPresenter
 
-    fun inject(activity: ListOfVideoActivity)
+    fun inject(fragment: ListOfVideoFragment)
 
     fun inject(activity: ShowVideoActivity)
 }
