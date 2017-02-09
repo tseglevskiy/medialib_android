@@ -37,6 +37,7 @@ class ListOfVideoFragment : MvpAppCompatFragment(), ListOfVideoView, VideoListAd
 
     lateinit var adapter: VideoListAdapter
 
+    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity) {
         activityComponent = (activity.applicationContext as MediaLibApplication)
                 .component

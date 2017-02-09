@@ -33,7 +33,7 @@ class VideoCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     override var videoId: Long? = null
         set(value) {
             field = value
-            presenter?.videoId = value
+            presenter.videoId = value
         }
 
     init {

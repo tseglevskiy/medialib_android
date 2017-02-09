@@ -24,10 +24,9 @@ import java.util.*
  */
 
 class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-: FrameLayout(context, attrs, defStyleAttr), VideoControlView, VideoControlInterface {
+    : FrameLayout(context, attrs, defStyleAttr), VideoControlView, VideoControlInterface {
     private val PROGRESS_BAR_MAX = 1000
 
-    private lateinit var parentDelegate: MvpDelegate<*>
     internal var callback: VideoControlCallback? = null
 
     internal val positionListener: SeekBar.OnSeekBarChangeListener
@@ -71,15 +70,13 @@ class VideoControl @JvmOverloads constructor(context: Context, attrs: AttributeS
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
 
-        if (presenter != null) {
-            if (visibility == View.VISIBLE) {
-                presenter.setIsVisible()
-            } else {
-                presenter.setIsInvisible()
-            }
+        if (visibility == View.VISIBLE) {
+            presenter.setIsVisible()
+        } else {
+            presenter.setIsInvisible()
         }
     }
-    
+
     @InjectPresenter
     lateinit var presenter: VideoControlPresenterImpl
 

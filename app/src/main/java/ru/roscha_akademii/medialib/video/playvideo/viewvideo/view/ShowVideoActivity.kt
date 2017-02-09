@@ -322,7 +322,7 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
 
         supportActionBar?.show()
 
-        decorView!!.systemUiVisibility = 0
+        decorView.systemUiVisibility = 0
         window.setFlags(
                 0,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)

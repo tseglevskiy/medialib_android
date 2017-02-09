@@ -21,7 +21,6 @@ open class StorageModule() {
     @Provides
     @Singleton
     internal fun providesVideoStorage(@Named("storage db") storio: StorIOSQLite,
-                                      videoDb: VideoDb,
                                       context: Context,
                                       contentResolver: ContentResolver,
                                       downloadManager: DownloadManager) : Storage
