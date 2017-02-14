@@ -4,11 +4,22 @@ import android.database.MatrixCursor
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import ru.roscha_akademii.medialib.BuildConfig
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.StorageRecordMapping
 import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.storage.VideoStorageRecord
 import ru.roscha_akademii.medialib.storage.StorageTable
 
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class,
+        sdk = intArrayOf(21),
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication::class,
+        packageName = "ru.roscha_akademii.medialib")
 class StorageRecordMappingTest() {
     lateinit var mapping: StorageRecordMapping
     lateinit var putResolver: StorageRecordMapping.PutResolver

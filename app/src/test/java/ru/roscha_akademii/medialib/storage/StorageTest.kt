@@ -2,20 +2,29 @@ package ru.roscha_akademii.medialib.storage
 
 import android.app.DownloadManager
 import android.database.MatrixCursor
-import android.support.test.InstrumentationRegistry
 import com.nhaarman.mockito_kotlin.*
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.common.AndroidModule
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent
-import ru.roscha_akademii.medialib.common.MockMediaLibApplication
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
-import ru.roscha_akademii.medialib.whenever
 
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class,
+        sdk = intArrayOf(21),
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication::class,
+        packageName = "ru.roscha_akademii.medialib")
 
-class StorageTest() {
+class StorageTest {
     lateinit var storage: StorageImpl // SUT
 
     lateinit var downloadManager: DownloadManager
@@ -33,9 +42,7 @@ class StorageTest() {
     fun setUp() {
         downloadManager = mock<DownloadManager>()
 
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-
-        val app = instrumentation.targetContext.applicationContext as MockMediaLibApplication
+        val app = RuntimeEnvironment.application as RobolectricMdiaLibApplication
 
         val component = DaggerApplicationComponent
                 .builder()
@@ -310,7 +317,6 @@ class StorageTest() {
         assertNotNull(storage.getRecord(testRecord2.remoteUri))
         assertNull(storage.getRecord(testRecord3.remoteUri)) // removed
     }
-
 
 
     //    @Test

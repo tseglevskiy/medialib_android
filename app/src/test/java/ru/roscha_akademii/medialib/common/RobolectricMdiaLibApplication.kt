@@ -1,8 +1,9 @@
 package ru.roscha_akademii.medialib.common
 
-import android.util.Log
-
 class RobolectricMdiaLibApplication : MediaLibApplication() {
-
+    fun setTestComponent(testComponent: ApplicationComponent)
+    {
+        _component = testComponent
+    }
 }
 

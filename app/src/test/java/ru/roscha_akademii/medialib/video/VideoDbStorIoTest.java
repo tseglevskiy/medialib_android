@@ -1,8 +1,7 @@
 package ru.roscha_akademii.medialib.video;
 
-import android.app.Instrumentation;
 import android.database.Cursor;
-import android.support.test.InstrumentationRegistry;
+import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
@@ -10,21 +9,32 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
-import java.util.Date;
 import java.util.List;
 
+import ru.roscha_akademii.medialib.BuildConfig;
 import ru.roscha_akademii.medialib.common.AndroidModule;
 import ru.roscha_akademii.medialib.common.ApplicationComponent;
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent;
-import ru.roscha_akademii.medialib.common.MockMediaLibApplication;
-import ru.roscha_akademii.medialib.video.model.remote.Video;
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication;
 import ru.roscha_akademii.medialib.video.model.VideoDbModule;
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper;
 import ru.roscha_akademii.medialib.video.model.local.VideoTable;
+import ru.roscha_akademii.medialib.video.model.remote.Video;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class,
+        sdk = 21,
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication.class,
+        packageName = "ru.roscha_akademii.medialib")
 
 public class VideoDbStorIoTest {
     private StorIOSQLite videoDb; // SUT
@@ -38,15 +48,13 @@ public class VideoDbStorIoTest {
 
     @Before
     public void setUp() throws Exception {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-
-        MockMediaLibApplication app
-                = (MockMediaLibApplication) instrumentation.getTargetContext().getApplicationContext();
+        RobolectricMdiaLibApplication app = (RobolectricMdiaLibApplication) RuntimeEnvironment.application;
 
         ApplicationComponent component = DaggerApplicationComponent
                 .builder()
                 .androidModule(new AndroidModule(app, app.refWatcher))
                 .videoDbModule(new VideoDbModule() {
+                    @NonNull
                     @Override
                     public String providesVideoDbFileName() {
                         return ""; // in-memory database for tests

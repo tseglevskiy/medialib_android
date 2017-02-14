@@ -48,20 +48,14 @@ class MainPresenterImplTest {
 
     @Before
     fun setUp() {
-        updateScheduler = mock<UpdateScheduler>()
         videoDb = mock<VideoDb>()
         navigator = mock<ActivityNavigator>()
         view = mock<ListOfVideoView>()
         viewState = mock<`ListOfVideoView$$State`>()
 
-        presenter = MainPresenterImpl(updateScheduler, videoDb, navigator)
+        presenter = MainPresenterImpl(videoDb, navigator) // SUT
         presenter.attachView(view)
         presenter.setViewState(viewState)
-    }
-
-    @Test
-    fun start() {
-        verify(updateScheduler, times(1)).startBySchedule()
     }
 
     @Test

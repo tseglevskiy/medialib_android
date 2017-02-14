@@ -2,6 +2,7 @@ package ru.roscha_akademii.medialib.update
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import com.nhaarman.mockito_kotlin.whenever
 
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +17,6 @@ import org.mockito.Matchers.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import ru.roscha_akademii.medialib.whenever
 
 class UpdateSchedulerTest {
     lateinit var scheduler: UpdateScheduler // SUT

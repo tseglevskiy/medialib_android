@@ -161,6 +161,8 @@ dependencies {
 
     ///////////////////////////////////////////////
     // test
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-all:$mockitoVersion"

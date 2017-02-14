@@ -5,8 +5,20 @@ import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import ru.roscha_akademii.medialib.BuildConfig
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.video.model.local.VideoTable
 import ru.roscha_akademii.medialib.video.model.remote.Video
+
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class,
+        sdk = intArrayOf(21),
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication::class,
+        packageName = "ru.roscha_akademii.medialib")
 
 class VideoMappingTest {
     lateinit var mapping: VideoMapping
