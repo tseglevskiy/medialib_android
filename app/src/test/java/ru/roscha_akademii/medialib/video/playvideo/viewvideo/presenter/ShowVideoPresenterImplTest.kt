@@ -5,15 +5,29 @@ import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.anyLong
 import org.mockito.Mockito.*
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import ru.roscha_akademii.medialib.BuildConfig
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.`ShowVideoView$$State`
+
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class,
+        sdk = intArrayOf(21),
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication::class,
+        packageName = "ru.roscha_akademii.medialib")
 
 class ShowVideoPresenterImplTest {
 
@@ -35,6 +49,8 @@ class ShowVideoPresenterImplTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        val app = RuntimeEnvironment.application as RobolectricMdiaLibApplication
+
         videoDb = mock<VideoDb>()
         storage = StorageStub()
         view = mock<ShowVideoView>()
