@@ -8,9 +8,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-//apply plugin: 'jacoco-android'
 apply plugin: 'android-apt'
-
+apply plugin: 'jacoco-android'
 
 
 buildscript {
@@ -33,6 +32,7 @@ android {
 
     defaultConfig {
         applicationId appId // from gradle.properties
+
         minSdkVersion 16
         targetSdkVersion 25
         versionCode appVersionCode.toInteger()
@@ -56,8 +56,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree('proguard').asList().toArray()
 
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test-rules.pro'
-            testProguardFiles fileTree('proguard').asList().toArray()
+            testCoverageEnabled true
         }
     }
 
@@ -70,6 +69,25 @@ android {
         abortOnError true
         fatal 'StopShip'
     }
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+}
+
+jacocoAndroidUnitTestReport {
+    excludes +=
+            [
+                    '**/*$PresentersBinder$*.class',
+                    '**/*$PresentersBinder.class',
+                    '**/*$ViewStateProvider.class',
+                    '**/*$State$*.class',
+                    '**/*$State.class',
+                    'com/arellomobile/mvp/**',
+                    '**/*inlined*.class'
+            ]
 }
 
 def supportVersion = '25.0.0'
