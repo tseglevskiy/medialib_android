@@ -1,25 +1,20 @@
 package ru.roscha_akademii.medialib.video.model
 
-import android.app.DownloadManager
-import android.content.ContentResolver
 import android.content.Context
-
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite
-
-import javax.inject.Named
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import ru.roscha_akademii.medialib.storage.Storage
-import ru.roscha_akademii.medialib.storage.VideoStorageRecord
-import ru.roscha_akademii.medialib.video.model.local.*
+import ru.roscha_akademii.medialib.video.model.local.VideoDb
+import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.video.model.local.storio.VideoMapping
-import ru.roscha_akademii.medialib.storage.StorageRecordMapping
-import ru.roscha_akademii.medialib.video.model.remote.Video
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
+import ru.roscha_akademii.medialib.video.model.remote.VideoUpdate
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 open class VideoDbModule {
@@ -62,4 +57,12 @@ open class VideoDbModule {
     internal fun providesVideoApi(retrofit: Retrofit)
             : VideoApi
             = retrofit.create(VideoApi::class.java)
+
+    @Provides
+    @Singleton
+    open fun providesVideoUpdate(videoApi: VideoApi,
+                            @Named("video db") videoDb: StorIOSQLite,
+                            storage: Storage)
+            : VideoUpdate
+            = VideoUpdate(videoApi = videoApi, videoDb = videoDb, storage = storage)
 }

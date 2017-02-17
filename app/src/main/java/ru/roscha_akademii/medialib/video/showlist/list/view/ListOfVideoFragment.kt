@@ -15,7 +15,7 @@ import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
 
 class ListOfVideoFragment : MvpAppCompatFragment(), ListOfVideoView, VideoListAdapter.OnItemClickListener {

@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import io.fabric.sdk.android.Fabric
+import net.danlew.android.joda.JodaTimeAndroid
 
 open class MediaLibApplication : MultiDexApplication() {
     protected var _component: ApplicationComponent? = null
@@ -37,6 +38,8 @@ open class MediaLibApplication : MultiDexApplication() {
         }
 
         super.onCreate()
+
+        JodaTimeAndroid.init(this)
 
         refWatcher = LeakCanary.install(this)
 

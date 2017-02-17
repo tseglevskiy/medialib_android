@@ -1,4 +1,4 @@
-package ru.roscha_akademii.medialib.video.model.remote
+package ru.roscha_akademii.medialib.video.model.remote.entity
 
 import com.google.gson.annotations.SerializedName
 import org.joda.time.LocalDate

@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.common
 import android.content.Context
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import dagger.Component
+import ru.roscha_akademii.medialib.book.BookModule
 import ru.roscha_akademii.medialib.net.NetModule
 import ru.roscha_akademii.medialib.storage.StorageModule
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
@@ -20,7 +21,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AndroidModule::class, NetModule::class, VideoDbModule::class, UpdateModule::class, StorageModule::class))
+@Component(modules = arrayOf(AndroidModule::class, NetModule::class, VideoDbModule::class, UpdateModule::class, StorageModule::class, BookModule::class))
 interface ApplicationComponent {
     /*
     ActivityScope components

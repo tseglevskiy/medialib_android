@@ -5,39 +5,65 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-
-import com.pushtorefresh.storio.sqlite.StorIOSQLite
-
-import java.util.ArrayList
-
-import javax.inject.Inject
-import javax.inject.Named
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.greenrobot.eventbus.EventBus
+import ru.roscha_akademii.medialib.book.model.remote.BookUpdate
 import ru.roscha_akademii.medialib.common.MediaLibApplication
-import ru.roscha_akademii.medialib.storage.Storage
-import ru.roscha_akademii.medialib.video.model.remote.Video
-import ru.roscha_akademii.medialib.video.model.remote.VideoAnswer
-import ru.roscha_akademii.medialib.video.model.remote.VideoApi
+import ru.roscha_akademii.medialib.update.event.DataDownloaded
+import ru.roscha_akademii.medialib.video.model.remote.VideoUpdate
+import javax.inject.Inject
 
 class UpdateService : Service() {
+    @Inject
+    lateinit var videoUpdater: VideoUpdate
+
+    @Inject
+    lateinit var bookUpdater: BookUpdate
 
     @Inject
     lateinit var updateScheduler: UpdateScheduler
 
     @Inject
-    lateinit var api: VideoApi
+    lateinit var bus: EventBus
 
-    @Inject
-    lateinit var storage: Storage
-
-    @field:[Inject Named("video db")]
-    lateinit var videoDb: StorIOSQLite
+    val CHANNELS = 2
+    var inProgress: Int = 0
+    var success: Int = 0
 
     override fun onBind(intent: Intent): IBinder? {
         return null
+    }
+
+    val updateCallback = object : UpdateCallback {
+        override fun onSuccess() {
+            success++
+            bus.post(DataDownloaded())
+            somethingFinished()
+        }
+
+        override fun onFail() {
+            somethingFinished()
+        }
+
+    }
+
+    fun somethingFinished() {
+        inProgress--
+
+        if (inProgress == 0) {
+            if (success == CHANNELS) {
+                updateScheduler.updateCompleted()
+            }
+
+            stopSelf()
+        }
+    }
+
+    fun startUpdate() {
+        inProgress = CHANNELS
+        success = 0
+
+        videoUpdater.update(updateCallback)
+        bookUpdater.update(updateCallback)
     }
 
     override fun onCreate() {
@@ -46,7 +72,8 @@ class UpdateService : Service() {
 
         (applicationContext as MediaLibApplication).component.inject(this)
 
-        update()
+        startUpdate()
+
     }
 
     override fun onDestroy() {
@@ -59,49 +86,6 @@ class UpdateService : Service() {
         return Service.START_NOT_STICKY
     }
 
-    internal fun update() {
-        val call = api.videoList()
-        call.enqueue(object : Callback<VideoAnswer> {
-            override fun onResponse(call: Call<VideoAnswer>, response: Response<VideoAnswer>) {
-                try {
-                    response.body()?.list?.let {
-                        saveVideos(it)
-                    }
-
-                    updateScheduler.updateCompleted()
-                } catch (ignore: Exception) {
-                    // ничего, в следующий раз получится
-                }
-
-                stopSelf()
-            }
-
-            override fun onFailure(call: Call<VideoAnswer>, t: Throwable) {
-                stopSelf()
-            }
-        })
-    }
-
-    internal fun saveVideos(list: ArrayList<Video>) {
-        videoDb
-                .put()
-                .objects(list)
-                .prepare()
-                .executeAsBlocking()
-
-        list
-                .map { it.pictureUrl }
-                .filterNotNull()
-                .forEach { storage.saveLocal(it, "image", false) }
-
-        val listToSave = list
-                .flatMap { listOf(it.videoUrl, it.pictureUrl) }
-                .filterNotNull()
-                .toSet()
-
-        storage
-                .cleanExceptThese(listToSave)
-    }
 
     companion object {
         /**

@@ -11,7 +11,7 @@ import ru.roscha_akademii.medialib.video.model.local.StorageDbSqliteHelper
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.video.model.local.storio.VideoMapping
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import javax.inject.Named
 import javax.inject.Singleton
 

@@ -11,7 +11,7 @@ import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import org.joda.time.LocalDate
 import ru.roscha_akademii.medialib.video.model.local.VideoTable
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 
 class VideoMapping : SQLiteTypeMapping<Video>(
         PutResolver(),

@@ -10,10 +10,10 @@ import ru.roscha_akademii.medialib.common.ServiceNavigator
 import ru.roscha_akademii.medialib.common.TimeProvider
 
 @Module
-class UpdateModule {
+open class UpdateModule {
     @Provides
     @Singleton
-    fun provides(prefs: SharedPreferences,
+    open fun provides(prefs: SharedPreferences,
                  timeProvider: TimeProvider,
                  navigator: ServiceNavigator): UpdateScheduler {
         return UpdateScheduler(prefs, timeProvider, navigator)

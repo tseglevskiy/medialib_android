@@ -22,9 +22,6 @@
 
         </activity>
 
-        <activity android:name="ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoFragment">
-        </activity>
-
         <receiver android:name=".video.event.DownloadNotificationClickReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
@@ -35,7 +32,7 @@
             android:name="ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity"
             android:configChanges="orientation|screenSize"/>
 
-        <service android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
+        <serviceController android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

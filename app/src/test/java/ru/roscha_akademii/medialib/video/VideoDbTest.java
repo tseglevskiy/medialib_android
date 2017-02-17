@@ -20,7 +20,7 @@ import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication;
 import ru.roscha_akademii.medialib.video.model.UnexistingVideoException;
 import ru.roscha_akademii.medialib.video.model.VideoDbModule;
 import ru.roscha_akademii.medialib.video.model.local.VideoDb;
-import ru.roscha_akademii.medialib.video.model.remote.Video;
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

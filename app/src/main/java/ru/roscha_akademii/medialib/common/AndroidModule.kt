@@ -13,6 +13,7 @@ import javax.inject.Singleton
 
 import dagger.Module
 import dagger.Provides
+import org.greenrobot.eventbus.EventBus
 
 @Module
 open class AndroidModule(private val application: MediaLibApplication,
@@ -47,4 +48,8 @@ open class AndroidModule(private val application: MediaLibApplication,
     @Provides
     @Singleton
     internal fun providesPicasso(context: Context) = Picasso.with(context)
+
+    @Provides
+    @Singleton
+    internal fun providesEventBus() = EventBus.getDefault()
 }

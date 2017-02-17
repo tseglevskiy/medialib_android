@@ -5,7 +5,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoView
 
 @InjectViewState

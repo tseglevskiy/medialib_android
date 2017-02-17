@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.arellomobile.mvp.MvpDelegate
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCard
 
 class VideoListAdapter(val parentDelegate: MvpDelegate<*>, val clickListener: OnItemClickListener)

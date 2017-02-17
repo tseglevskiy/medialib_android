@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.video.showlist.list.presenter
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import org.greenrobot.eventbus.EventBus
 import org.joda.time.LocalDate
 import org.junit.Before
 import org.junit.Ignore
@@ -10,7 +11,7 @@ import org.junit.Test
 import ru.roscha_akademii.medialib.common.ActivityNavigator
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
 import ru.roscha_akademii.medialib.video.showlist.list.view.`ListOfVideoView$$State`
 import java.util.*
@@ -45,6 +46,7 @@ class MainPresenterImplTest {
     lateinit var viewState: `ListOfVideoView$$State`
     lateinit var videoDb: VideoDb
     lateinit var navigator: ActivityNavigator
+    lateinit var bus: EventBus
 
     @Before
     fun setUp() {
@@ -52,8 +54,9 @@ class MainPresenterImplTest {
         navigator = mock<ActivityNavigator>()
         view = mock<ListOfVideoView>()
         viewState = mock<`ListOfVideoView$$State`>()
+        bus = mock<EventBus>()
 
-        presenter = MainPresenterImpl(videoDb, navigator) // SUT
+        presenter = MainPresenterImpl(bus, videoDb, navigator) // SUT
         presenter.attachView(view)
         presenter.setViewState(viewState)
     }

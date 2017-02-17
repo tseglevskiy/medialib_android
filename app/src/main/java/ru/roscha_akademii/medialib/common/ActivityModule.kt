@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.common
 import android.app.Activity
 import dagger.Module
 import dagger.Provides
+import org.greenrobot.eventbus.EventBus
 import ru.roscha_akademii.medialib.mainscreen.presenter.MainScreenPresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateScheduler
@@ -21,9 +22,10 @@ class ActivityModule(private val activity: Activity) {
 
     @Provides
     @ActivityScope
-    internal fun providesMainPresenter(videoDb: VideoDb,
+    internal fun providesMainPresenter(bus: EventBus,
+                                       videoDb: VideoDb,
                                        navigator: ActivityNavigator): MainPresenterImpl {
-        return MainPresenterImpl(videoDb, navigator)
+        return MainPresenterImpl(bus, videoDb, navigator)
     }
 
     @Provides

@@ -18,7 +18,7 @@ import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoView
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.`ShowVideoView$$State`
 

@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.video.model.local.VideoTable
-import ru.roscha_akademii.medialib.video.model.remote.Video
+import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class,
