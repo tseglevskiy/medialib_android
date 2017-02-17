@@ -32,7 +32,7 @@
             android:name="ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity"
             android:configChanges="orientation|screenSize"/>
 
-        <serviceController android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
+        <service android:name="ru.roscha_akademii.medialib.update.UpdateService"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
