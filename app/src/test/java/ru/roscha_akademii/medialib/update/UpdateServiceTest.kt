@@ -16,6 +16,7 @@ import org.robolectric.shadows.ShadowService
 import org.robolectric.util.ServiceController
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.BookModule
+import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.remote.BookApi
 import ru.roscha_akademii.medialib.book.model.remote.BookUpdate
 import ru.roscha_akademii.medialib.common.*
@@ -59,7 +60,7 @@ class UpdateServiceTest {
                             = videoUpdate
                 })
                 .bookModule(object : BookModule() {
-                    override fun providesBookUpdate(api: BookApi)
+                    override fun providesBookUpdate(api: BookApi, bookDb: BookDb, storage: Storage)
                             = bookUpdate
                 })
                 .updateModule(object : UpdateModule() {

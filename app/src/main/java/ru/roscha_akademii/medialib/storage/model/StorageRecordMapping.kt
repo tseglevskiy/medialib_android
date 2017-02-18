@@ -1,4 +1,4 @@
-package ru.roscha_akademii.medialib.storage
+package ru.roscha_akademii.medialib.storage.model
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -9,20 +9,22 @@ import com.pushtorefresh.storio.sqlite.operations.put.DefaultPutResolver
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
+import ru.roscha_akademii.medialib.storage.model.StorageTable
 
-class StorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
+class StorageRecordMapping : SQLiteTypeMapping<FileStorageRecord>(
         PutResolver(),
         GetResolver(),
         DeleteResolver()) {
 
-    class PutResolver : DefaultPutResolver<VideoStorageRecord>() {
-        public override fun mapToInsertQuery(obj: VideoStorageRecord): InsertQuery {
+    class PutResolver : DefaultPutResolver<FileStorageRecord>() {
+        public override fun mapToInsertQuery(obj: FileStorageRecord): InsertQuery {
             return InsertQuery.builder()
                     .table(StorageTable.TABLE_NAME)
                     .build()
         }
 
-        public override fun mapToUpdateQuery(obj: VideoStorageRecord): UpdateQuery {
+        public override fun mapToUpdateQuery(obj: FileStorageRecord): UpdateQuery {
             return UpdateQuery.builder()
                     .table(StorageTable.TABLE_NAME)
                     .where(StorageTable.REMOTE_URI + " = ?")
@@ -30,7 +32,7 @@ class StorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
                     .build()
         }
 
-        public override fun mapToContentValues(obj: VideoStorageRecord): ContentValues {
+        public override fun mapToContentValues(obj: FileStorageRecord): ContentValues {
             val contentValues = ContentValues()
 
             contentValues.put(StorageTable.LOCAL_URI, obj.localUri)
@@ -43,9 +45,9 @@ class StorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
         }
     }
 
-    class GetResolver : DefaultGetResolver<VideoStorageRecord>() {
-        override fun mapFromCursor(cursor: Cursor): VideoStorageRecord {
-            return VideoStorageRecord(
+    class GetResolver : DefaultGetResolver<FileStorageRecord>() {
+        override fun mapFromCursor(cursor: Cursor): FileStorageRecord {
+            return FileStorageRecord(
                     remoteUri = cursor.getString(cursor.getColumnIndex(StorageTable.REMOTE_URI)),
                     downloadId = cursor.getLong(cursor.getColumnIndex(StorageTable.DOWNLOAD_ID)),
                     localUri = cursor.getString(cursor.getColumnIndex(StorageTable.LOCAL_URI)),
@@ -56,8 +58,8 @@ class StorageRecordMapping : SQLiteTypeMapping<VideoStorageRecord>(
         }
     }
 
-    class DeleteResolver : DefaultDeleteResolver<VideoStorageRecord>() {
-        public override fun mapToDeleteQuery(obj: VideoStorageRecord): DeleteQuery {
+    class DeleteResolver : DefaultDeleteResolver<FileStorageRecord>() {
+        public override fun mapToDeleteQuery(obj: FileStorageRecord): DeleteQuery {
             return DeleteQuery.builder()
                     .table(StorageTable.TABLE_NAME)
                     .where(StorageTable.REMOTE_URI + " = ?")

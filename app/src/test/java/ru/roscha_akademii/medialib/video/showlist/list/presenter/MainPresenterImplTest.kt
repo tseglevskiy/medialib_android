@@ -68,7 +68,7 @@ class MainPresenterImplTest {
         srcList.add(video1)
         srcList.add(video2)
 
-//        whenever(videoDb.getAllVideo()).thenReturn(srcList)
+//        whenever(bookDb.getAllVideo()).thenReturn(srcList)
 
 //        presenter.attachView(view)
 //        presenter.start()
@@ -81,7 +81,7 @@ class MainPresenterImplTest {
 
 //        val dstList = listCaptor.value as ArrayList<Video>
 //        assertEquals(2, dstList.size.toLong())
-//        assertEquals(video1.id, dstList[0].id)
+//        assertEquals(book1.id, dstList[0].id)
 //        assertEquals(video2.id, dstList[1].id)
 
     }

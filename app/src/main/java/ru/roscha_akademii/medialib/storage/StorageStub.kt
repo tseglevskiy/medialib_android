@@ -1,15 +1,15 @@
 package ru.roscha_akademii.medialib.storage.stub
 
 import ru.roscha_akademii.medialib.storage.Storage
-import ru.roscha_akademii.medialib.storage.StorageStatus
-import ru.roscha_akademii.medialib.storage.VideoStorageRecord
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
 
 class StorageStub : Storage {
     override fun getStatus(remoteUri: String): StorageStatus = StorageStatus.REMOTE
 
     override fun checkDownloadStatus(remoteUri: String) {}
 
-    override fun checkDownloadStatus(record: VideoStorageRecord) {}
+    override fun checkDownloadStatus(record: FileStorageRecord) {}
 
     override fun checkLocalUri(remoteUri: String) {}
 

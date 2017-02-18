@@ -47,13 +47,14 @@ open class VideoUpdate(val videoApi: VideoApi,
                 .filterNotNull()
                 .forEach { storage.saveLocal(it, "image", false) }
 
-        val listToSave = list
-                .flatMap { listOf(it.videoUrl, it.pictureUrl) }
-                .filterNotNull()
-                .toSet()
 
-        storage
-                .cleanExceptThese(listToSave)
+//        val listToSave = list
+//                .flatMap { listOf(it.videoUrl, it.pictureUrl) }
+//                .filterNotNull()
+//                .toSet()
+
+//        storage
+//                .cleanExceptThese(listToSave)
     }
 
 }

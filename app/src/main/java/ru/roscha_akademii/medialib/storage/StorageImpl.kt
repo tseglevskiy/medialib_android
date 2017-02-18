@@ -9,6 +9,9 @@ import android.util.Log
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery
 import com.pushtorefresh.storio.sqlite.queries.Query
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
+import ru.roscha_akademii.medialib.storage.model.StorageTable
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
 import java.io.FileNotFoundException
 
 open class StorageImpl(internal val db: StorIOSQLite,
@@ -30,7 +33,7 @@ open class StorageImpl(internal val db: StorIOSQLite,
         checkDownloadStatus(record)
     }
 
-    override fun checkDownloadStatus(record: VideoStorageRecord) {
+    override fun checkDownloadStatus(record: FileStorageRecord) {
         if (record.status == StorageStatus.LOCAL) return
 
         val downloadId = record.downloadId
@@ -115,7 +118,7 @@ open class StorageImpl(internal val db: StorIOSQLite,
                 else DownloadManager.Request.VISIBILITY_HIDDEN)
 
         val downloadRef = downloadManager.enqueue(request)
-        VideoStorageRecord(remoteUri, downloadRef).save()
+        FileStorageRecord(remoteUri, downloadRef).save()
 
         checkDownloadStatus(remoteUri)
     }
@@ -128,18 +131,18 @@ open class StorageImpl(internal val db: StorIOSQLite,
         record.delete()
     }
 
-    private fun VideoStorageRecord.save() {
+    private fun FileStorageRecord.save() {
         db.put().`object`(this).prepare().executeAsBlocking()
     }
 
-    private fun VideoStorageRecord.delete() {
+    private fun FileStorageRecord.delete() {
         db.delete().`object`(this).prepare().executeAsBlocking()
     }
 
-    fun getRecord(remoteUri: String): VideoStorageRecord? {
+    fun getRecord(remoteUri: String): FileStorageRecord? {
         return try {
             db.get()
-                    .listOfObjects(VideoStorageRecord::class.java)
+                    .listOfObjects(FileStorageRecord::class.java)
                     .withQuery(Query.builder()
                             .table(StorageTable.TABLE_NAME)
                             .where(StorageTable.REMOTE_URI + " = ?")

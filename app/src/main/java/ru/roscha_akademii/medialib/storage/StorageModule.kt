@@ -7,16 +7,14 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite
 import dagger.Module
 import dagger.Provides
-import ru.roscha_akademii.medialib.video.model.local.StorageDbSqliteHelper
-import ru.roscha_akademii.medialib.video.model.local.VideoDb
-import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
-import ru.roscha_akademii.medialib.video.model.local.storio.VideoMapping
-import ru.roscha_akademii.medialib.video.model.remote.entity.Video
+import ru.roscha_akademii.medialib.storage.model.StorageDbSqliteHelper
+import ru.roscha_akademii.medialib.storage.model.StorageRecordMapping
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-open class StorageModule() {
+open class StorageModule {
 
     @Provides
     @Singleton
@@ -34,13 +32,12 @@ open class StorageModule() {
     @Provides
     @Singleton
     @Named("storage db")
-    internal fun providesStorageDbSio(videoDbHelper: VideoDbSqliteHelper)
+    internal fun providesStorageDbSio(dbHelper: StorageDbSqliteHelper)
             : StorIOSQLite
             = DefaultStorIOSQLite
             .builder()
-            .sqliteOpenHelper(videoDbHelper)
-            .addTypeMapping(Video::class.java, VideoMapping())
-            .addTypeMapping(VideoStorageRecord::class.java, StorageRecordMapping())
+            .sqliteOpenHelper(dbHelper)
+            .addTypeMapping(FileStorageRecord::class.java, StorageRecordMapping())
             .build()
 
     @Provides

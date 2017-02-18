@@ -1,12 +1,11 @@
-package ru.roscha_akademii.medialib.video.model.local
+package ru.roscha_akademii.medialib.storage.model
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ru.roscha_akademii.medialib.storage.StorageTable
 
 class StorageDbSqliteHelper internal constructor(context: Context, dbName: String?)
-: SQLiteOpenHelper(context, dbName, null, StorageDbSqliteHelper.VERSION) {
+: SQLiteOpenHelper(context, dbName, null, VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(StorageTable.createTable())

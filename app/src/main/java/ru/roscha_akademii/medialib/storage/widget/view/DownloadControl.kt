@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.downloadcontrol.view.*
 import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
-import ru.roscha_akademii.medialib.storage.StorageStatus
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
 import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.storage.widget.DownloadControlInterface
 import ru.roscha_akademii.medialib.storage.widget.presenter.DownloadControlPresenterImpl

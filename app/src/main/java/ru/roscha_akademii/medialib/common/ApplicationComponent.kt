@@ -4,6 +4,8 @@ import android.content.Context
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import dagger.Component
 import ru.roscha_akademii.medialib.book.BookModule
+import ru.roscha_akademii.medialib.book.model.local.BookDb
+import ru.roscha_akademii.medialib.book.model.local.BookDbSqliteHelper
 import ru.roscha_akademii.medialib.net.NetModule
 import ru.roscha_akademii.medialib.storage.StorageModule
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
@@ -15,6 +17,7 @@ import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
 import ru.roscha_akademii.medialib.video.model.local.VideoDbSqliteHelper
 import ru.roscha_akademii.medialib.storage.Storage
+import ru.roscha_akademii.medialib.storage.model.StorageDbSqliteHelper
 import ru.roscha_akademii.medialib.storage.widget.view.DownloadControl
 import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCard
 import javax.inject.Named
@@ -65,7 +68,20 @@ interface ApplicationComponent {
 
     fun videoDb(): VideoDb
 
+    // BookModule
+    @Named("book db filename")
+    fun bookDbFileName(): String
+
+    fun bookDbSqliteHelper(): BookDbSqliteHelper
+
+    @Named("book db")
+    fun bookDbStorIo(): StorIOSQLite
+
+    fun bookDb(): BookDb
+
     // StorageModule
+
+    fun storageDbHelper(): StorageDbSqliteHelper
 
     @Named("storage db")
     fun storageDbStorIo(): StorIOSQLite

@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.storage
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
 import ru.roscha_akademii.medialib.storage.stub.StorageStub
 
 

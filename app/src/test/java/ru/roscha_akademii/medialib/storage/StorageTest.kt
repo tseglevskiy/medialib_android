@@ -15,6 +15,10 @@ import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.common.AndroidModule
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
+import ru.roscha_akademii.medialib.storage.model.StorageDbSqliteHelper
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
+import ru.roscha_akademii.medialib.storage.model.StorageTable
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
 
 @RunWith(RobolectricTestRunner::class)
@@ -28,10 +32,11 @@ class StorageTest {
     lateinit var storage: StorageImpl // SUT
 
     lateinit var downloadManager: DownloadManager
+    lateinit var dbHelper: StorageDbSqliteHelper
     lateinit var storIo: StorIOSQLite
     lateinit var downloadManagerQueryResult: MatrixCursor
 
-    val inProgressTestRecord = VideoStorageRecord(
+    val inProgressTestRecord = FileStorageRecord(
             remoteUri = "remote_url",
             downloadId = 111,
             status = StorageStatus.PROGRESS,
@@ -59,7 +64,9 @@ class StorageTest {
 
         app.setTestComponent(component)
 
-        storage = component.videoStorage() as StorageImpl
+        storage = component.videoStorage() as StorageImpl // SUT
+
+        dbHelper = component.storageDbHelper()
         storIo = component.storageDbStorIo()
 
         downloadManagerQueryResult = MatrixCursor(arrayOf(
@@ -72,8 +79,29 @@ class StorageTest {
     }
 
     @Test
+    fun testDbInMemory() {
+        assertNull("test db not in memory", dbHelper.databaseName)
+    }
+
+    @Test
+    fun storageTableExisting() {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + StorageTable.TABLE_NAME + "';", null)
+        assertEquals("table not exists", 1, cursor.count)
+        cursor.close()
+    }
+
+    @Test
+    fun tableIsEmpty() {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM " + StorageTable.TABLE_NAME + ";", null)
+        assertEquals("table is not empty", 0, cursor.count)
+        cursor.close()
+    }
+
+    @Test
     fun getUnexistingRecord() {
-        val record: VideoStorageRecord? = storage.getRecord("remote_url")
+        val record: FileStorageRecord? = storage.getRecord("remote_url")
 
         assertNull(record)
     }
@@ -93,10 +121,20 @@ class StorageTest {
     }
 
     @Test
+    fun testDataOneRecord() {
+        inProgressTestRecord.saveForTest()
+
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM " + StorageTable.TABLE_NAME + ";", null)
+        assertEquals("table is not empty", 1, cursor.count)
+        cursor.close()
+    }
+
+    @Test
     fun getRecordForExistingRecord() {
         inProgressTestRecord.saveForTest()
 
-        val record: VideoStorageRecord? = storage.getRecord(inProgressTestRecord.remoteUri)
+        val record: FileStorageRecord? = storage.getRecord(inProgressTestRecord.remoteUri)
 
         assertNotNull(record)
         assertEquals(inProgressTestRecord, record)
@@ -104,7 +142,7 @@ class StorageTest {
 
     @Test
     fun getPercentForExistingRecord() {
-        val testRecord = VideoStorageRecord(
+        val testRecord = FileStorageRecord(
                 remoteUri = "remote_uri_111",
                 downloadId = 111,
                 percent = 87)
@@ -128,7 +166,7 @@ class StorageTest {
      */
     @Test
     fun checkDownloadStatusForLocalRecord() {
-        val testRecord = VideoStorageRecord(
+        val testRecord = FileStorageRecord(
                 remoteUri = "remote_uri",
                 downloadId = 111,
                 status = StorageStatus.LOCAL,
@@ -265,7 +303,7 @@ class StorageTest {
      */
     @Test
     fun checkRequestTwiceWhenLocal() {
-        val testRecord = VideoStorageRecord(
+        val testRecord = FileStorageRecord(
                 remoteUri = "remote_uri",
                 downloadId = 111,
                 status = StorageStatus.LOCAL,
@@ -283,7 +321,7 @@ class StorageTest {
      */
     @Test
     fun clean() {
-        val testRecord1 = VideoStorageRecord(
+        val testRecord1 = FileStorageRecord(
                 remoteUri = "remote_uri_1",
                 downloadId = 111,
                 status = StorageStatus.LOCAL,
@@ -291,7 +329,7 @@ class StorageTest {
                 percent = 100)
         testRecord1.saveForTest()
 
-        val testRecord2 = VideoStorageRecord(
+        val testRecord2 = FileStorageRecord(
                 remoteUri = "remote_uri_2",
                 downloadId = 112,
                 status = StorageStatus.LOCAL,
@@ -299,7 +337,7 @@ class StorageTest {
                 percent = 100)
         testRecord2.saveForTest()
 
-        val testRecord3 = VideoStorageRecord(
+        val testRecord3 = FileStorageRecord(
                 remoteUri = "remote_uri_3",
                 downloadId = 113,
                 status = StorageStatus.LOCAL,
@@ -332,7 +370,7 @@ class StorageTest {
 //        assertEquals(testRecord.status, status)
 //    }
 
-    private fun VideoStorageRecord.saveForTest() {
+    private fun FileStorageRecord.saveForTest() {
         storIo.put().`object`(this).prepare().executeAsBlocking()
     }
 

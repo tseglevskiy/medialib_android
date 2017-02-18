@@ -1,11 +1,14 @@
 package ru.roscha_akademii.medialib.storage
 
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
+import ru.roscha_akademii.medialib.storage.model.FileStorageRecord
+
 interface Storage {
     fun getStatus(remoteUri: String): StorageStatus
 
     fun checkDownloadStatus(remoteUri: String)
 
-    fun checkDownloadStatus(record: VideoStorageRecord)
+    fun checkDownloadStatus(record: FileStorageRecord)
 
     fun checkLocalUri(remoteUri: String)
 

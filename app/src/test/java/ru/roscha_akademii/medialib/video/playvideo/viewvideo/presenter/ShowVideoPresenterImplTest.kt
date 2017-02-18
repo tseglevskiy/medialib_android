@@ -84,7 +84,7 @@ class ShowVideoPresenterImplTest {
         assertEquals(video1.id.toLong(), longCaptor.allValues[0])
 
 //        verify<ShowVideoView>(view, times(1)).showVideo(videoCaptor.capture())
-//        assertEquals(video1.videoUrl, videoCaptor.allValues[0])
+//        assertEquals(book1.videoUrl, videoCaptor.allValues[0])
 
     }
 

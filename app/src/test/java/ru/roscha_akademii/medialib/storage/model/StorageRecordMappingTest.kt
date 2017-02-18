@@ -1,7 +1,7 @@
-package ru.roscha_akademii.medialib.video.model.local.storio
+package ru.roscha_akademii.medialib.storage.model
 
 import android.database.MatrixCursor
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,10 +9,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
-import ru.roscha_akademii.medialib.storage.StorageRecordMapping
-import ru.roscha_akademii.medialib.storage.StorageStatus
-import ru.roscha_akademii.medialib.storage.VideoStorageRecord
-import ru.roscha_akademii.medialib.storage.StorageTable
+import ru.roscha_akademii.medialib.storage.model.StorageStatus
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class,
@@ -34,7 +31,7 @@ class StorageRecordMappingTest() {
         deleteResolver = mapping.deleteResolver() as StorageRecordMapping.DeleteResolver
     }
 
-    val record1 = VideoStorageRecord(
+    val record1 = FileStorageRecord(
             remoteUri = "remote_url",
             downloadId = 2222,
             localUri = "local url",

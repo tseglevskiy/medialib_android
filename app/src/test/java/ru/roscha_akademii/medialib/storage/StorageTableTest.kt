@@ -2,7 +2,7 @@ package ru.roscha_akademii.medialib.storage
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import ru.roscha_akademii.medialib.storage.StorageTable
+import ru.roscha_akademii.medialib.storage.model.StorageTable
 
 class StorageTableTest() {
 
