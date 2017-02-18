@@ -1,14 +1,12 @@
 package ru.roscha_akademii.medialib.storage
 
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import ru.roscha_akademii.medialib.storage.Storage
-import ru.roscha_akademii.medialib.storage.StorageStatus
 import ru.roscha_akademii.medialib.storage.stub.StorageStub
 
 
-class StorageStubTest() {
+class StorageStubTest {
     lateinit var storage: Storage // SUT
 
     @Before

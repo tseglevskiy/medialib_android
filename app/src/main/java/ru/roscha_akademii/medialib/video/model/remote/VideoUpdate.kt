@@ -1,7 +1,5 @@
 package ru.roscha_akademii.medialib.video.model.remote
 
-import com.pushtorefresh.storio.sqlite.StorIOSQLite
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -9,18 +7,14 @@ import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateCallback
 import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.model.remote.entity.VideoAnswer
+import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import java.util.*
 
-/*
-    @field:[Inject Named("video db")]
-    lateinit var videoDb: StorIOSQLite
+open class VideoUpdate(val videoApi: VideoApi,
+                       val videoDb: VideoDb,
+                       val storage: Storage) {
 
- */
-public open class VideoUpdate(val videoApi: VideoApi,
-                  val videoDb: StorIOSQLite,
-                  val storage: Storage) {
-
-    public open fun update(callback: UpdateCallback) {
+    open fun update(callback: UpdateCallback) {
         val call = videoApi.videoList()
         call.enqueue(object : Callback<VideoAnswer> {
             override fun onResponse(call: Call<VideoAnswer>, response: Response<VideoAnswer>) {
@@ -46,11 +40,7 @@ public open class VideoUpdate(val videoApi: VideoApi,
     }
 
     internal fun saveVideos(list: ArrayList<Video>) {
-        videoDb
-                .put()
-                .objects(list)
-                .prepare()
-                .executeAsBlocking()
+        videoDb.saveVideos(list)
 
         list
                 .map { it.pictureUrl }

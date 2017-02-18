@@ -10,6 +10,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.roscha_akademii.medialib.BuildConfig;
@@ -122,6 +123,32 @@ public class VideoDbTest {
 
         List<Video> list = videoDb.getAllVideo();
 
+        assertNotNull(list);
+        assertEquals(2, list.size());
+
+        assertEquals(video1.getId(), list.get(0).getId());
+        assertEquals(video2.getId(), list.get(1).getId());
+    }
+
+    @Test
+    public void saveZeroVideos() {
+        videoDb.saveVideos(new ArrayList<Video>());
+
+        List<Video> list = videoDb.getAllVideo();
+        assertNotNull(list);
+        assertEquals(0, list.size());
+    }
+
+    @Test
+    public void saveTwoVideos() {
+
+        ArrayList<Video> listToSave = new ArrayList<Video>();
+        listToSave.add(video1);
+        listToSave.add(video2);
+
+        videoDb.saveVideos(listToSave);
+
+        List<Video> list = videoDb.getAllVideo();
         assertNotNull(list);
         assertEquals(2, list.size());
 

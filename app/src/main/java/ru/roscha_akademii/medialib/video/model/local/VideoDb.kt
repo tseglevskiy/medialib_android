@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.Query
 import ru.roscha_akademii.medialib.video.model.UnexistingVideoException
 import ru.roscha_akademii.medialib.video.model.remote.entity.Video
+import java.util.*
 
 open class VideoDb(internal var db: StorIOSQLite) {
 
@@ -36,5 +37,11 @@ open class VideoDb(internal var db: StorIOSQLite) {
         }
     }
 
-
+    open fun saveVideos(list: ArrayList<Video>) {
+        db
+                .put()
+                .objects(list)
+                .prepare()
+                .executeAsBlocking()
+    }
 }

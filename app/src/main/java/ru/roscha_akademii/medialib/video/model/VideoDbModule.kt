@@ -61,7 +61,7 @@ open class VideoDbModule {
     @Provides
     @Singleton
     open fun providesVideoUpdate(videoApi: VideoApi,
-                            @Named("video db") videoDb: StorIOSQLite,
+                            videoDb: VideoDb,
                             storage: Storage)
             : VideoUpdate
             = VideoUpdate(videoApi = videoApi, videoDb = videoDb, storage = storage)

@@ -12,8 +12,8 @@ import ru.roscha_akademii.medialib.common.ServiceNavigator
 import ru.roscha_akademii.medialib.common.TimeProvider
 
 import org.junit.Assert.assertEquals
-import org.mockito.Matchers.anyLong
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify

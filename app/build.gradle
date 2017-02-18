@@ -96,11 +96,12 @@ def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
 def googlePlayVersion = '10.0.1'
 def okHttpVersion = '3.2.0'
-def storIoVersion = '1.11.0'
+def storIoVersion = '1.12.2'
 def mockitoVersion = '1.10.19'
 def mockitoKotlinVersion = '0.11.0'
 def moxyVersion = '1.4.4'
 def robolectricVersion = "3.2.2"
+def rxJavaVersion = "1.2.1"
 
 dependencies {
 //    compile project(':net')
@@ -201,6 +202,9 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
     }
+
+    testCompile "io.reactivex:rxjava:$rxJavaVersion"
+
 
     ///////////////////////////////////////////////
     // androidTest

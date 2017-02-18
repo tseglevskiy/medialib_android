@@ -21,6 +21,7 @@ import ru.roscha_akademii.medialib.book.model.remote.BookUpdate
 import ru.roscha_akademii.medialib.common.*
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.video.model.VideoDbModule
+import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
 import ru.roscha_akademii.medialib.video.model.remote.VideoUpdate
 
@@ -54,7 +55,7 @@ class UpdateServiceTest {
                 .videoDbModule(object : VideoDbModule() {
                     override fun providesVideoDbFileName() = "" // in-memory database for tests
 
-                    override fun providesVideoUpdate(videoApi: VideoApi, videoDb: StorIOSQLite, storage: Storage)
+                    override fun providesVideoUpdate(videoApi: VideoApi, videoDb: VideoDb, storage: Storage)
                             = videoUpdate
                 })
                 .bookModule(object : BookModule() {
