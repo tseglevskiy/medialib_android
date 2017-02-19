@@ -25,6 +25,23 @@ open class BookDb (internal var db: StorIOSQLite) {
                 .prepare()
                 .executeAsBlocking()
     }
+
+    open fun getBook(id: Long): Book {
+        try {
+            return db
+                    .get()
+                    .listOfObjects(Book::class.java)
+                    .withQuery(Query.builder()
+                            .table(BookTable.TABLE_NAME)
+                            .where(BookTable.ID + " = ?")
+                            .whereArgs(id)
+                            .build())
+                    .prepare()
+                    .executeAsBlocking()[0]
+        } catch (e: IndexOutOfBoundsException) {
+            throw UnexistingBookException(e)
+        }
+    }
 }
 
 

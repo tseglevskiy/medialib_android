@@ -123,58 +123,58 @@ class BookDbTest {
         assertEquals(book2.id, list[1].id)
     }
 
-//    @Test
-//    fun twoVideos_readVideo_unexistingVideo() {
-//        bookDbStorIoHelper
-//                .put()
-//                .`object`(book1)
-//                .prepare()
-//                .executeAsBlocking()
-//
-//        bookDbStorIoHelper
-//                .put()
-//                .`object`(book2)
-//                .prepare()
-//                .executeAsBlocking()
-//
-//        val unexistingId: Long = 3333
-//        assertNotEquals(unexistingId, book1.id)
-//        assertNotEquals(unexistingId, book2.id)
-//
-//        try {
-//            bookDb.getVideo(1999)
-//            fail("taking unexisting video has to throw UnexistingVideoException")
-//        } catch (e: UnexistingVideoException) {
-//            // OK
-//        }
-//
-//    }
+    @Test
+    fun twoBooks_getBook_unexistingBook() {
+        bookDbStorIoHelper
+                .put()
+                .`object`(book1)
+                .prepare()
+                .executeAsBlocking()
 
-//    @Test
-//    fun twoVideos_readVideo_oneVideo() {
-//        bookDbStorIoHelper
-//                .put()
-//                .`object`(book1)
-//                .prepare()
-//                .executeAsBlocking()
-//
-//        bookDbStorIoHelper
-//                .put()
-//                .`object`(book2)
-//                .prepare()
-//                .executeAsBlocking()
-//
-//        var video = bookDb.getVideo(book1.id)
-//
-//        assertEquals(book1.id, video.id)
-//        assertEquals(book1.description, video.description)
-//
-//        video = bookDb.getVideo(book2.id)
-//
-//        assertEquals(book2.id, video.id)
-//        assertEquals(book2.description, video.description)
-//
-//    }
+        bookDbStorIoHelper
+                .put()
+                .`object`(book2)
+                .prepare()
+                .executeAsBlocking()
+
+        val unexistingId: Long = 3333
+        assertNotEquals(unexistingId, book1.id)
+        assertNotEquals(unexistingId, book2.id)
+
+        try {
+            bookDb.getBook(unexistingId)
+            fail("taking unexisting video has to throw UnexistingVideoException")
+        } catch (e: UnexistingBookException) {
+            // OK
+        }
+
+    }
+
+    @Test
+    fun twoBooks_getBook_oneBook() {
+        bookDbStorIoHelper
+                .put()
+                .`object`(book1)
+                .prepare()
+                .executeAsBlocking()
+
+        bookDbStorIoHelper
+                .put()
+                .`object`(book2)
+                .prepare()
+                .executeAsBlocking()
+
+        var book = bookDb.getBook(book1.id)
+
+        assertEquals(book1.id, book.id)
+        assertEquals(book1.description, book.description)
+
+        book = bookDb.getBook(book2.id)
+
+        assertEquals(book2.id, book.id)
+        assertEquals(book2.description, book.description)
+
+    }
 
     companion object {
 

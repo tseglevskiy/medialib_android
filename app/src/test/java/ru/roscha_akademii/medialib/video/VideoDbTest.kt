@@ -145,7 +145,7 @@ class VideoDbTest {
         assertNotEquals(unexistingId, video2.id)
 
         try {
-            videoDb.getVideo(1999)
+            videoDb.getVideo(unexistingId)
             fail("taking unexisting video has to throw UnexistingVideoException")
         } catch (e: UnexistingVideoException) {
             // OK

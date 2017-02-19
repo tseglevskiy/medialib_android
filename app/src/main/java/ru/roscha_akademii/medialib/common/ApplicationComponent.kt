@@ -7,6 +7,7 @@ import ru.roscha_akademii.medialib.book.BookModule
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.BookDbSqliteHelper
 import ru.roscha_akademii.medialib.book.model.remote.BookApi
+import ru.roscha_akademii.medialib.book.showlist.item.view.BookCard
 import ru.roscha_akademii.medialib.net.NetModule
 import ru.roscha_akademii.medialib.storage.StorageModule
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
@@ -41,6 +42,7 @@ interface ApplicationComponent {
     fun inject(videoCard: VideoCard)
     fun inject(downloadNotificationClickReceiver: DownloadNotificationClickReceiver)
     fun inject(downloadControl: DownloadControl)
+    fun inject(bookCard: BookCard)
 
     /*
     Using submodules requires providing explicit methods in the parent component.

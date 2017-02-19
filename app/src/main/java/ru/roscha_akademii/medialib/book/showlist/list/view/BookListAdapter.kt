@@ -24,7 +24,6 @@ class BookListAdapter(val parentDelegate: MvpDelegate<*>,
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
         )
-        Log.d("happy", "parent delegate " + parentDelegate)
         view.parentDeleagate = parentDelegate
 
         return MyViewHolder(view, clickListener)
