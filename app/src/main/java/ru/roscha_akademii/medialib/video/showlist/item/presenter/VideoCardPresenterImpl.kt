@@ -9,6 +9,7 @@ import ru.roscha_akademii.medialib.video.showlist.item.view.VideoCardView
 @InjectViewState
 class VideoCardPresenterImpl(val videoDb: VideoDb, val storage: Storage)
     : MvpPresenter<VideoCardView>(), VideoCardPresenter {
+
     override var videoId: Long? = null
         set(value) {
             field = value

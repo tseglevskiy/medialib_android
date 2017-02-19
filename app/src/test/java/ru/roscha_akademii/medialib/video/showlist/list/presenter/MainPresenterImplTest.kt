@@ -1,15 +1,16 @@
 package ru.roscha_akademii.medialib.video.showlist.list.presenter
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.*
 import org.greenrobot.eventbus.EventBus
 import org.joda.time.LocalDate
+import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import ru.roscha_akademii.medialib.common.ActivityNavigator
-import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.model.remote.entity.Video
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
@@ -41,46 +42,75 @@ class MainPresenterImplTest {
 
     lateinit var presenter: MainPresenterImpl // SUT
 
-    lateinit var updateScheduler: UpdateScheduler
+    @Mock
     lateinit var view: ListOfVideoView
+
+    @Mock
     lateinit var viewState: `ListOfVideoView$$State`
+
+    @Mock
     lateinit var videoDb: VideoDb
+
+    @Mock
     lateinit var navigator: ActivityNavigator
+
+    @Mock
     lateinit var bus: EventBus
+
+    @Captor
+    lateinit var listCaptor: ArgumentCaptor<List<Video>>
 
     @Before
     fun setUp() {
-        videoDb = mock<VideoDb>()
-        navigator = mock<ActivityNavigator>()
-        view = mock<ListOfVideoView>()
-        viewState = mock<`ListOfVideoView$$State`>()
-        bus = mock<EventBus>()
+        MockitoAnnotations.initMocks(this)
 
         presenter = MainPresenterImpl(bus, videoDb, navigator) // SUT
-        presenter.attachView(view)
-        presenter.setViewState(viewState)
     }
 
     @Test
-    @Ignore
+    fun registerBus() {
+        presenter.setViewState(viewState)
+        presenter.attachView(view)
+
+        verify(bus).register(presenter)
+        verifyNoMoreInteractions(bus)
+    }
+
+    @Test
+    fun unregisterBus() {
+        presenter.setViewState(viewState)
+        presenter.attachView(view)
+        presenter.onDestroy()
+
+        verify(bus).unregister(presenter)
+    }
+
+    @Test
+    fun requestVideoList() {
+        presenter.setViewState(viewState)
+        presenter.attachView(view)
+
+        verify(videoDb).allVideo
+    }
+
+    @Test
     fun displayVideoList() {
         val srcList = ArrayList<Video>()
         srcList.add(video1)
         srcList.add(video2)
 
-//        whenever(bookDb.getAllVideo()).thenReturn(srcList)
+        whenever(videoDb.allVideo).thenReturn(srcList)
 
-//        presenter.attachView(view)
-//        presenter.start()
+        presenter.setViewState(viewState)
+        presenter.attachView(view)
 
-//        verify(view).showVideoList(any())
-//        verify(view, times(1)).showVideoList(anyObject())
+        verify(viewState, times(1)).showVideoList(capture(listCaptor))
 
-//        val listCaptor = ArgumentCaptor.forClass(List<Video>::class.java)
-//        verify<ListOfVideoView>(view, times(1)).showVideoList(listCaptor.capture())
+        val dstList = listCaptor.allValues[0]
 
-//        val dstList = listCaptor.value as ArrayList<Video>
-//        assertEquals(2, dstList.size.toLong())
+        assertEquals(srcList, dstList)
+        assertEquals(2, dstList.size.toLong())
+
 //        assertEquals(book1.id, dstList[0].id)
 //        assertEquals(video2.id, dstList[1].id)
 

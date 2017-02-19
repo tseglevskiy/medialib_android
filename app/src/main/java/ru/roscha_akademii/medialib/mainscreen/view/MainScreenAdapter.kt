@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import ru.roscha_akademii.medialib.R
+import ru.roscha_akademii.medialib.book.showlist.list.view.ListOfBooksFragment
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoFragment
 
 class MainScreenAdapter(fm: FragmentManager, val context: Context) : FragmentPagerAdapter(fm) {
@@ -16,7 +17,7 @@ class MainScreenAdapter(fm: FragmentManager, val context: Context) : FragmentPag
     }
 
     val second: Fragment by lazy {
-        DemoFragment.getInstance("second")
+        ListOfBooksFragment.getInstance()
     }
 
     override fun getItem(position: Int): Fragment = when(position) {

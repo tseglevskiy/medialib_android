@@ -4,6 +4,8 @@ import android.app.Activity
 import dagger.Module
 import dagger.Provides
 import org.greenrobot.eventbus.EventBus
+import ru.roscha_akademii.medialib.book.model.local.BookDb
+import ru.roscha_akademii.medialib.book.showlist.list.presenter.BookListPresenter
 import ru.roscha_akademii.medialib.mainscreen.presenter.MainScreenPresenter
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateScheduler
@@ -26,6 +28,14 @@ class ActivityModule(private val activity: Activity) {
                                        videoDb: VideoDb,
                                        navigator: ActivityNavigator): MainPresenterImpl {
         return MainPresenterImpl(bus, videoDb, navigator)
+    }
+
+    @Provides
+    @ActivityScope
+    internal fun providesBookListPresenter(bus: EventBus,
+                                           bookDb: BookDb,
+                                           navigator: ActivityNavigator): BookListPresenter {
+        return BookListPresenter(bus, bookDb)
     }
 
     @Provides
