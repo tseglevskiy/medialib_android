@@ -16,7 +16,7 @@ import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.video.model.remote.entity.Video
-import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.VideoListPresenterImpl
 
 class ListOfVideoFragment : MvpAppCompatFragment(), ListOfVideoView, VideoListAdapter.OnItemClickListener {
     companion object {
@@ -28,10 +28,10 @@ class ListOfVideoFragment : MvpAppCompatFragment(), ListOfVideoView, VideoListAd
     lateinit var activityComponent: ActivityComponent
 
     @InjectPresenter
-    lateinit var presenter: MainPresenterImpl
+    lateinit var presenter: VideoListPresenterImpl
 
     @ProvidePresenter
-    fun createPresenter(): MainPresenterImpl {
+    fun createPresenter(): VideoListPresenterImpl {
         return activityComponent.mainPresenter()
     }
 

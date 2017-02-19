@@ -11,9 +11,9 @@ import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
 
 @InjectViewState
-class MainPresenterImpl(private val bus: EventBus,
-                        private val videoDb: VideoDb,
-                        private val navigator: ActivityNavigator) : MvpPresenter<ListOfVideoView>(), MainPresenter {
+class VideoListPresenterImpl(private val bus: EventBus,
+                             private val videoDb: VideoDb,
+                             private val navigator: ActivityNavigator) : MvpPresenter<ListOfVideoView>(), VideoListPresenter {
 
 
     override fun onFirstViewAttach() {

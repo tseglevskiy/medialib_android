@@ -5,13 +5,13 @@ import ru.roscha_akademii.medialib.book.showlist.list.presenter.BookListPresente
 import ru.roscha_akademii.medialib.mainscreen.presenter.MainScreenPresenter
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.view.ShowVideoActivity
-import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.VideoListPresenterImpl
 import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoFragment
 
 @ActivityScope
 @Subcomponent(modules = arrayOf(ActivityModule::class))
 interface ActivityComponent {
-    fun mainPresenter(): MainPresenterImpl
+    fun mainPresenter(): VideoListPresenterImpl
 
     fun bookListPresenter(): BookListPresenter
 

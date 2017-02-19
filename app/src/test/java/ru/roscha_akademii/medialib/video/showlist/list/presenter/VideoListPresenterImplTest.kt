@@ -17,7 +17,7 @@ import ru.roscha_akademii.medialib.video.showlist.list.view.ListOfVideoView
 import ru.roscha_akademii.medialib.video.showlist.list.view.`ListOfVideoView$$State`
 import java.util.*
 
-class MainPresenterImplTest {
+class VideoListPresenterImplTest {
     /*
      * test data
      */
@@ -40,7 +40,7 @@ class MainPresenterImplTest {
             duration = "0:02")
 
 
-    lateinit var presenter: MainPresenterImpl // SUT
+    lateinit var presenter: VideoListPresenterImpl // SUT
 
     @Mock
     lateinit var view: ListOfVideoView
@@ -64,7 +64,7 @@ class MainPresenterImplTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        presenter = MainPresenterImpl(bus, videoDb, navigator) // SUT
+        presenter = VideoListPresenterImpl(bus, videoDb, navigator) // SUT
     }
 
     @Test

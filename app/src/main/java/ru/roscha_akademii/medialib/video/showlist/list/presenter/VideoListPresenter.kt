@@ -1,5 +1,5 @@
 package ru.roscha_akademii.medialib.video.showlist.list.presenter
 
-interface MainPresenter {
+interface VideoListPresenter {
     fun wannaOpenVideo(id: Long)
 }

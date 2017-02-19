@@ -11,7 +11,7 @@ import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateScheduler
 import ru.roscha_akademii.medialib.video.model.local.VideoDb
 import ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter.ShowVideoPresenterImpl
-import ru.roscha_akademii.medialib.video.showlist.list.presenter.MainPresenterImpl
+import ru.roscha_akademii.medialib.video.showlist.list.presenter.VideoListPresenterImpl
 
 @Module
 class ActivityModule(private val activity: Activity) {
@@ -26,8 +26,8 @@ class ActivityModule(private val activity: Activity) {
     @ActivityScope
     internal fun providesMainPresenter(bus: EventBus,
                                        videoDb: VideoDb,
-                                       navigator: ActivityNavigator): MainPresenterImpl {
-        return MainPresenterImpl(bus, videoDb, navigator)
+                                       navigator: ActivityNavigator): VideoListPresenterImpl {
+        return VideoListPresenterImpl(bus, videoDb, navigator)
     }
 
     @Provides
