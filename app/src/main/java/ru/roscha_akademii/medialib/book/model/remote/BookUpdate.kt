@@ -44,6 +44,10 @@ open class BookUpdate(val bookApi: BookApi,
     private fun saveBooks(list: ArrayList<Book>) {
         bookDb.saveBooks(list)
 
+//        list
+//                .map { it.id }
+//                .forEach { Log.d("happy", "id $it") }
+
         list
                 .map { it.picture }
                 .filterNotNull()

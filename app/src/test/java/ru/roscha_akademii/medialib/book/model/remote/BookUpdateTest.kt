@@ -7,16 +7,28 @@ import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.*
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.remote.entity.Book
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookAnswer
+import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateCallback
 import java.util.*
+
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class,
+        sdk = intArrayOf(21),
+        manifest = "AndroidManifest.xml",
+        application = RobolectricMdiaLibApplication::class,
+        packageName = "ru.roscha_akademii.medialib")
 
 class BookUpdateTest {
     val book1 = Book(
@@ -102,10 +114,14 @@ class BookUpdateTest {
         list.add(book1)
         val answer = BookAnswer()
         answer.list = list
+        assertEquals(1, answer.list!!.size)
+
         val response = Response.success(answer)
+
         requestCallback.onResponse(call, response)
 
         Mockito.verify(bookDb, times(1)).saveBooks(capture(bookListCaptor))
+
         assertEquals(list, bookListCaptor.allValues[0])
 
         Mockito.verify(callback).onSuccess()

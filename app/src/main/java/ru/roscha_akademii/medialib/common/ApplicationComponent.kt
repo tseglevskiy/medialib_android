@@ -6,6 +6,7 @@ import dagger.Component
 import ru.roscha_akademii.medialib.book.BookModule
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.BookDbSqliteHelper
+import ru.roscha_akademii.medialib.book.model.remote.BookApi
 import ru.roscha_akademii.medialib.net.NetModule
 import ru.roscha_akademii.medialib.storage.StorageModule
 import ru.roscha_akademii.medialib.video.model.remote.VideoApi
@@ -55,6 +56,8 @@ interface ApplicationComponent {
     fun serverBaseUrl(): String
 
     fun videoApi(): VideoApi
+
+    fun bookApi(): BookApi
 
     // VideoDbModule
 
