@@ -185,7 +185,7 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
                 // adjustments to your UI, such as showing the action bar or
                 // other navigational controls.
 
-                videoControl.setVisibility(VISIBLE)
+                videoControl.visibility = VISIBLE
 
                 mainHandler.hideInMoments()
                 requestLayout()
@@ -194,7 +194,7 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
                 // adjustments to your UI, such as hiding the action bar or
                 // other navigational controls.
 
-                videoControl.setVisibility(GONE)
+                videoControl.visibility = GONE
                 requestLayout()
                 mainHandler.freeze()
             }
@@ -229,6 +229,8 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
         mainHandler.post {
             statusField.url = url
             statusField.title = title
+
+            titleField.text = title ?: ""
         }
     }
 
@@ -345,7 +347,7 @@ class ShowVideoActivity : MvpAppCompatActivity(), ShowVideoView {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        videoControl.setVisibility(GONE)
+        videoControl.visibility = GONE
         requestLayout()
     }
 

@@ -18,16 +18,15 @@ class ShowVideoPresenterImpl(val videoDb: VideoDb,
     override fun start(videoId: Long) {
         video = videoDb.getVideo(videoId)
 
-        storage.checkDownloadStatus(video.videoUrl)
-        storage.checkLocalUri(video.videoUrl)
+        with(video) {
+            storage.checkDownloadStatus(videoUrl)
+            storage.checkLocalUri(videoUrl)
 
-        val url = storage.getLocalUriIfAny(video.videoUrl)
+            viewState.showStatus(videoUrl, title)
+            viewState.showDescription(description)
 
-
-        viewState.showStatus(video.videoUrl, video.title)
-
-        viewState.showDescription(video.description)
-
-        viewState.showVideo(url)
+            val url = storage.getLocalUriIfAny(videoUrl)
+            viewState.showVideo(url)
+        }
     }
 }
