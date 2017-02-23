@@ -2,14 +2,17 @@ package ru.roscha_akademii.medialib.storage.widget.view
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.os.Handler
+import android.support.graphics.drawable.VectorDrawableCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import ru.roscha_akademii.medialib.R
 import ru.roscha_akademii.medialib.common.MediaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.storage.model.StorageStatus
@@ -80,11 +83,15 @@ class DownloadControl @JvmOverloads constructor(context: Context,
     private var strokeWidth: Float
 
     private var rect = RectF()
+    private var rectIcon = Rect()
 
     private var status = StorageStatus.REMOTE
     private var percent: Int? = null
     private var percentStr = "0%"
     private var angle = 0f
+
+    private var cloudIcon: Drawable
+    private var localIcon: Drawable
 
     init {
         val app = context.applicationContext
@@ -112,6 +119,17 @@ class DownloadControl @JvmOverloads constructor(context: Context,
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.color = noPaint.color
+
+        val srcCloudIcon = VectorDrawableCompat.create(resources, R.drawable.ic_cloud_download_black_24dp, null)
+        val tintedCloudIcon = DrawableCompat.wrap(srcCloudIcon!!)
+        DrawableCompat.setTint(tintedCloudIcon, noPaint.color)
+        cloudIcon = tintedCloudIcon
+
+        val srcLocalIcon = VectorDrawableCompat.create(resources, R.drawable.ic_check_black_24dp, null)
+        val tintedLocalIcon = DrawableCompat.wrap(srcLocalIcon!!)
+        DrawableCompat.setTint(tintedLocalIcon, yesPaint.color)
+        localIcon = tintedLocalIcon
+
     }
 
     override fun onDetachedFromWindow() {
@@ -148,11 +166,8 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
         when (status) {
             StorageStatus.REMOTE -> {
-                textPaint.color = noPaint.color
-
-                val xPos = canvas.width / 2
-                val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2).toInt()
-                canvas.drawText("--", xPos.toFloat(), yPos.toFloat(), textPaint)
+                cloudIcon.setBounds(rectIcon)
+                cloudIcon.draw(canvas)
 
                 canvas.drawOval(rect, noPaint)
             }
@@ -166,15 +181,11 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
                 canvas.drawOval(rect, noPaint)
                 canvas.drawArc(rect, -90f, angle, false, yesPaint)
-
             }
 
             StorageStatus.LOCAL -> {
-                textPaint.color = yesPaint.color
-
-                val xPos = canvas.width / 2
-                val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2).toInt()
-                canvas.drawText("100%", xPos.toFloat(), yPos.toFloat(), textPaint)
+                localIcon.setBounds(rectIcon)
+                localIcon.draw(canvas)
 
                 canvas.drawOval(rect, yesPaint)
             }
@@ -190,6 +201,8 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+
+        rectIcon.set(w * 2 / 10, h * 2 / 10, w * 8 / 10 , h * 8 / 10)
 
         rect.left = 0f + paddingLeft + strokeWidth / 2
         rect.top = 0f + paddingTop + strokeWidth / 2
