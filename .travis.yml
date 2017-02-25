@@ -50,3 +50,6 @@ before_install:
 
 script:
 - "./gradlew clean :app:assembleDebug -PdisablePreDex --stacktrace"
+
+notifications:
+  slack: jollydroid:tBqTKf1eswO0VcGzj6UbupM9
