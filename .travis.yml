@@ -5,7 +5,7 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-25.0.0
+    - build-tools-25.0.2
     - android-25
     - extra-android-m2repository
     - extra-google-m2repository
@@ -21,7 +21,7 @@ before_install:
     - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force  > /dev/null
 
 script:
-    - ./gradlew clean :app:assembleDebug :app:connectedDebugAndroidTest
+    - ./gradlew clean :app:assembleDebug 
 
 before_script:
     - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
