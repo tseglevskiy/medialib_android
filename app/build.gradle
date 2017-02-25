@@ -90,11 +90,11 @@ jacocoAndroidUnitTestReport {
             ]
 }
 
-def supportVersion = '25.0.0'
+def supportVersion = '25.2.0'
 def daggerVersion = '2.6.1'
 def supportTestVersion = '0.5'
 def espressoVersion = '2.2.2'
-def googlePlayVersion = '10.0.1'
+def googlePlayVersion = '10.2.0'
 def okHttpVersion = '3.2.0'
 def storIoVersion = '1.12.2'
 def mockitoVersion = '1.10.19'
@@ -132,7 +132,7 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
 
     // retrofit
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
