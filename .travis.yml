@@ -49,4 +49,4 @@ before_install:
 - ./gradlew dependencies || true
 
 script:
-- "./gradlew clean build -PdisablePreDex --stacktrace"
+- "./gradlew clean :app:assembleDebug -PdisablePreDex --stacktrace"
