@@ -69,6 +69,14 @@ android {
         abortOnError true
         fatal 'StopShip'
     }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
 }
 
 jacocoAndroidUnitTestReport {
@@ -245,5 +253,4 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     androidTestCompile "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
-
 }
