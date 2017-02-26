@@ -49,7 +49,10 @@ before_install:
 - ./gradlew dependencies || true
 
 script:
-- "./gradlew clean :app:assembleDebug -PdisablePreDex --stacktrace"
+- "./gradlew clean :app:assembleDebug :app:jacocoTestReport :app:assembleAndroidTest -PdisablePreDex --stacktrace"
 
 notifications:
   slack: jollydroid:tBqTKf1eswO0VcGzj6UbupM9
+  
+after_success:
+  - bash <(curl -s https://codecov.io/bash)  
