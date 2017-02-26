@@ -65,7 +65,7 @@ class ListOfBooksFragment : MvpAppCompatFragment(), BookListView, BookListAdapte
     }
 
     override fun onItemClicked(id: Long) {
-        Toast.makeText(activity, "Hello!", Toast.LENGTH_LONG).show()
+        presenter.wannaOpenBook(id)
     }
 
 

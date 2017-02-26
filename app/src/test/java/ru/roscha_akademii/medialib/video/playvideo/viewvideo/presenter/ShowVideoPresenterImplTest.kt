@@ -1,6 +1,7 @@
 package ru.roscha_akademii.medialib.video.playvideo.viewvideo.presenter
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.joda.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -37,15 +38,6 @@ class ShowVideoPresenterImplTest {
     lateinit var viewState: `ShowVideoView$$State`
     lateinit var storage: Storage
 
-    private val video1 = Video(
-            id = 1111,
-            title = "title one",
-            pictureUrl = "picture url one",
-            description = "description one",
-            videoUrl = "video url one",
-            issueDate = LocalDate.parse("2000-01-01"),
-            duration = "0:01")
-
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -71,7 +63,7 @@ class ShowVideoPresenterImplTest {
     @Test
     @Throws(Exception::class)
     fun start() {
-        `when`(videoDb.getVideo(anyLong())).thenReturn(video1)
+        whenever(videoDb.getVideo(anyLong())).thenReturn(video1)
 
         presenter.attachView(view)
         presenter.setViewState(viewState)
@@ -88,5 +80,15 @@ class ShowVideoPresenterImplTest {
 
     }
 
+    companion object {
+        val video1 = Video(
+                id = 1111,
+                title = "title one",
+                pictureUrl = "picture url one",
+                description = "description one",
+                videoUrl = "video url one",
+                issueDate = LocalDate.parse("2000-01-01"),
+                duration = "0:01")
+    }
 
 }
