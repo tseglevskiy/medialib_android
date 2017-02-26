@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.BookModule
 import ru.roscha_akademii.medialib.book.model.local.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.common.AndroidModule
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
@@ -75,7 +76,7 @@ class BookDbTest {
     }
 
     @Test
-    fun twoVideos_readAllBooks() {
+    fun twoBooks_readAllBooks() {
         bookDbStorIoHelper
                 .put()
                 .`object`(book1)
@@ -98,7 +99,7 @@ class BookDbTest {
     }
 
     @Test
-    fun saveZeroVideos() {
+    fun saveZeroBooks() {
         bookDb.saveBooks(ArrayList<Book>())
 
         val list = bookDb.allBooks
@@ -107,7 +108,7 @@ class BookDbTest {
     }
 
     @Test
-    fun saveTwoVideos() {
+    fun saveTwoBooks() {
 
         val listToSave = ArrayList<Book>()
         listToSave.add(book1)
@@ -121,6 +122,31 @@ class BookDbTest {
 
         assertEquals(book1.id, list[0].id)
         assertEquals(book2.id, list[1].id)
+    }
+
+    @Test
+    fun saveTwoBooksOneByOne() {
+        bookDb.saveBook(book1)
+        bookDb.saveBook(book2)
+
+        val list = bookDb.allBooks
+        assertNotNull(list)
+        assertEquals(2, list.size.toLong())
+
+        assertEquals(book1.id, list[0].id)
+        assertEquals(book2.id, list[1].id)
+    }
+
+    @Test
+    fun saveOneBookTwoTimes() {
+        bookDb.saveBook(book1) // save the book
+        bookDb.saveBook(book1) // the same
+
+        val list = bookDb.allBooks
+        assertNotNull(list)
+        assertEquals(1, list.size.toLong())
+
+        assertEquals(book1.id, list[0].id)
     }
 
     @Test
@@ -176,6 +202,59 @@ class BookDbTest {
 
     }
 
+    @Test
+    fun bookFile_unexistingBookFile() {
+        bookDb.saveBookFile(file11)
+        bookDb.saveBookFile(file12)
+
+        val list = bookDb.getBookFile(book2.id)
+        assertNotNull(list)
+        assertEquals(0, list.size)
+    }
+
+    @Test
+    fun bookFile_oneBookFile() {
+        // file for 'book2'
+        assertEquals(file21.bookId, book2.id)
+        bookDb.saveBookFile(file21)
+
+        // other files
+        assertNotEquals(file11.bookId, book2.id)
+        bookDb.saveBookFile(file11)
+        assertNotEquals(file12.bookId, book2.id)
+        bookDb.saveBookFile(file12)
+
+        val list = bookDb.getBookFile(book2.id)
+        assertNotNull(list)
+        assertEquals(1, list.size)
+        assertEquals(book2.id, list[0].bookId)
+        assertEquals(file21.url, list[0].url)
+    }
+
+    @Test
+    fun bookFile_twoBookFiles() {
+        // files for 'bookDto1'
+        assertEquals(file11.bookId, book1.id)
+        bookDb.saveBookFile(file11)
+        assertEquals(file12.bookId, book1.id)
+        bookDb.saveBookFile(file12)
+
+        // other files
+        assertNotEquals(file21.bookId, book1.id)
+        bookDb.saveBookFile(file21)
+
+        val list = bookDb
+                .getBookFile(book1.id)
+                .sortedBy(BookFile::url)
+
+        assertNotNull(list)
+        assertEquals(2, list.size)
+        assertEquals(book1.id, list[0].bookId)
+        assertEquals(book1.id, list[1].bookId)
+        assertEquals(file11.url, list[0].url)
+        assertEquals(file12.url, list[1].url)
+    }
+
     companion object {
 
         /*
@@ -192,5 +271,19 @@ class BookDbTest {
                 "title two",
                 "picture url two",
                 "description two")
-    }
+
+        private val file11 = BookFile(
+                book1.id,
+                "http://file.1.1"
+        )
+
+        private val file12 = BookFile(
+                book1.id,
+                "http://file.1.2"
+        )
+
+        private val file21 = BookFile(
+                book2.id,
+                "http://file.2.1"
+        )    }
 }

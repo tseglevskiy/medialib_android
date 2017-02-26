@@ -5,19 +5,23 @@ import ru.roscha_akademii.medialib.common.CreateTableQueryBuilder.SqlType.INTEGE
 import ru.roscha_akademii.medialib.common.CreateTableQueryBuilder.SqlType.STRING
 
 object BookFileTable {
-    val VERSION = 1
+    val VERSION = 2
 
     val TABLE_NAME = "book_file"
 
-    val ID = "_id"
-    val BOOK = "fook"
+    val BOOK_ID = "book"
     val URL = "url"
+
+    val INDEX_NAME = "book_and_url"
 
     fun createTable(): String {
         return CreateTableQueryBuilder(TABLE_NAME)
-                .index(ID)
-                .column(BOOK, INTEGER)
+                .column(BOOK_ID, INTEGER)
                 .column(URL, STRING)
                 .build()
+    }
+
+    fun createIndex(): String {
+        return "CREATE UNIQUE INDEX IF NOT EXISTS $INDEX_NAME on $TABLE_NAME ($BOOK_ID, $URL)"
     }
 }

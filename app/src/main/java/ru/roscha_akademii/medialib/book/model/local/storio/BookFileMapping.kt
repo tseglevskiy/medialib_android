@@ -27,8 +27,8 @@ class BookFileMapping : SQLiteTypeMapping<BookFile>(
         public override fun mapToUpdateQuery(obj: BookFile): UpdateQuery {
             return UpdateQuery.builder()
                     .table(BookFileTable.TABLE_NAME)
-                    .where(BookFileTable.ID + " = ?")
-                    .whereArgs(obj.id)
+                    .where(BookFileTable.BOOK_ID + " = ? AND " + BookFileTable.URL + " = ?")
+                    .whereArgs(obj.bookId, obj.url)
                     .build()
         }
 
@@ -36,8 +36,7 @@ class BookFileMapping : SQLiteTypeMapping<BookFile>(
             val contentValues = ContentValues()
 
             contentValues.put(BookFileTable.URL, obj.url)
-            contentValues.put(BookFileTable.ID, obj.id)
-            contentValues.put(BookFileTable.BOOK, obj.bookId)
+            contentValues.put(BookFileTable.BOOK_ID, obj.bookId)
 
             return contentValues
         }
@@ -46,8 +45,7 @@ class BookFileMapping : SQLiteTypeMapping<BookFile>(
     internal class GetResolver : DefaultGetResolver<BookFile>() {
         override fun mapFromCursor(cursor: Cursor): BookFile {
             return BookFile(
-                    id = cursor.getLong(cursor.getColumnIndex(BookFileTable.ID)),
-                    bookId = cursor.getLong(cursor.getColumnIndex(BookFileTable.BOOK)),
+                    bookId = cursor.getLong(cursor.getColumnIndex(BookFileTable.BOOK_ID)),
                     url = cursor.getString(cursor.getColumnIndex(BookFileTable.URL))
             )
         }
@@ -57,8 +55,8 @@ class BookFileMapping : SQLiteTypeMapping<BookFile>(
         public override fun mapToDeleteQuery(obj: BookFile): DeleteQuery {
             return DeleteQuery.builder()
                     .table(BookFileTable.TABLE_NAME)
-                    .where(BookFileTable.ID + " = ?")
-                    .whereArgs(obj.id)
+                    .where(BookFileTable.BOOK_ID + " = ? AND " + BookFileTable.URL + " = ?")
+                    .whereArgs(obj.bookId, obj.url)
                     .build()
         }
     }

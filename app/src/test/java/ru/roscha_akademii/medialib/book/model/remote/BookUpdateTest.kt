@@ -17,12 +17,12 @@ import retrofit2.Response
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookAnswer
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookDTO
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateCallback
-import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class,
@@ -32,11 +32,13 @@ import java.util.*
         packageName = "ru.roscha_akademii.medialib")
 
 class BookUpdateTest {
-    val book1 = BookDTO(
+    val bookDto1 = BookDTO(
             id = 1111,
             title = "title one",
             picture = "picture url one",
-            description = "description one")
+            description = "description one",
+            files = arrayOf("http://1", "http://2").toList()
+    )
 
     @Mock
     lateinit var bookApi: BookApi
@@ -54,7 +56,10 @@ class BookUpdateTest {
     lateinit var requestCallCaptor: ArgumentCaptor<Callback<BookAnswer>>
 
     @Captor
-    lateinit var bookListCaptor: ArgumentCaptor<ArrayList<Book>>
+    lateinit var bookCaptor: ArgumentCaptor<Book>
+
+    @Captor
+    lateinit var bookFileCaptor: ArgumentCaptor<BookFile>
 
     @Mock
     lateinit var bookDb: BookDb
@@ -105,30 +110,86 @@ class BookUpdateTest {
     }
 
     @Test
-    fun successResultWithData() {
+    fun successResultWithData_saveBook() {
+        // 1. если вызывается update()...
         updater.update(callback)
 
+        // ...то в процессе работы будет один запрос к серверу
         Mockito.verify(call, times(1)).enqueue(capture(requestCallCaptor))
         val requestCallback = requestCallCaptor.allValues[0]
 
-        val list = ArrayList<BookDTO>()
-        list.add(book1)
+        // 2. если сервер вернет ответ, содержащий один bookDto1...
         val answer = BookAnswer()
-        answer.list = list
+        answer.list = arrayOf(bookDto1).toList()
+
         assertEquals(1, answer.list!!.size)
 
         val response = Response.success(answer)
 
         requestCallback.onResponse(call, response)
 
-        Mockito.verify(bookDb, times(1)).saveBooks(capture(bookListCaptor))
+        // ...то будет вызыван saveBook для этой книги
+        Mockito.verify(bookDb, times(1)).saveBook(capture(bookCaptor))
 
-        val bookList = bookListCaptor.allValues[0]
-        assertEquals(list.size, bookList.size)
-        assertEquals(list[0].id, bookList[0].id)
-        assertEquals(list[0].title, bookList[0].title)
-        assertEquals(list[0].description, bookList[0].description)
-        assertEquals(list[0].picture, bookList[0].picture)
+        val book = bookCaptor.allValues[0]
+        assertEquals(bookDto1.id, book.id)
+        assertEquals(bookDto1.title, book.title)
+        assertEquals(bookDto1.description, book.description)
+        assertEquals(bookDto1.picture, book.picture)
+    }
+
+    @Test
+    fun successResultWithData_saveFiles() {
+        // 1. если вызывается update()...
+        updater.update(callback)
+
+        // ...то в процессе работы будет один запрос к серверу
+        Mockito.verify(call, times(1)).enqueue(capture(requestCallCaptor))
+        val requestCallback = requestCallCaptor.allValues[0]
+
+        // 2. если сервер вернет ответ, содержащий один bookDto1...
+        val answer = BookAnswer()
+        answer.list = arrayOf(bookDto1).toList()
+
+        assertEquals(1, answer.list!!.size)
+
+        val response = Response.success(answer)
+
+        requestCallback.onResponse(call, response)
+
+        // ...то будет вызыван saveBookFile для обоих файлов этой книги
+        Mockito.verify(bookDb, times(2)).saveBookFile(capture(bookFileCaptor))
+
+        val files = bookFileCaptor
+                .allValues
+                .toList()
+                .sortedBy(BookFile::url)
+
+        // первый
+        assertEquals(bookDto1.id, files.get(0).bookId)
+        assertEquals(bookDto1.files!![0], files.get(0).url)
+        // второй
+        assertEquals(bookDto1.id, files.get(1).bookId)
+        assertEquals(bookDto1.files!![1], files.get(1).url)
+    }
+
+    @Test
+    fun successResultWithData_success() {
+        // 1. если вызывается update()...
+        updater.update(callback)
+
+        // ...то в процессе работы будет один запрос к серверу
+        Mockito.verify(call, times(1)).enqueue(capture(requestCallCaptor))
+        val requestCallback = requestCallCaptor.allValues[0]
+
+        // 2. если сервер вернет ответ, содержащий один bookDto1...
+        val answer = BookAnswer()
+        answer.list = arrayOf(bookDto1).toList()
+        val response = Response.success(answer)
+
+        requestCallback.onResponse(call, response)
+
+        // ...то будет вызван callback.onSuccess()
 
         Mockito.verify(callback).onSuccess()
     }

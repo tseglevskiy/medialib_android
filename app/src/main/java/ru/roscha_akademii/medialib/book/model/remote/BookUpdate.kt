@@ -5,6 +5,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookAnswer
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookDTO
 import ru.roscha_akademii.medialib.storage.Storage
@@ -41,13 +42,20 @@ open class BookUpdate(val bookApi: BookApi,
     }
 
     private fun saveBooks(list: List<BookDTO>) {
+        list.forEach { dto ->
+            run {
+                val book = Book(dto)
+                bookDb.saveBook(book)
 
-
-        bookDb.saveBooks(list.map { d -> Book(d) })
-
-//        list
-//                .map { it.id }
-//                .forEach { Log.d("happy", "id $it") }
+                dto.files
+                        ?.distinct()
+                        ?.forEach { url ->
+                            run {
+                                bookDb.saveBookFile(BookFile(book, url))
+                            }
+                        }
+            }
+        }
 
         list
                 .map { it.picture }

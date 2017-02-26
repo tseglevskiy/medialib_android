@@ -26,7 +26,6 @@ class BookFileMappingTest {
     lateinit internal var getResolver: BookFileMapping.GetResolver
 
     val book1 = BookFile(
-            id = 1111,
             bookId = 5678,
             url = "url one")
 
@@ -39,24 +38,24 @@ class BookFileMappingTest {
     }
 
     @Test
-    fun mapToUpdateQuery_identifyVideoById() {
+    fun mapToUpdateQuery_identifyBookById() {
         val query = putResolver.mapToUpdateQuery(book1)
 
         assertEquals(BookFileTable.TABLE_NAME, query.table())
 
-        assertEquals("${BookFileTable.ID}=?", query.where().replace(" ", "", true))
+        assertEquals("${BookFileTable.BOOK_ID}=?AND${BookFileTable.URL}=?", query.where().replace(" ", "", true))
 
-        assertEquals(1, query.whereArgs().size)
-        assertEquals(book1.id, query.whereArgs()[0].toLong())
+        assertEquals(2, query.whereArgs().size)
+        assertEquals(book1.bookId, query.whereArgs()[0].toLong())
+        assertEquals(book1.url, query.whereArgs()[1])
     }
 
     @Test
     fun mapToContentValues() {
         val values = putResolver.mapToContentValues(book1)
 
-        assertEquals(3, values.size())
-        assertEquals(book1.id, values.get(BookFileTable.ID))
-        assertEquals(book1.bookId, values.get(BookFileTable.BOOK))
+        assertEquals(2, values.size())
+        assertEquals(book1.bookId, values.get(BookFileTable.BOOK_ID))
         assertEquals(book1.url, values.get(BookFileTable.URL))
     }
 
@@ -70,13 +69,11 @@ class BookFileMappingTest {
     @Test
     fun mapFromCursor() {
         val cursor = MatrixCursor(arrayOf(
-                BookFileTable.ID,
-                BookFileTable.BOOK,
+                BookFileTable.BOOK_ID,
                 BookFileTable.URL
         ))
 
         cursor.newRow()
-                .add(book1.id)
                 .add(book1.bookId)
                 .add(book1.url)
 
@@ -93,10 +90,11 @@ class BookFileMappingTest {
 
         assertEquals(BookFileTable.TABLE_NAME, query.table())
 
-        assertEquals("${BookFileTable.ID}=?", query.where().replace(" ", "", true))
+        assertEquals("${BookFileTable.BOOK_ID}=?AND${BookFileTable.URL}=?", query.where().replace(" ", "", true))
 
-        assertEquals(1, query.whereArgs().size)
-        assertEquals(book1.id, query.whereArgs()[0].toLong())
+        assertEquals(2, query.whereArgs().size)
+        assertEquals(book1.bookId, query.whereArgs()[0].toLong())
+        assertEquals(book1.url, query.whereArgs()[1])
     }
 
 }
