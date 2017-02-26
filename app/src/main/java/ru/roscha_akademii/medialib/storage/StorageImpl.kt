@@ -96,7 +96,7 @@ open class StorageImpl(internal val db: StorIOSQLite,
     }
 
     override fun getPercent(remoteUri: String): Int {
-        return getRecord(remoteUri)?.percent?.toInt() ?: return 0
+        return getRecord(remoteUri)?.percent ?: 0
     }
 
     override fun saveLocal(remoteUri: String, title: String, visible: Boolean) {
@@ -159,6 +159,7 @@ open class StorageImpl(internal val db: StorIOSQLite,
     }
 
     override fun getLocalUriIfAny(remoteUri: String): String {
+        checkLocalUri(remoteUri)
         return getRecord(remoteUri)?.localUri ?: remoteUri
     }
 
@@ -173,7 +174,7 @@ open class StorageImpl(internal val db: StorIOSQLite,
                 .prepare()
                 .executeAsBlocking()
 
-        try {
+        cursor.use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
                     val url = cursor.getString(0)
@@ -190,9 +191,6 @@ open class StorageImpl(internal val db: StorIOSQLite,
                     }
                 } while (cursor.moveToNext())
             }
-
-        } finally {
-            cursor.close()
         }
 
     }
