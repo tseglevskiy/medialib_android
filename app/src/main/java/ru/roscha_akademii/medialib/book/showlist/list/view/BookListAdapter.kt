@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.arellomobile.mvp.MvpDelegate
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.showlist.item.view.BookCard
 
 class BookListAdapter(val parentDelegate: MvpDelegate<*>,

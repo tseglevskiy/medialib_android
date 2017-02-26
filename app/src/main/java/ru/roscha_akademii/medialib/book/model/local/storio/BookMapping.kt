@@ -11,7 +11,7 @@ import com.pushtorefresh.storio.sqlite.queries.InsertQuery
 import com.pushtorefresh.storio.sqlite.queries.UpdateQuery
 import org.joda.time.LocalDate
 import ru.roscha_akademii.medialib.book.model.local.BookTable
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 
 class BookMapping : SQLiteTypeMapping<Book>(
         PutResolver(),

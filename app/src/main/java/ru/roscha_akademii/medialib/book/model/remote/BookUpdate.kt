@@ -1,15 +1,14 @@
 package ru.roscha_akademii.medialib.book.model.remote
 
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.roscha_akademii.medialib.book.model.local.BookDb
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookAnswer
+import ru.roscha_akademii.medialib.book.model.remote.entity.BookDTO
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateCallback
-import java.util.*
 
 open class BookUpdate(val bookApi: BookApi,
                       val bookDb: BookDb,
@@ -41,8 +40,10 @@ open class BookUpdate(val bookApi: BookApi,
         })
     }
 
-    private fun saveBooks(list: ArrayList<Book>) {
-        bookDb.saveBooks(list)
+    private fun saveBooks(list: List<BookDTO>) {
+
+
+        bookDb.saveBooks(list.map { d -> Book(d) })
 
 //        list
 //                .map { it.id }

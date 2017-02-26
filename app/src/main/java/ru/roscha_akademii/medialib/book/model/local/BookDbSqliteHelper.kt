@@ -9,15 +9,19 @@ class BookDbSqliteHelper internal constructor(context: Context, dbName: String?)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(BookTable.createTable())
+        db.execSQL(BookFileTable.createTable())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // TODO dummy upgrade
         db.execSQL("drop table if exists " + BookTable.TABLE_NAME)
+        db.execSQL("drop table if exists " + BookFileTable.TABLE_NAME)
         onCreate(db)
     }
 
     companion object {
-        private val VERSION = BookTable.VERSION
+        private val VERSION =
+                BookTable.VERSION +
+                BookFileTable.VERSION
     }
 }

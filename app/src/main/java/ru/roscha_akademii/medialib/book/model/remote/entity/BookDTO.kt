@@ -2,7 +2,7 @@ package ru.roscha_akademii.medialib.book.model.remote.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class Book(
+data class BookDTO(
         val id: Long,
 
         @SerializedName("title")

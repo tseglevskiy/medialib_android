@@ -11,7 +11,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.BookModule
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.common.AndroidModule
 import ru.roscha_akademii.medialib.common.DaggerApplicationComponent
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
@@ -181,14 +181,12 @@ class BookDbStorIoTest {
                 1111,
                 "title one",
                 "picture url one",
-                "description one",
-                null)
+                "description one")
 
         private val book2 = Book(2222,
                 "title two",
                 "picture url two",
-                "description two",
-                null)
+                "description two")
     }
 
 }

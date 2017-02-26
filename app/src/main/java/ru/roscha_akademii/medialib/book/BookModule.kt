@@ -8,10 +8,12 @@ import dagger.Provides
 import retrofit2.Retrofit
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.BookDbSqliteHelper
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
+import ru.roscha_akademii.medialib.book.model.local.storio.BookFileMapping
 import ru.roscha_akademii.medialib.book.model.local.storio.BookMapping
 import ru.roscha_akademii.medialib.book.model.remote.BookApi
 import ru.roscha_akademii.medialib.book.model.remote.BookUpdate
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.storage.Storage
 
 import javax.inject.Named
@@ -44,6 +46,7 @@ open class BookModule {
             .builder()
             .sqliteOpenHelper(dbHelper)
             .addTypeMapping(Book::class.java, BookMapping())
+            .addTypeMapping(BookFile::class.java, BookFileMapping())
             .build()
 
     @Provides

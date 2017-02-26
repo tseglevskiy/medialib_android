@@ -2,8 +2,7 @@ package ru.roscha_akademii.medialib.book.model.local
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite
 import com.pushtorefresh.storio.sqlite.queries.Query
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
-import java.util.*
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 
 open class BookDb (internal var db: StorIOSQLite) {
 
@@ -18,7 +17,7 @@ open class BookDb (internal var db: StorIOSQLite) {
                 .prepare()
                 .executeAsBlocking()
 
-    open fun saveBooks(list: ArrayList<Book>) {
+    open fun saveBooks(list: List<Book>) {
         db
                 .put()
                 .objects(list)

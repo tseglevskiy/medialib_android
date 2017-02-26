@@ -12,7 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.activity_main.view.*
 import ru.roscha_akademii.medialib.R
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.showlist.list.presenter.BookListPresenter
 import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule

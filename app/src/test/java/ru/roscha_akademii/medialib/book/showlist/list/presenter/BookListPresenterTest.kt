@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.model.local.BookDb
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.showlist.list.view.BookListView
 import ru.roscha_akademii.medialib.book.showlist.list.view.`BookListView$$State`
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication

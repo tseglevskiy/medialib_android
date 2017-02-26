@@ -16,8 +16,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.roscha_akademii.medialib.BuildConfig
 import ru.roscha_akademii.medialib.book.model.local.BookDb
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.model.remote.entity.BookAnswer
+import ru.roscha_akademii.medialib.book.model.remote.entity.BookDTO
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 import ru.roscha_akademii.medialib.storage.Storage
 import ru.roscha_akademii.medialib.update.UpdateCallback
@@ -31,7 +32,7 @@ import java.util.*
         packageName = "ru.roscha_akademii.medialib")
 
 class BookUpdateTest {
-    val book1 = Book(
+    val book1 = BookDTO(
             id = 1111,
             title = "title one",
             picture = "picture url one",
@@ -70,7 +71,7 @@ class BookUpdateTest {
     }
 
     @Test
-    fun runVideoList() {
+    fun runBookList() {
         updater.update(callback)
 
         Mockito.verify(bookApi).bookList()
@@ -110,7 +111,7 @@ class BookUpdateTest {
         Mockito.verify(call, times(1)).enqueue(capture(requestCallCaptor))
         val requestCallback = requestCallCaptor.allValues[0]
 
-        val list = ArrayList<Book>()
+        val list = ArrayList<BookDTO>()
         list.add(book1)
         val answer = BookAnswer()
         answer.list = list
@@ -122,7 +123,12 @@ class BookUpdateTest {
 
         Mockito.verify(bookDb, times(1)).saveBooks(capture(bookListCaptor))
 
-        assertEquals(list, bookListCaptor.allValues[0])
+        val bookList = bookListCaptor.allValues[0]
+        assertEquals(list.size, bookList.size)
+        assertEquals(list[0].id, bookList[0].id)
+        assertEquals(list[0].title, bookList[0].title)
+        assertEquals(list[0].description, bookList[0].description)
+        assertEquals(list[0].picture, bookList[0].picture)
 
         Mockito.verify(callback).onSuccess()
     }

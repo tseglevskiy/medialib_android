@@ -8,8 +8,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.roscha_akademii.medialib.BuildConfig
-import ru.roscha_akademii.medialib.book.model.local.BookTable
-import ru.roscha_akademii.medialib.book.model.local.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.BookFileTable
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
 
 @RunWith(RobolectricTestRunner::class)
@@ -19,33 +19,32 @@ import ru.roscha_akademii.medialib.common.RobolectricMdiaLibApplication
         application = RobolectricMdiaLibApplication::class,
         packageName = "ru.roscha_akademii.medialib")
 
-class BookMappingTest {
-    lateinit var mapping: BookMapping
-    lateinit internal var putResolver: BookMapping.PutResolver
-    lateinit internal var deleteResolver: BookMapping.DeleteResolver
-    lateinit internal var getResolver: BookMapping.GetResolver
+class BookFileMappingTest {
+    lateinit var mapping: BookFileMapping
+    lateinit internal var putResolver: BookFileMapping.PutResolver
+    lateinit internal var deleteResolver: BookFileMapping.DeleteResolver
+    lateinit internal var getResolver: BookFileMapping.GetResolver
 
-    val book1 = Book(
+    val book1 = BookFile(
             id = 1111,
-            title = "title one",
-            picture = "picture url one",
-            description = "description one")
+            bookId = 5678,
+            url = "url one")
 
     @Before
     fun setUp() {
-        mapping = BookMapping()
-        putResolver = mapping.putResolver() as BookMapping.PutResolver
-        getResolver = mapping.getResolver() as BookMapping.GetResolver
-        deleteResolver = mapping.deleteResolver() as BookMapping.DeleteResolver
+        mapping = BookFileMapping()
+        putResolver = mapping.putResolver() as BookFileMapping.PutResolver
+        getResolver = mapping.getResolver() as BookFileMapping.GetResolver
+        deleteResolver = mapping.deleteResolver() as BookFileMapping.DeleteResolver
     }
 
     @Test
     fun mapToUpdateQuery_identifyVideoById() {
         val query = putResolver.mapToUpdateQuery(book1)
 
-        assertEquals(BookTable.TABLE_NAME, query.table())
+        assertEquals(BookFileTable.TABLE_NAME, query.table())
 
-        assertEquals("${BookTable.ID}=?", query.where().replace(" ", "", true))
+        assertEquals("${BookFileTable.ID}=?", query.where().replace(" ", "", true))
 
         assertEquals(1, query.whereArgs().size)
         assertEquals(book1.id, query.whereArgs()[0].toLong())
@@ -55,34 +54,31 @@ class BookMappingTest {
     fun mapToContentValues() {
         val values = putResolver.mapToContentValues(book1)
 
-        assertEquals(4, values.size())
-        assertEquals(book1.id, values.get(BookTable.ID))
-        assertEquals(book1.title, values.get(BookTable.TITLE))
-        assertEquals(book1.description, values.get(BookTable.DESCRIPTION))
-        assertEquals(book1.picture, values.get(BookTable.PICTURE_URL))
+        assertEquals(3, values.size())
+        assertEquals(book1.id, values.get(BookFileTable.ID))
+        assertEquals(book1.bookId, values.get(BookFileTable.BOOK))
+        assertEquals(book1.url, values.get(BookFileTable.URL))
     }
 
     @Test
     fun mapToInsertQuery() {
         val query = putResolver.mapToInsertQuery(book1)
 
-        assertEquals(BookTable.TABLE_NAME, query.table())
+        assertEquals(BookFileTable.TABLE_NAME, query.table())
     }
 
     @Test
     fun mapFromCursor() {
         val cursor = MatrixCursor(arrayOf(
-                BookTable.ID,
-                BookTable.TITLE,
-                BookTable.DESCRIPTION,
-                BookTable.PICTURE_URL
+                BookFileTable.ID,
+                BookFileTable.BOOK,
+                BookFileTable.URL
         ))
 
         cursor.newRow()
                 .add(book1.id)
-                .add(book1.title)
-                .add(book1.description)
-                .add(book1.picture)
+                .add(book1.bookId)
+                .add(book1.url)
 
         cursor.moveToFirst()
 
@@ -95,9 +91,9 @@ class BookMappingTest {
     fun mapToDeleteQuery() {
         val query = deleteResolver.mapToDeleteQuery(book1)
 
-        assertEquals(BookTable.TABLE_NAME, query.table())
+        assertEquals(BookFileTable.TABLE_NAME, query.table())
 
-        assertEquals("${BookTable.ID}=?", query.where().replace(" ", "", true))
+        assertEquals("${BookFileTable.ID}=?", query.where().replace(" ", "", true))
 
         assertEquals(1, query.whereArgs().size)
         assertEquals(book1.id, query.whereArgs()[0].toLong())

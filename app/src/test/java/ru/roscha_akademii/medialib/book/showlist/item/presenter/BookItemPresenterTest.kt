@@ -12,7 +12,7 @@ import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.roscha_akademii.medialib.book.model.local.BookDb
-import ru.roscha_akademii.medialib.book.model.remote.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.Book
 import ru.roscha_akademii.medialib.book.showlist.item.view.BookItemView
 import ru.roscha_akademii.medialib.book.showlist.item.view.`BookItemView$$State`
 import ru.roscha_akademii.medialib.storage.Storage
@@ -105,8 +105,7 @@ class BookItemPresenterTest {
                 1111,
                 "title one",
                 "picture url one",
-                "description one",
-                null)
+                "description one")
 
     }
 }
