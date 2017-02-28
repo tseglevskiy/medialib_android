@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.*
 import ru.roscha_akademii.medialib.book.model.local.BookDb
 import ru.roscha_akademii.medialib.book.model.local.entity.Book
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.book.onebook.view.OneBookView
 import ru.roscha_akademii.medialib.book.onebook.view.`OneBookView$$State`
 import ru.roscha_akademii.medialib.storage.Storage
@@ -27,6 +28,9 @@ class OneBookPresenterTest {
     @Captor
     lateinit var stringCaptor: ArgumentCaptor<String>
 
+    @Captor
+    lateinit var filesCaptor: ArgumentCaptor<List<BookFile>>
+
     lateinit var presenter: OneBookPresenter // SUT
 
     @Before
@@ -34,6 +38,7 @@ class OneBookPresenterTest {
         MockitoAnnotations.initMocks(this)
         storage = StorageStub()
         whenever(bookDb.getBook(any())).thenReturn(book1)
+        whenever(bookDb.getBookFile(any())).thenReturn(files1)
 
         presenter = OneBookPresenter(bookDb, storage) // SUT
     }
@@ -76,6 +81,27 @@ class OneBookPresenterTest {
         assertEquals(book1.description, stringCaptor.allValues[0])
     }
 
+    @Test
+    fun start_getBookFiles() {
+        presenter.attachView(view)
+        presenter.setViewState(viewState)
+        presenter.start(book1.id)
+
+        verify(bookDb, times(1)).getBookFile(book1.id)
+    }
+
+    @Test
+    fun start_showFilesList() {
+        presenter.attachView(view)
+        presenter.setViewState(viewState)
+        presenter.start(book1.id)
+
+        verify(viewState, times(1)).showFiles(capture(filesCaptor))
+        val files = filesCaptor.allValues[0]
+        assertEquals(files1.size, files.size)
+        assertEquals(files1[0], files[0])
+    }
+
     companion object {
         val book1 = Book(
                 id = 345L,
@@ -84,5 +110,7 @@ class OneBookPresenterTest {
                 picture = "http://1"
 
         )
+
+        val files1 = arrayOf(BookFile(book1, "http://2")).toList()
     }
 }

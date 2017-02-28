@@ -3,12 +3,12 @@ package ru.roscha_akademii.medialib.storage.widget.view
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.os.Handler
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import android.view.View.MeasureSpec.*
 import com.arellomobile.mvp.MvpDelegate
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -20,7 +20,6 @@ import ru.roscha_akademii.medialib.storage.stub.StorageStub
 import ru.roscha_akademii.medialib.storage.widget.DownloadControlInterface
 import ru.roscha_akademii.medialib.storage.widget.presenter.DownloadControlPresenterImpl
 import javax.inject.Inject
-
 
 class DownloadControl @JvmOverloads constructor(context: Context,
                                                 attrs: AttributeSet? = null,
@@ -34,15 +33,11 @@ class DownloadControl @JvmOverloads constructor(context: Context,
     @Inject
     lateinit var storage: Storage
 
-    private val mainHandler: Handler by lazy {
-        Handler()
-    }
-
     override var url: String? = null
         set(value) {
             field = value
 
-            mainHandler.post {
+            post {
                 presenter.url = value
             }
         }
@@ -51,7 +46,7 @@ class DownloadControl @JvmOverloads constructor(context: Context,
         set(value) {
             field = value
 
-            mainHandler.post {
+            post {
                 presenter.title = value
             }
         }
@@ -84,6 +79,8 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
     private var rect = RectF()
     private var rectIcon = Rect()
+    private var textXPos = 0f
+    private var textYPos = 0f
 
     private var status = StorageStatus.REMOTE
     private var percent: Int? = null
@@ -132,8 +129,15 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        presenter.updateStatus()
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+
         presenter.stop()
     }
 
@@ -166,7 +170,7 @@ class DownloadControl @JvmOverloads constructor(context: Context,
 
         when (status) {
             StorageStatus.REMOTE -> {
-                cloudIcon.setBounds(rectIcon)
+                cloudIcon.bounds = rectIcon
                 cloudIcon.draw(canvas)
 
                 canvas.drawOval(rect, noPaint)
@@ -175,16 +179,14 @@ class DownloadControl @JvmOverloads constructor(context: Context,
             StorageStatus.PROGRESS -> {
                 textPaint.color = noPaint.color
 
-                val xPos = canvas.width / 2
-                val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2).toInt()
-                canvas.drawText(percentStr, xPos.toFloat(), yPos.toFloat(), textPaint)
+                canvas.drawText(percentStr, textXPos, textYPos, textPaint)
 
                 canvas.drawOval(rect, noPaint)
                 canvas.drawArc(rect, -90f, angle, false, yesPaint)
             }
 
             StorageStatus.LOCAL -> {
-                localIcon.setBounds(rectIcon)
+                localIcon.bounds = rectIcon
                 localIcon.draw(canvas)
 
                 canvas.drawOval(rect, yesPaint)
@@ -193,28 +195,65 @@ class DownloadControl @JvmOverloads constructor(context: Context,
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = View.MeasureSpec.getSize(widthMeasureSpec)
-        val height = View.MeasureSpec.getSize(heightMeasureSpec)
-        val size = if (width > height) height else width
-        setMeasuredDimension(size, size)
+        val width = View.MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
+        val height = View.MeasureSpec.getSize(heightMeasureSpec) - paddingTop - paddingBottom
+
+        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+
+        if (widthMode == EXACTLY && heightMode == EXACTLY ||
+                widthMode == UNSPECIFIED && heightMode == UNSPECIFIED) { // do nothing
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            return
+        }
+
+        val size =
+                if (widthMode == EXACTLY) {
+                    width
+                } else if (heightMode == EXACTLY) {
+                    height
+                } else if (widthMode == AT_MOST && heightMode == UNSPECIFIED) {
+                    width
+                } else if (widthMode == UNSPECIFIED && heightMode == AT_MOST) {
+                    height
+                } else if (width > height) {
+                    height
+                } else {
+                    width
+                }
+
+        val newWidth = MeasureSpec.makeMeasureSpec(size + paddingLeft + paddingRight, EXACTLY)
+        val newHeight = MeasureSpec.makeMeasureSpec(size + paddingTop + paddingBottom, EXACTLY)
+
+        setMeasuredDimension(newWidth, newHeight)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
-        rectIcon.set(w * 2 / 10, h * 2 / 10, w * 8 / 10 , h * 8 / 10)
+        val margin = 15f // percents
+        val strokeCoeff = 1.5f // why??
 
-        rect.left = 0f + paddingLeft + strokeWidth / 2
-        rect.top = 0f + paddingTop + strokeWidth / 2
-        rect.bottom = h.toFloat() - paddingBottom - strokeWidth / 2
-        rect.right = w.toFloat() - paddingRight - strokeWidth / 2
+        val wWithoutPadding = w - paddingLeft - paddingRight
+        val hWithoutPadding = h - paddingTop - paddingBottom
+
+        val wSideMargin = (wWithoutPadding.toFloat() - 2f * strokeCoeff * strokeWidth) * margin / 200f + strokeWidth * strokeCoeff
+        val hSideMargin = (hWithoutPadding.toFloat() - 2f * strokeCoeff * strokeWidth) * margin / 200f + strokeWidth * strokeCoeff
+        rectIcon.set(wSideMargin.toInt() + paddingLeft,
+                hSideMargin.toInt() + paddingTop,
+                w - wSideMargin.toInt() - paddingRight,
+                h - hSideMargin.toInt() - paddingBottom)
+
+        rect.left = strokeWidth + paddingLeft.toFloat()
+        rect.top = strokeWidth + paddingTop.toFloat()
+        rect.bottom = h.toFloat() - strokeWidth - paddingBottom.toFloat()
+        rect.right = w.toFloat() - strokeWidth - paddingRight.toFloat()
 
         val maxH = (rect.bottom - rect.top) * 0.5f
-        val maxW = (rect.right - rect.left) * 0.85f
+        val maxW = (rect.right - rect.left) * 0.8f
         val maxD = (rect.right - rect.left) * 0.9f
 
-//        val text = "99%"
-        val text = "100%"
+        val text = "99%"
 
         val bounds = Rect()
 
@@ -236,6 +275,10 @@ class DownloadControl @JvmOverloads constructor(context: Context,
                 max = mid
             }
         }
+
+        textXPos = paddingLeft.toFloat() + wWithoutPadding.toFloat() / 2f
+        textYPos = paddingTop + hWithoutPadding / 2f - (textPaint.descent() + textPaint.ascent()) / 2f
+
 
     }
 }

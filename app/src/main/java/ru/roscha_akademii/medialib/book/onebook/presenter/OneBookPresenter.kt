@@ -9,15 +9,18 @@ import ru.roscha_akademii.medialib.storage.Storage
 
 @InjectViewState
 class OneBookPresenter(val bookDb: BookDb, val storage: Storage) : MvpPresenter<OneBookView>() {
-    lateinit var book: Book
+//    lateinit var book: Book
 
     fun start(videoId: Long) {
-        book = bookDb.getBook(videoId)
+        val book = bookDb.getBook(videoId)
 
         with(book) {
             viewState.showTitle(title)
             viewState.showDescription(description)
         }
+
+        val files = bookDb.getBookFile(book.id)
+        viewState.showFiles(files)
     }
 
 }

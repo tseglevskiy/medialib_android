@@ -3,6 +3,7 @@ package ru.roscha_akademii.medialib.book.onebook.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -10,6 +11,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.book_onebook_acitivity.*
 import ru.roscha_akademii.medialib.R
+import ru.roscha_akademii.medialib.book.model.local.entity.BookFile
 import ru.roscha_akademii.medialib.book.onebook.presenter.OneBookPresenter
 import ru.roscha_akademii.medialib.common.ActivityComponent
 import ru.roscha_akademii.medialib.common.ActivityModule
@@ -38,6 +40,7 @@ class OneBookActivity : MvpAppCompatActivity(), OneBookView {
     }
 
     lateinit var activityComponent: ActivityComponent
+    lateinit var adapter: BookFilesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent = (application as MediaLibApplication).component.activityComponent(ActivityModule(this))
@@ -46,6 +49,10 @@ class OneBookActivity : MvpAppCompatActivity(), OneBookView {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.book_onebook_acitivity)
+
+        adapter = BookFilesAdapter(mvpDelegate)
+        filesListField.adapter = adapter
+        filesListField.layoutManager = LinearLayoutManager(this)
 
         presenter.start(bookId)
     }
@@ -63,6 +70,10 @@ class OneBookActivity : MvpAppCompatActivity(), OneBookView {
                 descriptionField.visibility = GONE
             }
         }
+    }
+
+    override fun showFiles(files: List<BookFile>) {
+        adapter.list = files
     }
 }
 

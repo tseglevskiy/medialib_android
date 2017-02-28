@@ -25,7 +25,7 @@ class DownloadControlPresenterImpl(val storage: Storage)
             storage.saveLocal(it, title ?: "", true)
 
             updateStatus()
-            updateHandler.start()
+            updateHandler.updateStatusInFiewSeconds()
         }
     }
 
@@ -44,9 +44,9 @@ class DownloadControlPresenterImpl(val storage: Storage)
             val percent = storage.getPercent(url!!)
             viewState.showStatus(status, percent)
 
-            if (status == StorageStatus.PROGRESS) {
-                updateHandler.start()
-            }
+//            if (status == StorageStatus.PROGRESS) {
+                updateHandler.updateStatusInFiewSeconds()
+//            }
 
             viewState.showStatus(status, percent)
         } else {
@@ -73,7 +73,7 @@ class DownloadControlPresenterImpl(val storage: Storage)
             }
         }
 
-        fun start() {
+        fun updateStatusInFiewSeconds() {
             removeMessages(VideoCardPresenterImpl.MSG_UPDATE)
             sendEmptyMessageDelayed(VideoCardPresenterImpl.MSG_UPDATE, 3000)
         }
